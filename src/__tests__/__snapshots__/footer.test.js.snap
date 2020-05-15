@@ -1,0 +1,183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header renders as it should be! 1`] = `
+<DocumentFragment>
+  <div
+    class="container-fluid"
+    style="color: white; background-color: rgb(36, 36, 36); padding-bottom: 20px;"
+  >
+    <div
+      style="color: white; background-color: rgb(36, 36, 36); padding-bottom: 20px;"
+    >
+      <div
+        class="flex row"
+      >
+        <div
+          class="d-none d-md-block col-sm-4  col"
+        >
+          <div>
+            <h2
+              style="color: orange;"
+            >
+              About
+            </h2>
+            <div>
+              This is a application that lets you plugin your daily learnings to a set schedule so it allows you to repeat the information again just before you forget about it. Thereby not wasting your hard earned wisdom the the fragility of time.
+            </div>
+          </div>
+        </div>
+        <div
+          class="d-none d-md-block col-sm-4 col"
+        >
+          <div>
+            <div>
+              <h2
+                style="color: orange;"
+              >
+                Contact
+              </h2>
+              <div
+                style="width: 65px; display: inline-block; color: orange;"
+              >
+                Email: 
+              </div>
+              <div
+                style="display: inline-block; color: white;"
+              >
+                kim@repetedScheduling.com
+              </div>
+              <br />
+              <div
+                style="width: 65px; display: inline-block; color: orange;"
+              >
+                Skype: 
+              </div>
+              <div
+                style="display: inline-block; color: white;"
+              >
+                +46703861152
+              </div>
+              <br />
+              <div
+                style="width: 65px; display: inline-block; color: orange;"
+              >
+                Slack:
+              </div>
+              <div
+                style="display: inline-block; color: white;"
+              >
+                rk.westberg@gmail.com
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="d-none d-md-block col-sm-4 col"
+        >
+          <h2
+            style="color: orange;"
+          >
+            Newsletter
+          </h2>
+          <div>
+            <input
+              placeholder="Your email address"
+              style="font-size: 17px; font-family: bold; padding: 3px 3px 3px 10px; margin-bottom: 8px; color: black;"
+              type="text"
+            />
+            <span
+              style="color: white; background-color: brown; display: inline-block; padding: 5px 20px; border-radius: 5px; margin-left: 10px; cursor: pointer;"
+            >
+              Signup
+            </span>
+          </div>
+          <img
+            alt="social icons"
+            class="m-3 img-fluid"
+            src="social_icons.png"
+            style="width: 160px; margin-top: 10px;"
+          />
+        </div>
+        <div
+          class="px-5 d-md-none margin-auto"
+        >
+          <div>
+            <h2
+              style="color: orange;"
+            >
+              About
+            </h2>
+            <div>
+              This is a application that lets you plugin your daily learnings to a set schedule so it allows you to repeat the information again just before you forget about it. Thereby not wasting your hard earned wisdom the the fragility of time.
+            </div>
+          </div>
+          <div>
+            <div>
+              <h2
+                style="color: orange;"
+              >
+                Contact
+              </h2>
+              <div
+                style="width: 65px; display: inline-block; color: orange;"
+              >
+                Email: 
+              </div>
+              <div
+                style="display: inline-block; color: white;"
+              >
+                kim@repetedScheduling.com
+              </div>
+              <br />
+              <div
+                style="width: 65px; display: inline-block; color: orange;"
+              >
+                Skype: 
+              </div>
+              <div
+                style="display: inline-block; color: white;"
+              >
+                +46703861152
+              </div>
+              <br />
+              <div
+                style="width: 65px; display: inline-block; color: orange;"
+              >
+                Slack:
+              </div>
+              <div
+                style="display: inline-block; color: white;"
+              >
+                rk.westberg@gmail.com
+              </div>
+            </div>
+          </div>
+          <h2
+            style="color: orange;"
+          >
+            Newsletter
+          </h2>
+          <div>
+            <input
+              placeholder="Your email address"
+              style="font-size: 17px; font-family: bold; padding: 3px 3px 3px 10px; margin-bottom: 8px; color: black;"
+              type="text"
+            />
+            <span
+              style="color: white; background-color: brown; display: inline-block; padding: 5px 20px; border-radius: 5px; margin-left: 10px; cursor: pointer;"
+            >
+              Signup
+            </span>
+          </div>
+          <img
+            alt="social icons"
+            class="m-3 img-fluid"
+            src="social_icons.png"
+            style="width: 160px; margin-top: 10px;"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

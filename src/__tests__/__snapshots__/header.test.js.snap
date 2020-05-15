@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header renders as it should be! 1`] = `
+<DocumentFragment>
+  <h1
+    class="bla"
+    data-testid="h1tag"
+  >
+    temp
+  </h1>
+</DocumentFragment>
+`;
