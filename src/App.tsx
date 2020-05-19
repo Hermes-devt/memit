@@ -19,7 +19,6 @@ export function App(){
     let data = init();
     // localStorage.setItem('memBackup', JSON.stringify(data));
     // let data:any = JSON.parse( localStorage.getItem('memBackup') || "");
-    // console.log('data list length', data.list.length);
     setData(data);
     dispatch( storage.setData(data) );
   },[]); //eslint-disable-line

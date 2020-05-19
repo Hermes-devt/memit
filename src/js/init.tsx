@@ -10,11 +10,12 @@ export function init(): UserData{
   let data: string | null = localStorage.getItem("dailyNotes");
 
   
-  // console.log('len', data && (data.length * 8) / 1000, 'kb');
 
   let dataObj = data ? JSON.parse(data) : createUserAccount();
   const todaysDay: number = getDaysAfter1970();
 
+  // console.log('len', data && (data.length * 8) / 1000, 'kb');
+  // console.log('data list length', dataObj.list.length);
   // dataObj.list = JSON.parse( localStorage.getItem('superbackup') || '');
   if( dateHandling.ifNewDay(dataObj)){
     dataObj.list.push( createNewDay() )
@@ -57,6 +58,9 @@ export function init(): UserData{
       if( match ) dataObj.missedCards.splice(i, 1);
     }
   }
+
+  console.log('d', dataObj.list);
+  dataObj.list.forEach( (item:any)=> item.userInput = '');
 
   // dataObj = JSON.parse( localStorage.getItem('superbackup') || '' );
   // localStorage.setItem('membackup', JSON.stringify(dataObj));

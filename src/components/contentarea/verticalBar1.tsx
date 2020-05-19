@@ -35,11 +35,8 @@ export function Navbar(props:any){
     setTodayCards( todayCards );
     setList(list);
     setData2(data);
-    console.log('da', data.dailyCards);
     setCheckboxes( Data.dailyCards ); //dailyCards is checkboxes
     setCardsMissed( cardsMissed);
-
-    console.log( 'dd', Data )
   },[Data]) // eslint-disable-line
 
 
@@ -47,10 +44,6 @@ export function Navbar(props:any){
     setActiveCard( Data.list.length - 1 - props.activeNote )
     // setCheckboxes( Data.dailyCards); //dailyCards is checkboxes
   }, [props.activeNote, Data.list.length])
-
-  useEffect( ()=>{
-    console.log('here');
-  },[checkBoxes])
 
   const setMissedCards = (data:any): any=>{
     let missedCardObj:any = [];

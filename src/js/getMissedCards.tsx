@@ -3,7 +3,6 @@ import {getDaysAfter1970} from './util';
 import {UserData, CardsToRepeat} from '../interfaces';
 
 export function getMissedCards( data: UserData, fromDaysPast: number){
-  console.log('here11');
   let schedule = [...data.schedule];
   let currentDay: number = getDaysAfter1970();
   let list = data.list;

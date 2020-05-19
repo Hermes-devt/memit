@@ -17,6 +17,8 @@ export function TextArea(props: any){
     const text = evt.target.value;
     setText( text );
     let nData:any = Object.assign({}, data)
+
+    if( props.data.name === 'userInput') return;
     nData.list[props.data.activeNote][props.data.name] = text;
     save(data);
   }
