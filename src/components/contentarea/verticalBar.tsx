@@ -173,11 +173,6 @@ export function Navbar(props:any){
       {...styling.card, ...styling.active, ...{textAlign: 'center', fontSize: 18}} as CSSProperties  : 
       {...styling.card, ...styling.passive, ...{textAlign: 'center', fontSize: 18}} as CSSProperties ,
 
-    // onMissingCards: (card:any)=>{ 
-    //   let _activeCard = list.length - 1 - activeCard;
-    //   return card.index === _activeCard ? 
-    //   {...styling.card, ...{backgroundColor: 'lightblue'}} as CSSProperties  : 
-    //   {...styling.card, ...{backgroundColor: '', color: 'black'}} as CSSProperties; },
 
     onMissingCards: (card:any)=>{ 
       let _activeCard = list.length - 1 - activeCard;
@@ -185,29 +180,11 @@ export function Navbar(props:any){
       {...styling.card, ...styling.active} as CSSProperties  : 
       {...styling.card, ...styling.passive} as CSSProperties; },
 
-    // todaysCardToRepeat: (evt:any, index:number)=>{
-    //   let todaysCard = evt, _activeCard = list[activeCard];
-    //   if( todaysCard === _activeCard ) 
-    //     return {...styling.card, ...{backgroundColor: 'lightblue'}} as CSSProperties;
-    //   else 
-    //     return {...styling.card, ...{backgroundColor: '', color: 'black'}} as CSSProperties;
-    // }
-    // todaysCardToRepeat: (evt:any, index:number)=>{
-    //   let todaysCard = evt, _activeCard = list[activeCard];
-    //   if( todaysCard === _activeCard ) 
-    //     return {...styling.card, ...styling.active} as CSSProperties;
-    //   else 
-    //     return {...styling.card, ...styling.passive} as CSSProperties;
-    // }
     todaysCardToRepeat: (evt:any, index:number)=>{
       let todaysCard = evt, _activeCard = list[activeCard];
       return todaysCard === _activeCard ? 
         {...styling.card, ...styling.active} as CSSProperties :
         {...styling.card, ...styling.passive} as CSSProperties;
-      // if( todaysCard === _activeCard ) 
-      //   return {...styling.card, ...styling.active} as CSSProperties;
-      // else 
-      //   return {...styling.card, ...styling.passive} as CSSProperties;
     }
   }
 
@@ -246,9 +223,6 @@ export function Navbar(props:any){
                   style={styling.checkbox as CSSProperties}
                   checked={card.done}
                 />
-                {card.done && <CheckboxTrue style={{zIndex: 9999, width: '200px', height: '200px'}}/>}
-                {!card.done && <CheckboxTrue style={{zIndex: 9999, width: '200px', height: '200px'}}/>}
-                {/* {!card.done && <CheckboxFalse />} */}
             </div>)
 
           })}
@@ -266,14 +240,19 @@ export function Navbar(props:any){
               onClick={ onCard.dailyCardsToRepeat } 
               >{ getCardString(card)}
 
-              { activeDay === getDaysAfter1970() &&
-                <input 
-                  onChange={ ()=> { 
-                  onCheckbox.todaysCards(index, checkBoxes[index].done)}}
-                  type='checkbox' 
+
+              { activeDay === getDaysAfter1970() && <span>
+                {checkBoxes[index].done && <div 
+                  onClick={ ()=> { onCheckbox.todaysCards(index, checkBoxes[index].done)}}
                   style={styling.checkbox as CSSProperties}
-                  checked={checkBoxes[index].done}
-              />}
+                  ><CheckboxTrue /></div> }
+
+
+                {!checkBoxes[index].done && <div 
+                  onClick={ ()=> { onCheckbox.todaysCards(index, checkBoxes[index].done)}}
+                  style={styling.checkbox as CSSProperties}
+                  ><CheckboxFalse/></div> }
+              </span> }
             </div>
           )})}
         </React.Fragment> 
@@ -302,12 +281,12 @@ const styling = {
     opacity: 1,
   },
 
+
   checkbox: {
-    width: 14, 
-    opacity: '0.6', 
-    height: 14, 
+    width: 16, 
+    height: 16, 
     position: 'absolute', 
-    bottom: 3, 
+    bottom: 10, 
     right: 3,
   },
 
