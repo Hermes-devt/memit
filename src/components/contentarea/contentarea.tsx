@@ -1,19 +1,19 @@
-import React, { Component, useEffect, useState, CSSProperties} from 'react';
+import React, {useEffect, useState, CSSProperties} from 'react';
 import VerticalBar from './verticalBar1';
 import Util from '../../js/util';
-import {save} from '../../js/storageHandling';
-import {Container, Col, Row} from 'react-bootstrap';
-import {UserData, Day} from '../../interfaces';
+// import {save} from '../../js/storageHandling';
+import {Container, Row} from 'react-bootstrap';
+import {UserData} from '../../interfaces';
 import TagInput from './tagInput';
 import Layout from './layout';
 
 import TextAreas from './textAreas1';
 import TextAreas2 from './textAreas2';
 import TextAreas3 from './textAreas3';
+import TextAreas4 from './textAreas4';
 
 export function ContentArea(props:any){
   const [data, setData] = useState<any>(null);
-  const [dailyNotes, setDailyNotes] = useState<any>([]);
   const [verticalBarExtended, setVerticalBarExtended] = useState<string>('<');
   const [activeNote,setActiveNote] = useState<number>(0);
 
@@ -31,7 +31,7 @@ export function ContentArea(props:any){
         <Layout onClick={ (nr:number): void=>{ setLayout(nr); }}/>
         <Row className="no-gutter">
 
-          <div className="vh-100 overflow-auto" 
+          <div className="vh-100 overflow-auto mr-3" 
             style={{ width: verticalBarExtended === '<' ? '15%' : '3%'} as CSSProperties}>
             {data && 
             <VerticalBar 
@@ -39,7 +39,6 @@ export function ContentArea(props:any){
               activeNote={ activeNote }
               />
             }
-
           </div>
           {layout === 1 && <TextAreas 
               onExtendVerticalbar={(char:string)=>{ setVerticalBarExtended(char); }}
@@ -50,6 +49,10 @@ export function ContentArea(props:any){
               data={{ activeNote: activeNote, navbarExtended: verticalBarExtended }}/>
           }
           {layout === 3 && <TextAreas3
+              onExtendVerticalbar={(char:string)=>{ setVerticalBarExtended(char); }}
+              data={{ activeNote: activeNote, navbarExtended: verticalBarExtended }}/>
+          }
+          {layout === 4 && <TextAreas4
               onExtendVerticalbar={(char:string)=>{ setVerticalBarExtended(char); }}
               data={{ activeNote: activeNote, navbarExtended: verticalBarExtended }}/>
           }

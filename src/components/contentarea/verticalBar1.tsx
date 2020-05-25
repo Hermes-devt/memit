@@ -266,9 +266,9 @@ export function Navbar(props:any){
 const styling = {
   header: {
     backgroundColor: '#242424', 
-    color: 'white',
     fontStyle: 'italic',
     textAlign: 'left',
+    color: 'white',
     opacity: 1,
   },
 
@@ -282,11 +282,12 @@ const styling = {
   },
 
   card: {
-    padding: '8px 0px',
-    paddingLeft: 10,
     position: 'relative',
+    padding: '5px 3px',
     borderBottom: '1px solid silver',
     cursor: 'pointer',
+    fontSize: 13,
+    color: 'red',
   },
 
 }
