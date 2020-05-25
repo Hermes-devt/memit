@@ -11,6 +11,7 @@ export function TextAreas(props:any){
 
   useEffect( ()=>{
     setActiveNote( props.data.activeNote );
+    console.log('here');
   },[props])
 
   const fieldBlock = [
@@ -18,10 +19,10 @@ export function TextAreas(props:any){
     [{width: '49%'}, {width: '0%'}, {width: '49%'}], // userinput hiden.
   ]
 
-  const changeFieldView = (src: any)=>{
-    if( expandDir === '<'){ setExpandDir(">"); setFieldView( 1 );
-    }else{                  setExpandDir("<"); setFieldView(0); }
-  }
+  // const changeFieldView = (src: any)=>{
+  //   if( expandDir === '<'){ setExpandDir(">"); setFieldView( 1 );
+  //   }else{                  setExpandDir("<"); setFieldView(0); }
+  // }
 
   const onNavbarExpand = ()=>{
     let char = props.data.navbarExtended === '<' ? '>' : '<' 
@@ -62,10 +63,10 @@ export function TextAreas(props:any){
             activeNote: activeNote, 
             placeholder:"Answers", 
             name: "answers", }} />
-        <div 
+        {/* <div 
           style={{ position:'absolute', top: '45%',left: -12,borderRadius: 3, padding: '6px 2px', backgroundColor: 'black', color: 'white', cursor: 'pointer'}}
           onClick={ ()=> changeFieldView('userInput')}
-        >{expandDir}</div>
+        >{expandDir}</div> */}
       </div>
 
       </Row>

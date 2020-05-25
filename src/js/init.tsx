@@ -59,7 +59,7 @@ export function init(): UserData{
     }
   }
 
-  console.log('d', dataObj.list);
+  // console.log('d', dataObj.list);
   dataObj.list.forEach( (item:any)=> item.userInput = '');
 
   // dataObj = JSON.parse( localStorage.getItem('superbackup') || '' );

@@ -4,17 +4,20 @@ import Util from '../../js/util';
 import {save} from '../../js/storageHandling';
 import {Container, Col, Row} from 'react-bootstrap';
 import {UserData, Day} from '../../interfaces';
-import TextAreas from './textAreas';
 import TagInput from './tagInput';
+import Layout from './layout';
 
-
+import TextAreas from './textAreas1';
+import TextAreas2 from './textAreas2';
+import TextAreas3 from './textAreas3';
 
 export function ContentArea(props:any){
   const [data, setData] = useState<any>(null);
   const [dailyNotes, setDailyNotes] = useState<any>([]);
   const [verticalBarExtended, setVerticalBarExtended] = useState<string>('<');
-
   const [activeNote,setActiveNote] = useState<number>(0);
+
+  const [layout, setLayout] = useState<number>(2);
 
   useEffect( ()=>{
     let _data:UserData = props.data;
@@ -25,6 +28,7 @@ export function ContentArea(props:any){
 
   return (
     <Container fluid className="">
+        <Layout onClick={ (nr:number): void=>{ setLayout(nr); }}/>
         <Row className="no-gutter">
 
           <div className="vh-100 overflow-auto" 
@@ -37,15 +41,19 @@ export function ContentArea(props:any){
             }
 
           </div>
+          {layout === 1 && <TextAreas 
+              onExtendVerticalbar={(char:string)=>{ setVerticalBarExtended(char); }}
+              data={{ activeNote: activeNote, navbarExtended: verticalBarExtended }}/>
+          }
+          {layout === 2 && <TextAreas2
+              onExtendVerticalbar={(char:string)=>{ setVerticalBarExtended(char); }}
+              data={{ activeNote: activeNote, navbarExtended: verticalBarExtended }}/>
+          }
+          {layout === 3 && <TextAreas3
+              onExtendVerticalbar={(char:string)=>{ setVerticalBarExtended(char); }}
+              data={{ activeNote: activeNote, navbarExtended: verticalBarExtended }}/>
+          }
 
-          <TextAreas 
-            onExtendVerticalbar={(char:string)=>{ 
-              setVerticalBarExtended(char);
-            }}
-            data={{
-              activeNote: activeNote,
-              navbarExtended: verticalBarExtended
-            }}/>
         </Row>
         <TagInput  activeNote={ activeNote }/>
     </Container>
