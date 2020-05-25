@@ -6,19 +6,17 @@ import {ReactComponent as Layout2} from '../../IMG/layout2.svg';
 import {ReactComponent as Layout3} from '../../IMG/layout3.svg';
 import {ReactComponent as Layout4} from '../../IMG/layout4.svg';
 
-// and then render: <MySvgComponent style={{fill: “#fff”}} />
 interface Props{
   onClick: (nr: number)=> void,
 }
 
-export function SetLayout(props: Props):any{
+export function SetLayout({onClick}: Props):any{
   return( 
     <div style={container as CSSProperties}>
-      <div> <Layout1 onClick={ ()=>{ props.onClick(2);}} /> </div>
-      <div> <Layout2 onClick={ ()=>{ props.onClick(1);}} /> </div>
-      <div> <Layout3 onClick={ ()=>{ props.onClick(3);}} /> </div>
-      <div> <Layout4 onClick={ ()=>{ props.onClick(4);}} /> </div>
-
+      <div style={{cursor: 'pointer'}}> <Layout1 onClick={ ()=>{ onClick(2);}} /> </div>
+      <div style={{cursor: 'pointer'}}> <Layout2 onClick={ ()=>{ onClick(1);}} /> </div>
+      <div style={{cursor: 'pointer'}}> <Layout3 onClick={ ()=>{ onClick(3);}} /> </div>
+      <div style={{cursor: 'pointer'}}> <Layout4 onClick={ ()=>{ onClick(4);}} /> </div>
     </div>);
 }
 

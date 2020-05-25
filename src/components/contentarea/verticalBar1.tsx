@@ -193,7 +193,7 @@ export function Navbar(props:any){
   }
 
   return (
-    <div style={{position: 'relative'}}>
+    <div >
       { todayCards && <React.Fragment>
           <div style={{ ...styling.card, ...styling.header} as CSSProperties}>Today</div>
           <div 
@@ -278,7 +278,9 @@ const styling = {
     height: 14, 
     position: 'absolute', 
     bottom: 3, 
-    right: 0
+    right: 3,
+    backgroundColor: 'green',
+    color: 'red',
   },
 
   card: {
