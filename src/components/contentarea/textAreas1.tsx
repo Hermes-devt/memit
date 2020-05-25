@@ -19,11 +19,6 @@ export function TextAreas(props:any){
     [{width: '49%'}, {width: '0%'}, {width: '49%'}], // userinput hiden.
   ]
 
-  // const changeFieldView = (src: any)=>{
-  //   if( expandDir === '<'){ setExpandDir(">"); setFieldView( 1 );
-  //   }else{                  setExpandDir("<"); setFieldView(0); }
-  // }
-
   const onNavbarExpand = ()=>{
     let char = props.data.navbarExtended === '<' ? '>' : '<' 
     props.onExtendVerticalbar(char);
