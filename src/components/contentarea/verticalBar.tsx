@@ -7,6 +7,9 @@ import {useSelector, useDispatch} from 'react-redux';
 import {setData} from '../../store/data/action';
 import {save} from '../../js/storageHandling';
 
+import {ReactComponent as CheckboxTrue} from '../../IMG/checkTrue.svg';
+import {ReactComponent as CheckboxFalse} from '../../IMG/checkFalse.svg';
+
 export function Navbar(props:any){
   const Data:any = useSelector<any>( state=> state.data );
   const dispatch = useDispatch();
@@ -167,21 +170,44 @@ export function Navbar(props:any){
     {...styling.card, ...{backgroundColor: 'lightblue'}} as CSSProperties : {...styling.card} as CSSProperties,
 
     todaysCard: ()=> (activeCard === 0) ? 
-      {...styling.card, ...{backgroundColor: 'lightblue', borderTop: '1px solid black', textAlign: 'center', fontSize: 20,}} as CSSProperties  : 
-      {...styling.card, ...{backgroundColor: 'white', fontSize: 20, textAlign: 'center'}} as CSSProperties ,
+      {...styling.card, ...styling.active, ...{textAlign: 'center', fontSize: 18}} as CSSProperties  : 
+      {...styling.card, ...styling.passive, ...{textAlign: 'center', fontSize: 18}} as CSSProperties ,
+
+    // onMissingCards: (card:any)=>{ 
+    //   let _activeCard = list.length - 1 - activeCard;
+    //   return card.index === _activeCard ? 
+    //   {...styling.card, ...{backgroundColor: 'lightblue'}} as CSSProperties  : 
+    //   {...styling.card, ...{backgroundColor: '', color: 'black'}} as CSSProperties; },
 
     onMissingCards: (card:any)=>{ 
       let _activeCard = list.length - 1 - activeCard;
       return card.index === _activeCard ? 
-      {...styling.card, ...{backgroundColor: 'lightblue'}} as CSSProperties  : 
-      {...styling.card, ...{backgroundColor: '', color: 'black'}} as CSSProperties; },
+      {...styling.card, ...styling.active} as CSSProperties  : 
+      {...styling.card, ...styling.passive} as CSSProperties; },
 
+    // todaysCardToRepeat: (evt:any, index:number)=>{
+    //   let todaysCard = evt, _activeCard = list[activeCard];
+    //   if( todaysCard === _activeCard ) 
+    //     return {...styling.card, ...{backgroundColor: 'lightblue'}} as CSSProperties;
+    //   else 
+    //     return {...styling.card, ...{backgroundColor: '', color: 'black'}} as CSSProperties;
+    // }
+    // todaysCardToRepeat: (evt:any, index:number)=>{
+    //   let todaysCard = evt, _activeCard = list[activeCard];
+    //   if( todaysCard === _activeCard ) 
+    //     return {...styling.card, ...styling.active} as CSSProperties;
+    //   else 
+    //     return {...styling.card, ...styling.passive} as CSSProperties;
+    // }
     todaysCardToRepeat: (evt:any, index:number)=>{
       let todaysCard = evt, _activeCard = list[activeCard];
-      if( todaysCard === _activeCard ) 
-        return {...styling.card, ...{backgroundColor: 'lightblue'}} as CSSProperties;
-      else 
-        return {...styling.card, ...{backgroundColor: '', color: 'black'}} as CSSProperties;
+      return todaysCard === _activeCard ? 
+        {...styling.card, ...styling.active} as CSSProperties :
+        {...styling.card, ...styling.passive} as CSSProperties;
+      // if( todaysCard === _activeCard ) 
+      //   return {...styling.card, ...styling.active} as CSSProperties;
+      // else 
+      //   return {...styling.card, ...styling.passive} as CSSProperties;
     }
   }
 
@@ -210,6 +236,7 @@ export function Navbar(props:any){
               data-index={card.index}
               onClick={ ()=> onCard.onOneMissedCard(card) } >
               <span>{card.date} - {card.tags}</span> 
+
                 <input 
                   onClick={ (ev)=> { 
                     ev.stopPropagation(); 
@@ -219,6 +246,9 @@ export function Navbar(props:any){
                   style={styling.checkbox as CSSProperties}
                   checked={card.done}
                 />
+                {card.done && <CheckboxTrue style={{zIndex: 9999, width: '200px', height: '200px'}}/>}
+                {!card.done && <CheckboxTrue style={{zIndex: 9999, width: '200px', height: '200px'}}/>}
+                {/* {!card.done && <CheckboxFalse />} */}
             </div>)
 
           })}
@@ -279,8 +309,6 @@ const styling = {
     position: 'absolute', 
     bottom: 3, 
     right: 3,
-    backgroundColor: 'green',
-    color: 'red',
   },
 
   card: {
@@ -289,8 +317,17 @@ const styling = {
     borderBottom: '1px solid silver',
     cursor: 'pointer',
     fontSize: 13,
-    color: 'red',
   },
+
+  active: {
+    color: 'black',
+    backgroundColor: 'lightblue',
+  },
+
+  passive: {
+    color: 'black',
+    backgroundColor: 'white',
+  }
 
 }
  

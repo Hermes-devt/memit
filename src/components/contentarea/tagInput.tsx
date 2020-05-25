@@ -1,6 +1,6 @@
 
 import React, {useState, useEffect} from 'react';
-import {Container, Row, Col} from 'react-bootstrap';
+import {Container} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import {setData} from '../../store/data/action';
 import {save} from '../../js/storageHandling';

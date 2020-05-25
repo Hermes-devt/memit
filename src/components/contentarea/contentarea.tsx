@@ -1,5 +1,5 @@
 import React, {useEffect, useState, CSSProperties} from 'react';
-import VerticalBar from './verticalBar1';
+import VerticalBar from './verticalBar';
 import Util from '../../js/util';
 // import {save} from '../../js/storageHandling';
 import {Container, Row, Col} from 'react-bootstrap';
