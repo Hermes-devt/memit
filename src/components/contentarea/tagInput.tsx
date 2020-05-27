@@ -16,7 +16,7 @@ export function TagInput(props:any):any{
     let tags2 =  Data.list[props.activeNote].tags;
     if( typeof tags2 === 'string') setTags( tags2 );
     if( typeof tags2 === 'object') setTags( tags2.join(','));
-  },[Data.list[props.activeNote].tags]); //eslint-disable-line
+  },[props.activeNote]) //eslint-disable-line
 
   const saveToStorage = (evt:any)=>{
     let data = {...Data};
@@ -28,7 +28,6 @@ export function TagInput(props:any):any{
 
   return(
       <Container fluid>
-          {/* <div style={{position: 'relative', fontSize: 17, top: '-3px', left: '-20px', textAlign: 'center', padding: '4px 0px 0px 0px', width: '16%', display: 'inline-block', color: 'white', backgroundColor: '#242424'}}>Tags:</div> */}
           <Row className="no-gutters">
             <Col className='m-0 p-0 col-sm-2'>
               <div style={styling.t1}>Tags</div>
@@ -43,6 +42,7 @@ export function TagInput(props:any):any{
                 onChange={( (evt)=>{ 
                   let data = {...Data}
                   data.list[props.activeNote].tags = evt.target.value;
+                  setTags(evt.target.value);
                   dispatch( setData(data));
                 })}
               />

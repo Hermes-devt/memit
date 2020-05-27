@@ -5,6 +5,7 @@ import {createNewDay} from './createNewDay';
 import {getDaysAfter1970} from './util';
 import {getMissedCards} from './getMissedCards';
 import {UserData} from '../interfaces';
+import {cardsCounter} from '../js/questionCounter';
 
 export function init(): UserData{
   let data: string | null = localStorage.getItem("dailyNotes");
@@ -64,6 +65,9 @@ export function init(): UserData{
 
   // dataObj = JSON.parse( localStorage.getItem('superbackup') || '' );
   // localStorage.setItem('membackup', JSON.stringify(dataObj));
+
+  // console.log('dataObj', dataObj.list);
+  cardsCounter( dataObj.list)
 
   // localStorage.setItem('memBackup', JSON.stringify(data));
   // let data:any = JSON.parse( localStorage.getItem('memBackup') || "");

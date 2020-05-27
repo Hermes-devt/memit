@@ -59,10 +59,10 @@ export const Timer = ()=> {
 const container: CSSProperties = {
   display: 'block',
   position: 'absolute', 
-  right: 20,
+  right: -10,
   top: 3,
   zIndex: 1,
-  width: 55,
+  width: 80,
   overflow: 'visible',
 }
 
