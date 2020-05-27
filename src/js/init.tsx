@@ -64,5 +64,8 @@ export function init(): UserData{
 
   // dataObj = JSON.parse( localStorage.getItem('superbackup') || '' );
   // localStorage.setItem('membackup', JSON.stringify(dataObj));
+
+  // localStorage.setItem('memBackup', JSON.stringify(data));
+  // let data:any = JSON.parse( localStorage.getItem('memBackup') || "");
   return dataObj;
 }

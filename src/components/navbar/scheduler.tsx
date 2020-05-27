@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {CSSProperties} from 'react';
 import {useState} from 'react';
 import {Container} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
@@ -30,20 +30,34 @@ export const Scheduler = ()=> {
   }
 
   return(
-    <Container fluid > 
-      <div className='text-center'>Scheduler - Days from now</div>
-
+    <Container fluid style={container}> 
+      <div className='text-center' style={{color: 'white'}}>Scheduler - Days from now</div>
       <div className='d-flex justify-content-center'>
       {schedule && schedule.map( (item:number, index:number)=>{ return(
         <input key={index} type="text" 
           value={item === 0 ? 0 : item}
-          style={{ width: '40px', textAlign: 'center', cursor: 'pointer', marginTop: '5px', marginLeft: '5px'}} 
+          style={inputBox}
           onChange={(evt)=>saveChanges(index, evt)}
         />
       )})}
       </div>
     </Container>
   )
+}
+
+const container: CSSProperties= {
+  color: 'black',
+  marginTop: 0,
+}
+
+const inputBox: CSSProperties = {
+  width: 30,
+  textAlign: 'center',
+  cursor: 'pointer',
+  marginTop: 5,
+  marginLeft: 5,
+  fontSize: 9,
+
 }
 
 export default Scheduler;

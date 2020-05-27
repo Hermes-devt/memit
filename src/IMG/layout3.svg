@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="15px" height="15px" version="1.1" viewBox="0 0 139.58 111.94" xmlns="http://www.w3.org/2000/svg" xmlns="http://creativecommons.org/ns#" xmlns="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
  <g transform="translate(-22.347 -27.766)">
-  <path d="m92.135 29.266h68.288v108.94h-68.288zm-68.288 0h68.288v108.94h-68.288z" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" style="paint-order:stroke fill markers"/>
+  <path d="m92.135 29.266h68.288v108.94h-68.288zm-68.288 0h68.288v108.94h-68.288z" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" style="paint-order:stroke fill markers"/>
  </g>
 </svg>

@@ -15,12 +15,12 @@ export const Timer = ()=> {
 
     if( newRunState === 'run'){
       clearInterval(intervalRef.current);
-      intervalRef.current = setInterval( ()=>{ setTimer(minutes => minutes + 1 ); }, 1000); 
+      intervalRef.current = setInterval( ()=>{ setTimer(minutes => minutes + 1 ); }, 60000); 
       setTimerState('running');
 
     } else if( newRunState === 'stop'){
       clearInterval(intervalRef.current);
-      setTimer(minutes=>0);
+      setTimer(0);
       setTimerState('stopped');
 
     } else if( newRunState === 'pause'){
@@ -31,24 +31,17 @@ export const Timer = ()=> {
 
   const displayButtons = ()=>{
 
-    if( timerState === 'stopped'){
-      return ( 
-        <span>
-          <div className='text-center' style={{...buttonStyle, ...{marginLeft: 0, width: 65, textAlign: 'center'}}} onClick={ ()=> handleRun('run')}>&gt;</div>
-        </span>);
-    }
-
     if( timerState === 'running'){
-      return( <span>
-        <div className='text-center ml-0' style={buttonStyle} onClick={ ()=> handleRun('pause') }>||</div>
-        <div className='text-center ml-2' style={buttonStyle} onClick={ ()=> handleRun('stop') }>#</div>
+      return( <span style={{display: 'inline-block', width: 20, backgroundColor: '', margin: 0, padding: 0, verticalAlign: 'top'}}>
+        <span className='text-center m-0 p-0' style={buttonStyle} onClick={ ()=> handleRun('pause') }>||</span>
+        <span className='text-center mt-1 ml-0 p-0' style={buttonStyle} onClick={ ()=> handleRun('stop') }>#</span>
       </span>)
     }
 
-    if( timerState === 'paused'){
-      return(<span>
-        <div className="text-center ml-0" style={buttonStyle} onClick={ ()=> handleRun('run')}>&gt;</div>
-        <div className='text-center ml-2' style={buttonStyle} tabIndex={1} onClick={ ()=> handleRun('stop') }>#</div>
+    if( timerState === 'paused' || timerState === 'stopped'){
+      return( <span style={{display: 'inline-block', width: 20, backgroundColor: '', margin: 0, padding: 0, verticalAlign: 'top'}}>
+        <div className="text-center m-0 p-0" style={buttonStyle as CSSProperties} onClick={ ()=> handleRun('run')}>&gt;</div>
+        <div className='text-center mt-1 ml-0 p-0' style={buttonStyle as CSSProperties} tabIndex={1} onClick={ ()=> handleRun('stop') }>#</div>
       </span>)
     }
   }
@@ -57,7 +50,8 @@ export const Timer = ()=> {
   <div style={container}>
     <div>
       {displayButtons()}
-      <span className="ml-3">Minutes: {minutes}</span>
+      <span className="ml-2 mr-1">{minutes}</span>
+      <span style={{fontSize: 8}}>min</span>
     </div>
   </div>)
 }
@@ -65,23 +59,23 @@ export const Timer = ()=> {
 const container: CSSProperties = {
   display: 'block',
   position: 'absolute', 
-  right: 50,
-  top: 0,
-  padding: 10,
-  zIndex: 999,
-  width: 200,
+  right: 20,
+  top: 3,
+  zIndex: 1,
+  width: 55,
+  overflow: 'visible',
 }
 
 const buttonStyle={
-  width:30,
-  fontSize: 10,
-  // backgroundColor: 'orange',
-  padding: '1px 0px',
-  color: 'black',
-  display: 'inline-block',
+  width: '100%',
+  display: 'block',
+  margin: 5,
+  fontSize: 6,
+  color: 'white', border: '1px solid silver',
   cursor: 'pointer',
-  border: '1px solid black',
+  padding: 2,
   borderRadius: 3,
+  borderBox: 'box-sizing',
 }
 
 export default Timer;

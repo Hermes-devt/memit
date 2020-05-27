@@ -10,6 +10,7 @@ import {save} from '../../js/storageHandling';
 import {ReactComponent as CheckboxTrue} from '../../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from '../../IMG/checkFalse.svg';
 
+
 export function Navbar(props:any){
   const Data:any = useSelector<any>( state=> state.data );
   const dispatch = useDispatch();
@@ -167,7 +168,7 @@ export function Navbar(props:any){
 
   const styles = {
     cardStyle: (index:number) => index === activeCard ? 
-    {...styling.card, ...{backgroundColor: 'lightblue'}} as CSSProperties : {...styling.card} as CSSProperties,
+    {...styling.card, ...styling.active} as CSSProperties : {...styling.card} as CSSProperties,
 
     todaysCard: ()=> (activeCard === 0) ? 
       {...styling.card, ...styling.active, ...{textAlign: 'center', fontSize: 18}} as CSSProperties  : 
@@ -299,8 +300,8 @@ const styling = {
   },
 
   active: {
-    color: 'black',
-    backgroundColor: 'lightblue',
+    // color: 'black', backgroundColor: 'lightblue',
+    color: 'white', backgroundColor: '#242424',
   },
 
   passive: {

@@ -23,7 +23,8 @@ export function SetLayout({onClick}: Props):any{
 const container = {
   position:'absolute', 
   zIndex: 2,
-  right: 12,
+  right: 2,
+  borderBottom: '1px solid silver',
 }
 
 export default SetLayout;
