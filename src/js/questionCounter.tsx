@@ -6,7 +6,7 @@ export function cardsCounter(cards:any): number{
   for(let i=0; i < cards.length; i++){
     accumulator += cardCounter( cards[i]);
   }
-  return 5;
+  return accumulator;
 }
 
 export function cardCounter( card:any ): number {

@@ -66,73 +66,7 @@ export function DayToRepeat(props: any){
       </Row>
     </Container>
   )
-
 }
-
-// class DayToRepeat extends Component<Props, {}> {
-//   state={
-//     active: 1,
-//     elements: ['', '', ''],
-//     dayFrom: -1,
-//   }
-
-//   componentDidMount(){
-//     this.setElementFromStartValue(this.state.dayFrom);
-//   }
-
-//   setElementFromStartValue(value:any){
-//     let days = getDaysAfter1970();
-//     let arr = [value, value+1, value+2];
-//     let elements = arr.map( (day, index)=> day = getDayMonthFromInt(days + day));
-//     const dayFrom = value;
-//     this.setState({elements, dayFrom}, ()=>{ this.toParent(); });
-//   }
-
-
-//   shift = (dir:number)=>{
-//     let active = this.state.active;
-//     let dayFrom = this.state.dayFrom;
-
-//     if( active === 0 && dir < 0){
-//       this.setElementFromStartValue(dayFrom-1); return; }
-
-//     if( active === 2 && dir > 0){
-//       this.setElementFromStartValue(dayFrom+1); return; }
-
-//     active += dir;
-//     this.setState({active}, ()=>{ this.toParent(); });
-//   }
-
-//   toParent = ()=>{
-//     const {dayFrom, active} = this.state;
-//     let days = getDaysAfter1970();
-//     days += (dayFrom + active);
-//     this.props.onClick( days );
-//   }
-
-
-//   render(){
-//     return(
-//       <Container fluid style={{backgroundColor: '', paddingBottom: 5, paddingTop: 5, borderBottom: '1px solid black'}}>
-//         <Row className="text-center">
-//           <Col onClick={ ()=>{ this.shift(-1); }} style={styling.sBlock} >{"<"}</Col>
-
-//           { this.state.elements.map( (el, index)=>{
-//             let style = index === this.state.active ? {...styling.sBlock, ...styling.active} : styling.sBlock;
-//             let classStr = index === this.state.active ? '' : '';
-//             return <Col key={index}
-//               style={style} 
-//               className={classStr}
-//               onClick={ ()=>{ const active = index; this.setState({active}, ()=> this.toParent() ); }}
-//               >{el}</Col>
-//           })}
-//           <Col style={styling.sBlock} onClick={ ()=>{ this.shift(1); }} >{">"}</Col>
-//         </Row>
-//       </Container>
-//     )
-//   }
-// }
-
 
 const styling = {
   sBlock: {

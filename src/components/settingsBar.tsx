@@ -13,13 +13,19 @@ export function SettingsBar(props:any):any{
   <div style={styles.container as CSSProperties}>
     <Timer />
 
-    <span 
-      style={styles.menu as CSSProperties}
-      onClick={ ()=>{ props.menuClick() }}
-      > <Menu />
-      {props.displayVerticalBar && <span style={{marginLeft: 10}}>Hide menu</span>}
-      {!props.displayVerticalBar && <span style={{marginLeft: 10}}>Display menu</span> }
+    {/* Makes the menu unclickable and make it look transparant. */}
+    {props.scheduleOn && <div style={styles.hideIt as CSSProperties}></div> }
+
+    <span style={styles.menu as CSSProperties} onClick={ ()=>{ props.menuClick() }} > 
+      <Menu />
+      {props.displayVerticalBar && <span style={{ paddingLeft: 10,}}>Hide menu</span>}
+      {!props.displayVerticalBar && <span style={{paddingLeft: 10,}}>Display menu</span> }
     </span>
+
+
+    <span style={{...styles.schedule, ...{}}} onClick={ ()=>props.onSchedule( false ) }>Home</span>
+    <span style={styles.schedule} onClick={ ()=>props.onSchedule( true ) }>Schedule</span>
+
     <div style={styles.layoutContainer as CSSProperties}>
       <span style={ styles.layouts} onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>
       <span style={ styles.layouts} onClick={ ()=> props.onClick(1)}> <Layout2 /> </span>
@@ -31,12 +37,31 @@ export function SettingsBar(props:any):any{
 
 
 const styles = {
-  menu: {
-    position: 'relative',
-    top: 3,
-    left: 10,
-    cursor: 'pointer',
+  hideIt:{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 130,
+    height: '100%',
+    backgroundColor: '#242424',
+    opacity: 0.8,
   },
+
+  menu: {
+    display: 'inline-block',
+    marginLeft: 10,
+    width: 125,
+    cursor: 'pointer',
+    borderRight: '1px solid silver',
+  },
+
+
+  schedule: {
+    display: 'inline-block',
+    position: 'relative', 
+    cursor: 'pointer',
+    padding: '3px 5px 2px 10px',
+  } as CSSProperties,
 
   container: {
     position: 'relative',

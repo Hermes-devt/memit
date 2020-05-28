@@ -9,6 +9,7 @@ import {save} from '../../js/storageHandling';
 
 import {ReactComponent as CheckboxTrue} from '../../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from '../../IMG/checkFalse.svg';
+import { cardsCounter } from '../../js/questionCounter';
 
 
 export function Navbar(props:any){
@@ -24,9 +25,10 @@ export function Navbar(props:any){
 
   const [activeDay, setActiveDay] = useState<number>( getDaysAfter1970())
 
-
   // const todaysDayInNumber:number = getDaysAfter1970();
+  const [todaysNumberOfQuestion, setTodaysNumberOfQuestion] = useState<number>(0);
 
+  // let todaysNumberOfQuestions = 0;
   useEffect( ()=>{
     let data = Data;
     if( !data ) return;
@@ -35,6 +37,8 @@ export function Navbar(props:any){
     list.reverse();
 
     const cardsMissed = setMissedCards(data);
+    // todaysNumberOfQuestions = cardsCounter( todayCards );
+    setTodaysNumberOfQuestion( cardsCounter( todayCards ));
 
     setTodayCards( todayCards );
     setList(list);
@@ -46,7 +50,6 @@ export function Navbar(props:any){
 
   useEffect( ()=>{
     setActiveCard( Data.list.length - 1 - props.activeNote )
-    // setCheckboxes( Data.dailyCards); //dailyCards is checkboxes
   }, [props.activeNote, Data.list.length])
 
   const setMissedCards = (data:any): any=>{
@@ -230,7 +233,7 @@ export function Navbar(props:any){
 
           <div 
             style={{ ...styling.card, ...styling.header} as CSSProperties}
-            >Notes to repeat</div>
+            >Notes to repeat - ({todaysNumberOfQuestion})</div>
           <DayToRepeat onClick={ changeDayOfRepeat}/>
 
           { todayCards.map( (card:any, index:number)=>{ 
