@@ -73,7 +73,7 @@ const styling = {
     cursor: 'pointer',
     width: '20%',
     padding: 0,
-    fontSize: 15,
+    fontSize: 11,
   } as CSSProperties,
 
   active: {

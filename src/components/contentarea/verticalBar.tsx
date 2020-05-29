@@ -16,19 +16,19 @@ export function Navbar(props:any){
   const Data:any = useSelector<any>( state=> state.data );
   const dispatch = useDispatch();
 
-  const [cardsMissed, setCardsMissed] = useState<any>([]);
-  const [checkBoxes, setCheckboxes] = useState<any>([]);
-  const [todayCards, setTodayCards] = useState<any>([]);
-  const [list, setList] = useState<any>(null);
   const [data, setData2] = useState<any>({});
+  const [cardsMissed, setCardsMissed] = useState<any>([]);
+
+  const [todayCards, setTodayCards] = useState<any>([]);
+  const [checkBoxes, setCheckboxes] = useState<any>([]);
+
+  const [list, setList] = useState<any>(null);
   const [activeCard, setActiveCard] = useState<number>(0);
 
   const [activeDay, setActiveDay] = useState<number>( getDaysAfter1970())
 
-  // const todaysDayInNumber:number = getDaysAfter1970();
   const [todaysNumberOfQuestion, setTodaysNumberOfQuestion] = useState<number>(0);
 
-  // let todaysNumberOfQuestions = 0;
   useEffect( ()=>{
     let data = Data;
     if( !data ) return;
@@ -37,13 +37,16 @@ export function Navbar(props:any){
     list.reverse();
 
     const cardsMissed = setMissedCards(data);
-    // todaysNumberOfQuestions = cardsCounter( todayCards );
+
     setTodaysNumberOfQuestion( cardsCounter( todayCards ));
 
-    setTodayCards( todayCards );
     setList(list);
     setData2(data);
-    setCheckboxes( Data.dailyCards ); //dailyCards is checkboxes
+
+    //set the daily cards and its checkboxes
+    setTodayCards( todayCards ); setCheckboxes( Data.dailyCards ); 
+
+    console.log('cardsMissed', cardsMissed);
     setCardsMissed( cardsMissed);
   },[Data]) // eslint-disable-line
 
@@ -113,34 +116,33 @@ export function Navbar(props:any){
       }
     },
 
-    onOneMissedCard: (card:any)=>{
-      let len = list.length - 1;
-      let _active = len - card.index;
-      let cardMissed =  cardsMissed;
+    onOneMissedCard: (card:any, setDone: boolean | undefined = undefined)=>{
+      props.onClick( card.index);
+      let cardMissed = cardsMissed;
+      cardMissed.forEach( (m:any) =>{ if( m.id === card.id ){ m.done = setDone; } })
 
-      cardMissed.forEach( (m:any) =>{ if( m.id === card.id ){ m.done = true; } })
-      setActiveCard(_active); 
+      setCardsMissed( cardMissed );
 
-      //props.onClick( card.index );
-
-      let propsMissed = props.data.missedCards;
-      propsMissed.forEach( (c:any)=>{ if(c.ID === card.id ){ c.done = true; } })
-      //props.onCheckbox2(propsMissed);
-      }
+      
+      let nData = Data;
+      let missed = cardMissed.map( (item:any)=> { return {ID: item.id, done: item.done}});
+      nData.missedCards = [...missed];
+      dispatch( setData(nData) );
+      save( nData );
+    }
   }
-
 
   const onCheckbox = {
     missedCards: (card:any)=>{
-      let cardMissed = cardsMissed;
-      cardMissed.forEach( (m:any) =>{ if( m.id === card.id ){ m.done = false; } })
-      setCardsMissed(cardMissed);
-      // this.setState({cardMissed});
+      let cardMissed =  [...cardsMissed];
+      cardMissed.forEach( (m:any) =>{ if( m.id === card.id ){ m.done = !m.done; } })
 
-      
-      let propsMissed = props.data.missedCards;
-      propsMissed.forEach ( (c:any)=>{ if(c.ID === card.id ){ c.done = false; } })
-      props.onCheckbox2(propsMissed);
+      setCardsMissed( cardMissed );
+      let nData = Data;
+      let missed = cardMissed.map( (item:any)=> { return {ID: item.id, done: item.done}});
+      nData.missedCards = [...missed];
+      dispatch( setData(nData) );
+      save( nData );
     },
 
     todaysCards: (index:any, bool:any)=>{
@@ -215,10 +217,17 @@ export function Navbar(props:any){
             <div key={index} 
               style={styles.onMissingCards(card)}
               data-index={card.index}
-              onClick={ ()=> onCard.onOneMissedCard(card) } >
+              onClick={ ()=> onCard.onOneMissedCard(card, true) } >
               <span>{card.date} - {card.tags}</span> 
 
-                <input 
+                <div 
+                // onClick={ (ev)=> { ev.stopPropagation(); onCard.onOneMissedCard(card, !card.done) }}
+                onClick={ (ev)=> { ev.stopPropagation(); onCheckbox.missedCards(card) }}
+                style={styling.checkbox as CSSProperties} > 
+                  {card.done && <CheckboxTrue />}
+                  {!card.done && <CheckboxFalse />}
+                </div>
+                {/* <input 
                   onClick={ (ev)=> { 
                     ev.stopPropagation(); 
                     onCheckbox.missedCards(card) }}
@@ -226,7 +235,7 @@ export function Navbar(props:any){
                   type='checkbox' 
                   style={styling.checkbox as CSSProperties}
                   checked={card.done}
-                />
+                /> */}
             </div>)
 
           })}
@@ -246,7 +255,8 @@ export function Navbar(props:any){
 
 
               { activeDay === getDaysAfter1970() && <span>
-                {checkBoxes[index].done && <div 
+                {checkBoxes[index].done && 
+                <div 
                   onClick={ ()=> { onCheckbox.todaysCards(index, checkBoxes[index].done)}}
                   style={styling.checkbox as CSSProperties}
                   ><CheckboxTrue /></div> }

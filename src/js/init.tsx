@@ -9,15 +9,18 @@ import {cardsCounter} from '../js/questionCounter';
 
 export function init(): UserData{
   let data: string | null = localStorage.getItem("dailyNotes");
-
+// 
   
 
   let dataObj = data ? JSON.parse(data) : createUserAccount();
+  // let dataObj = JSON.parse( localStorage.getItem('memBackup') || "");
+  // dataObj = JSON.parse(dataObj);
   const todaysDay: number = getDaysAfter1970();
 
   // console.log('len', data && (data.length * 8) / 1000, 'kb');
   // console.log('data list length', dataObj.list.length);
-  // dataObj.list = JSON.parse( localStorage.getItem('superbackup') || '');
+
+  // console.log( dataObj );
   if( dateHandling.ifNewDay(dataObj)){
     dataObj.list.push( createNewDay() )
 
@@ -70,6 +73,5 @@ export function init(): UserData{
   cardsCounter( dataObj.list)
 
   // localStorage.setItem('memBackup', JSON.stringify(data));
-  // let data:any = JSON.parse( localStorage.getItem('memBackup') || "");
   return dataObj;
 }
