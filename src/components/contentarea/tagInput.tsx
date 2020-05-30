@@ -29,16 +29,14 @@ export function TagInput(props:any):any{
   return(
       <Container fluid>
           <Row className="no-gutters">
-            <Col className='m-0 p-0 col-sm-2'>
-              <div style={styling.t1}>Tags</div>
-            </Col>
             <Col className="m-0 p-0 col-sm-10">
               <input 
                 style={styling.t2}
                 type="text" 
                 value={tags}
                 onBlur={ saveToStorage }
-                placeholder="Set some basic tags for this day for to find later on."
+                placeholder="Card Tags"
+                // placeholder="Set some basic tags for this day for to find later on."
                 onChange={( (evt)=>{ 
                   let data = {...Data}
                   data.list[props.activeNote].tags = evt.target.value;
@@ -47,6 +45,7 @@ export function TagInput(props:any):any{
                 })}
               />
             </Col>
+            <Col className='m-0 p-0 col-sm-2'> <div style={styling.t1}>Tags</div> </Col>
 
           </Row>
     </Container>)
@@ -57,19 +56,20 @@ const styling = {
     position: 'relative', 
     fontSize: 18,
     fontWeight: 'bold',
-    top: '4px',
     height: '100%',
     textAlign: 'center',
     color: 'white',
     backgroundColor: '#242424',
-    // borderTop: '1px solid silver',
-    boxShadow: '-2px -2px 10px black',
+    paddingTop: 3,
+    // if i decide to set it on the bottom of the content area
+    boxShadow: '-3px 0px 10px black', 
+    // top: '4px',
   } as CSSProperties,
 
   t2: {
     display: 'inline-block',
     fontSize: 14,
-    padding: '4px 30px',
+    padding: '4px 15px',
     width: '100%',
     color: 'black',
   }

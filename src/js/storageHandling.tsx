@@ -1,6 +1,6 @@
 
 import {UserData} from '../interfaces';
-import { getMissedCards } from './getMissedCards';
+// import { getMissedCards } from './getMissedCards';
 
 export function save(data: UserData){
   const obj: UserData = {

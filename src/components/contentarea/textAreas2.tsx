@@ -47,8 +47,6 @@ export function TextAreas2(props:any){
                 name: "answers", }} />
           </div>
         </Col>
-
-
       </Row>
       </Container>
   )

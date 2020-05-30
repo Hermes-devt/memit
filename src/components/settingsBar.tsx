@@ -14,7 +14,7 @@ export function SettingsBar(props:any):any{
     <Timer />
 
     {/* Makes the menu unclickable and make it look transparant. */}
-    {props.scheduleOn && <div style={styles.hideIt as CSSProperties}></div> }
+    {props.windowDisplay !== 1 && <div style={styles.hideIt as CSSProperties}></div> }
 
     <span style={styles.menu as CSSProperties} onClick={ ()=>{ props.menuClick() }} > 
       <Menu />
@@ -23,8 +23,9 @@ export function SettingsBar(props:any):any{
     </span>
 
 
-    <span style={{...styles.schedule, ...{}}} onClick={ ()=>props.onSchedule( false ) }>Home</span>
-    <span style={styles.schedule} onClick={ ()=>props.onSchedule( true ) }>Schedule</span>
+    <span style={{...styles.schedule, ...{}}} onClick={ ()=>props.onDisplayWindow( 1 ) }>Home</span>
+    <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 2 ) }>Schedule</span>
+    <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 3 ) }>Search</span>
 
     <div style={styles.layoutContainer as CSSProperties}>
       <span style={ styles.layouts} onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>

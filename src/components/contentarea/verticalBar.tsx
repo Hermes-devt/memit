@@ -10,6 +10,7 @@ import {save} from '../../js/storageHandling';
 import {ReactComponent as CheckboxTrue} from '../../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from '../../IMG/checkFalse.svg';
 import { cardsCounter } from '../../js/questionCounter';
+import {Container} from 'react-bootstrap';
 
 
 export function Navbar(props:any){
@@ -37,16 +38,13 @@ export function Navbar(props:any){
     list.reverse();
 
     const cardsMissed = setMissedCards(data);
-
     setTodaysNumberOfQuestion( cardsCounter( todayCards ));
 
     setList(list);
     setData2(data);
 
-    //set the daily cards and its checkboxes
     setTodayCards( todayCards ); setCheckboxes( Data.dailyCards ); 
 
-    console.log('cardsMissed', cardsMissed);
     setCardsMissed( cardsMissed);
   },[Data]) // eslint-disable-line
 
@@ -202,7 +200,8 @@ export function Navbar(props:any){
   }
 
   return (
-    <div >
+    <Container fluid className="m-0 p-0 vh-100">
+    <div>
       { todayCards && <React.Fragment>
           <div style={{ ...styling.card, ...styling.header} as CSSProperties}>Today</div>
           <div 
@@ -227,15 +226,6 @@ export function Navbar(props:any){
                   {card.done && <CheckboxTrue />}
                   {!card.done && <CheckboxFalse />}
                 </div>
-                {/* <input 
-                  onClick={ (ev)=> { 
-                    ev.stopPropagation(); 
-                    onCheckbox.missedCards(card) }}
-                  onChange={ ()=>{}}
-                  type='checkbox' 
-                  style={styling.checkbox as CSSProperties}
-                  checked={card.done}
-                /> */}
             </div>)
 
           })}
@@ -283,6 +273,7 @@ export function Navbar(props:any){
       )})}
       </React.Fragment> }
     </div>
+    </Container>
   );
 }
 
@@ -313,7 +304,6 @@ const styling = {
   },
 
   active: {
-    // color: 'black', backgroundColor: 'lightblue',
     color: 'white', backgroundColor: '#242424',
   },
 
