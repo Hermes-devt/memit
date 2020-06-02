@@ -1,4 +1,4 @@
-import React, { useEffect, CSSProperties} from 'react';
+import React, { useEffect} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 import Footer from './components/footer/footer';
 import Navbar from './components/navbar/';

@@ -24,8 +24,10 @@ export function Schedule(props:any):any{
   }
 
   return(
-    <Container fluid className='m-0 p-0' style={ container}>
+    <Container fluid className='m-0 p-0' style={{ backgroundColor: 'silver'}}>
       {arr.map( (item, index)=>{
+        if( item.totalNrOfQuestions === 0 ) return <span key={index}></span> 
+
         return(
           <div key={index} className='pt-0- m-0'>
             <div style={{backgroundColor:'black', color: 'white', padding: '4px 4px'}}>
@@ -46,10 +48,6 @@ export function Schedule(props:any):any{
       })}
     </Container>
   )
-}
-
-const container = {
-  backgroundColor: 'silver',
 }
 
 

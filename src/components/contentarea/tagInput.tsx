@@ -36,7 +36,6 @@ export function TagInput(props:any):any{
                 value={tags}
                 onBlur={ saveToStorage }
                 placeholder="Card Tags"
-                // placeholder="Set some basic tags for this day for to find later on."
                 onChange={( (evt)=>{ 
                   let data = {...Data}
                   data.list[props.activeNote].tags = evt.target.value;
@@ -61,7 +60,6 @@ const styling = {
     color: 'white',
     backgroundColor: '#242424',
     paddingTop: 3,
-    // if i decide to set it on the bottom of the content area
     boxShadow: '-3px 0px 10px black', 
     // top: '4px',
   } as CSSProperties,

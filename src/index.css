@@ -43,3 +43,8 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+
+textarea {
+  /* outline-color: #719ECE; */
+  outline-color: rgb(13, 85, 180);
+}

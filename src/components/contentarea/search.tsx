@@ -9,12 +9,10 @@ export const Search = ()=> {
   const [stringFind, setStringFind] = useState<string>('');
   const [showBlocks, setShowBlocks] = useState<any>([]);
 
-  const inputRef = useRef<any>();
-  const inputRef2 = useRef<any>();
   let data:any = useSelector( state=> state);
 
-  const elementsRef = useRef<any>(data.data.list.map(() => createRef()));
-  const elementsRef2 = useRef<any>(data.data.list.map(() => createRef()));
+  const questionTextAreas = useRef<any>(data.data.list.map(() => createRef()));
+  const answerTextAreas = useRef<any>(data.data.list.map(() => createRef()));
 
   data.data.list.forEach( (item:any) =>{
     item.answers = item.answers.trim(); item.questions = item.questions.trim();
@@ -22,27 +20,49 @@ export const Search = ()=> {
 
   useEffect( ()=>{
     let tagsObj = [];
-    for(let i=0, len:number=data.data.list.length; i<len; i++){
-      let tagStr = "";
-      if(typeof data.data.list[i].tags === 'object') tagStr = data.data.list[i].tags.join(' ');
-      else                                           tagStr = data.data.list[i].tags;
+    let tagArr = (tags || "").split(/[,]/);
+    const {list} = data.data;
 
-      const obj = tagStr.includes(tags) ? {display: 'block'} : {display: 'none'};
-      tagsObj.push(obj)
+    for(let i=0, len:number= list.length; i<len; i++){
+      let tagStr: string = typeof list[i].tags === 'object' ? list[i].tags.join(' ') : list[i].tags;
+
+      let includes = false;
+      for(let y=0, len=tagArr.length; y<len; y++){
+        if( tagArr[y].length === 0 || tagArr[y] === ' ') continue;
+
+        if( tagStr.trim().toLowerCase().includes(tagArr[y].toLowerCase())){
+          includes = true; break; }
+      }
+      tagsObj.push( includes ? {display: 'block'} : {display: 'none'});
     }
+
     setShowBlocks( tagsObj );
   }, [tags]) //eslint-disable-line
 
   useEffect( ()=>{
+    if( stringFind.length === 0 || stringFind === ' ') return;
+
+    const strArr = stringFind.split(/,/);
+    console.log('str', strArr);
+
+
     let tagsObj = [];
-    for(let i=0, len:number=data.data.list.length; i<len; i++){
-      const obj = 
-        data.data.list[i].questions.includes(stringFind) || 
-        data.data.list[i].answers.includes(stringFind) ? 
-        {display: 'block'} : {display: 'none'};
-      tagsObj.push(obj)
+    const {list} = data.data;
+
+    for(let i=0, len:number=list.length; i<len; i++){
+
+      let includes = false;
+      for(let y=0, len=strArr.length; y<len; y++){
+        if( strArr[y].length === 0 || strArr[y] === ' ') continue;
+        if( list[i].questions.includes(strArr[y]) || list[i].answers.includes(strArr[y])){
+          includes = true; break; }
+      }
+
+      tagsObj.push( includes ? {display: 'block'} : {display: 'none'});
+
     }
     setShowBlocks( tagsObj);
+    
 
   }, [stringFind]) //eslint-disable-line
 
@@ -50,14 +70,15 @@ export const Search = ()=> {
   useEffect( ()=>{
     setShowBlocks( ()=>data.data.list.map( ()=>{ return{display: 'block'}}) )
 
-    for( let i=0, len=elementsRef.current.length; i<len; i++){
-      let questionHeight = elementsRef.current[i].current.scrollHeight;
-      let answerHeight = elementsRef2.current[i].current.scrollHeight;
+    for( let i=0, len=questionTextAreas.current.length; i<len; i++){
+      let questionHeight = questionTextAreas.current[i].current.scrollHeight;
+      let answerHeight = answerTextAreas.current[i].current.scrollHeight;
 
       let height = (questionHeight > answerHeight ? questionHeight : answerHeight) + 5 + 'px';
-      elementsRef.current[i].current.style.height = height;
-      elementsRef2.current[i].current.style.height = height;
+      questionTextAreas.current[i].current.style.height = height;
+      answerTextAreas.current[i].current.style.height = height;
     }
+
   }, []) //eslint-disable-line
 
   return(
@@ -66,8 +87,6 @@ export const Search = ()=> {
       <input 
         placeholder="Sort documents based on tags"
         style={{width: '100%'}}
-        ref={inputRef}
-
         value={ tags }
         onChange={ (evt)=>{ setTags(evt.target.value) }}
       />
@@ -75,15 +94,11 @@ export const Search = ()=> {
       <input 
         placeholder="Sort documents after specific keywords"
         style={{width: '100%', marginTop: 20}}
-        ref={inputRef2}
         value={stringFind}
         onChange={ (evt)=>{ setStringFind(evt.target.value)}}
       />
 
-
       {data.data.list.map( (item:any, index:number)=>{
-        // let questionRows = ((item.questions || "").match( /\r\n|\r|\n/g) || []).length;
-        // let answerRows = ((item.answers|| "").match( /\r\n|\r|\n/g) || []).length;
         return(
           <div key={index} style={{...{verticalAlign: 'top'}, ...showBlocks[index] }}>
 
@@ -95,13 +110,13 @@ export const Search = ()=> {
               readOnly
               style={{width: '50%'}}
               value={item.questions}
-              ref={elementsRef.current[index]}
+              ref={questionTextAreas.current[index]}
             />
             <textarea
               style={{width: '50%', verticalAlign: 'top'}}
               readOnly
               onChange={ ()=>{}}
-              ref={elementsRef2.current[index]}
+              ref={answerTextAreas.current[index]}
               value={item.answers}
             />
           </div>
