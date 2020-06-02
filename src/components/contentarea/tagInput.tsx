@@ -13,9 +13,10 @@ export function TagInput(props:any):any{
 
   
   useEffect( ()=>{
-    let tags2 =  Data.list[props.activeNote].tags;
-    if( typeof tags2 === 'string') setTags( tags2 );
-    if( typeof tags2 === 'object') setTags( tags2.join(','));
+    // let tags2 =  Data.list[props.activeNote].tags;
+
+    // if( typeof tags2 === 'string') setTags( tags2 );
+    // if( typeof tags2 === 'object') setTags( tags2.join(','));
   },[props.activeNote]) //eslint-disable-line
 
   const saveToStorage = (evt:any)=>{

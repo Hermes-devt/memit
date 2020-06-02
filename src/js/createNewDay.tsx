@@ -7,7 +7,6 @@ export function createNewDay(): Day{
     questions: '',
     answers: '',
     tags: [],
-    creationDate: DateHandling.createDate(),
     onDay: DateHandling.getDaysAfter1970(),
   };
   return newDay;

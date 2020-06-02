@@ -9,18 +9,11 @@ import {cardsCounter} from '../js/questionCounter';
 
 export function init(): UserData{
   let data: string | null = localStorage.getItem("dailyNotes");
-// 
-  
-
   let dataObj = data ? JSON.parse(data) : createUserAccount();
-  // let dataObj = JSON.parse( localStorage.getItem('memBackup') || "");
-  // dataObj = JSON.parse(dataObj);
+  // let dataObj = JSON.parse( localStorage.getItem('memBackup') || ""); dataObj = JSON.parse(dataObj);
   const todaysDay: number = getDaysAfter1970();
+  // localStorage.setItem('membackup', JSON.stringify(dataObj));
 
-  // console.log('len', data && (data.length * 8) / 1000, 'kb');
-  // console.log('data list length', dataObj.list.length);
-
-  // console.log( dataObj );
   if( dateHandling.ifNewDay(dataObj)){
     dataObj.list.push( createNewDay() )
 
@@ -63,9 +56,11 @@ export function init(): UserData{
     }
   }
 
-  // localStorage.setItem('membackup', JSON.stringify(dataObj));
 
   // console.log('dataObj', dataObj.list);
+  // console.log('len', data && (data.length * 8) / 1000, 'kb');
+  // console.log('Number of inserted days', dataObj.list.length);
+
   cardsCounter( dataObj.list)
 
   return dataObj;

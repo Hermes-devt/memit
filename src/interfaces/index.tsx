@@ -3,7 +3,7 @@ export interface Day {
   questions: string,
   answers: string,
   tags: string[],
-  creationDate: string,
+  creationDate?: string,
   onDay: number,
 }
 

@@ -14,7 +14,7 @@ export function getDaysAfter1970(): number{
   return daysAfter;
 }
 
-export function getDayMonthFromInt(fromDay:number){
+export function getDayMonthFromInt(fromDay:number): string{
   let today:number = getDaysAfter1970();
   let date: Date = new Date();
   let diff = today - fromDay;
@@ -41,6 +41,7 @@ export default {
   createDate,
   getDaysAfter1970,
   ifNewDay,
+  getDayMonthFromInt,
 }
 
 

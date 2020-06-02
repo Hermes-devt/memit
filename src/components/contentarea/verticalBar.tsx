@@ -6,6 +6,8 @@ import DayToRepeat from './dayToRepeat';
 import {useSelector, useDispatch} from 'react-redux';
 import {setData} from '../../store/data/action';
 import {save} from '../../js/storageHandling';
+import dateHandling from '../../js/dateHandling';
+
 
 import {ReactComponent as CheckboxTrue} from '../../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from '../../IMG/checkFalse.svg';
@@ -192,12 +194,6 @@ export function Navbar(props:any){
     }
   }
 
-  const getCardString = (dayObject:any)=>{
-    let yearMonthDay = dayObject.creationDate.split('-');
-    let dayMonth = '' + parseInt(yearMonthDay[2]) + '/' + parseInt( yearMonthDay[1]);
-    let dayMonth_tags = dayMonth + " - " + dayObject.tags;
-    return dayMonth_tags;
-  }
 
   return (
     <Container fluid className="m-0 p-0 vh-100">
@@ -217,7 +213,9 @@ export function Navbar(props:any){
               style={styles.onMissingCards(card)}
               data-index={card.index}
               onClick={ ()=> onCard.onOneMissedCard(card, true) } >
-              <span>{card.date} - {card.tags}</span> 
+              {dateHandling.getDayMonthFromInt(card.onDay) }
+               - {card.tags}
+              {/* <span>{card.date} - {card.tags}</span>  */}
 
                 <div 
                 // onClick={ (ev)=> { ev.stopPropagation(); onCard.onOneMissedCard(card, !card.done) }}
@@ -241,20 +239,19 @@ export function Navbar(props:any){
               style={ styles.todaysCardToRepeat(card, index)} 
               data-index={index} 
               onClick={ onCard.dailyCardsToRepeat } 
-              >{ getCardString(card)}
+              >
+                <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.onDay) }</span>
+                - {card.tags}
 
 
               { activeDay === getDaysAfter1970() && <span>
                 {checkBoxes[index].done && 
-                <div 
+                <div style={styling.checkbox as CSSProperties}
                   onClick={ ()=> { onCheckbox.todaysCards(index, checkBoxes[index].done)}}
-                  style={styling.checkbox as CSSProperties}
                   ><CheckboxTrue /></div> }
 
-
-                {!checkBoxes[index].done && <div 
+                {!checkBoxes[index].done && <div style={styling.checkbox as CSSProperties}
                   onClick={ ()=> { onCheckbox.todaysCards(index, checkBoxes[index].done)}}
-                  style={styling.checkbox as CSSProperties}
                   ><CheckboxFalse/></div> }
               </span> }
             </div>
@@ -269,7 +266,10 @@ export function Navbar(props:any){
             style={ styles.cardStyle(index)}
             data-index={index}
             onClick={ onCard.todaysCardOrFullList }
-          >{ getCardString(card)}</div>
+          >
+            <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.onDay) } </span>
+            - {card.tags}
+          </div>
       )})}
       </React.Fragment> }
     </div>
