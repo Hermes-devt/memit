@@ -32,13 +32,13 @@ export function Schedule(props:any):any{
           <div key={index} className='pt-0- m-0'>
             <div style={{backgroundColor:'black', color: 'white', padding: '4px 4px'}}>
               <span style={{display: 'inline-block', paddingRight: 0, fontWeight: 'bold'}}>{getDayMonthFromInt( getDaysAfter1970() + item.daysFromNow )}</span>
-              <span style={{color: 'orange'}}> - {item.totalNrOfQuestions} Questions</span>
+              <span style={{color: 'orange'}}> - Total number of questions: {item.totalNrOfQuestions}</span>
             </div>
 
             { item.cards.map( (item2, index2)=>{ return(
               <div key={index2}>
                 <div style={{marginLeft: 20, fontWeight: 'bold'}}>
-                  <span style={{display: 'inline-block', width: '250px'}}> {item2.tags} </span>
+                  <span style={{display: 'inline-block', width: '400px'}}> {item2.tags} </span>
                   <span>{cardCounter( item2)} questions</span>
                 </div>
               </div>

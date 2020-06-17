@@ -17,25 +17,48 @@ export function SettingsBar(props:any):any{
     {props.windowDisplay !== 1 && <div style={styles.hideIt as CSSProperties}></div> }
 
     <span style={styles.menu as CSSProperties} onClick={ ()=>{ props.menuClick() }} > 
-      <Menu />
+      <Menu onClick={ ()=>{ console.log('clicked on the menu icon!') }}
+      />
+
       {props.displayVerticalBar && <span style={{ paddingLeft: 10,}}>Hide menu</span>}
       {!props.displayVerticalBar && <span style={{paddingLeft: 10,}}>Display menu</span> }
     </span>
 
+    {/* <div style={popup as CSSProperties}>
+      <div>Print cards</div>
+      <div>Style</div>
+      <div>Settings</div>
+      <div>Account</div>
+      <div>Login / Logout</div>
+    </div> */}
 
     <span style={{...styles.schedule, ...{}}} onClick={ ()=>props.onDisplayWindow( 1 ) }>Home</span>
     <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 2 ) }>Schedule</span>
     <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 3 ) }>Search</span>
 
+    <span style={{opacity: 1}}>
     <div style={styles.layoutContainer as CSSProperties}>
       <span style={ styles.layouts} onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>
       <span style={ styles.layouts} onClick={ ()=> props.onClick(1)}> <Layout2 /> </span>
       <span style={ styles.layouts} onClick={ ()=> props.onClick(3)}> <Layout3 /> </span>
       <span style={ styles.layouts} onClick={ ()=> props.onClick(4)}> <Layout4 /> </span>
     </div>
+    </span>
   </div>)
 }
 
+const popup = {
+  position: 'absolute',
+  left: 0,
+  top: 30,
+  width: 200,
+  backgroundColor: 'black',
+  opacity: 0.9,
+  zIndex: 5,
+  color: 'white',
+  padding: 10,
+  cursor: 'pointer',
+}
 
 const styles = {
   hideIt:{

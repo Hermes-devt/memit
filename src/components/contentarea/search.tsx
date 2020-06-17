@@ -15,7 +15,8 @@ export const Search = ()=> {
   const answerTextAreas = useRef<any>(data.data.list.map(() => createRef()));
 
   data.data.list.forEach( (item:any) =>{
-    item.answers = item.answers.trim(); item.questions = item.questions.trim();
+    item.answers = item.answers.trim(); 
+    item.questions = item.questions.trim();
   });
 
   useEffect( ()=>{
@@ -43,7 +44,6 @@ export const Search = ()=> {
     if( stringFind.length === 0 || stringFind === ' ') return;
 
     const strArr = stringFind.split(/,/);
-    console.log('str', strArr);
 
 
     let tagsObj = [];

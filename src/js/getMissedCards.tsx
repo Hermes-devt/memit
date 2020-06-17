@@ -8,11 +8,12 @@ export function getMissedCards( data: UserData, fromDaysPast: number){
   let list = data.list;
 
   let missedList: {ID: number, done: boolean}[] = [];
-  const scheduleLen = schedule.length, listLen = list.length;
+  // const scheduleLen = schedule.length; 
+        // listLen     = list.length;
 
-  for( let i = 0; i< listLen; i++){
+  for( let i = 0, listLen=list.length; i< listLen; i++){
     let item = list[i];
-    for( let index=1; index<scheduleLen; index++){
+    for( let index=1, scheduleLen=schedule.length; index<scheduleLen; index++){
       let dayScheduled = item.onDay + schedule[index];
 
       if( (dayScheduled > (currentDay - fromDaysPast)) && (dayScheduled < currentDay) ){

@@ -60,14 +60,14 @@ export function Navbar(props:any){
     data.missedCards.forEach( (card:any)=>{
 
       for(let i=0; i<data.list.length;i++){
-        if( card.ID === data.list[i].onDay){
-          const {tags, creationDate} = data.list[i];
+        // if( card.ID === data.list[i].onDay){
+        //   const {tags, creationDate} = data.list[i];
 
-          let arr = creationDate.split('-');
-          let dateStr = parseInt(arr[2]) + "/" + parseInt(arr[1]);
+        //   let arr = creationDate.split('-');
+        //   let dateStr = parseInt(arr[2]) + "/" + parseInt(arr[1]);
 
-          missedCardObj.push( {index: i, tags, date: dateStr, done: card.done, id: card.ID});
-        }
+        //   missedCardObj.push( {index: i, tags, date: dateStr, done: card.done, id: card.ID});
+        // }
       }
     });
     return missedCardObj;

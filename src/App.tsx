@@ -14,6 +14,8 @@ import SettingsBar from './components/settingsBar';
 import TagInput from './components/contentarea/tagInput';
 import Schedule from './components/schedule';
 import Search from './components/contentarea/search';
+import Stats from './components/stats';
+
 
 export function App(){
   const [data, setData]: [UserData | null, any] = useState(null);
@@ -45,12 +47,10 @@ export function App(){
   return(
     <Container fluid className='m-0 p-0'>
       {data && <Navbar />}
-
       <SettingsBar 
         onClick={ onSettingsBarClick } 
         menuClick={ onMenuClick } 
         displayVerticalBar={ displayVerticalBar }
-        // onSchedule={ (value:boolean)=>{ setShowSchedule(value)}}
         windowDisplay={ displayWindow }
         onDisplayWindow={ (window:number)=> { setDisplayWindow(window)}}
       />
@@ -60,7 +60,7 @@ export function App(){
 
       <div style={ displayContentAreas() }>
 
-        <Row className='no-gutters m-0 p-0'>
+        <Row className='no-gutters m-0 p-0 position-relative'>
           { displayVerticalBar && <Col className='m-0 p-0 col-sm-2 overflow-auto'>
               {data && <VerticalBar onClick={(note:number)=> setActiveNote(note)} activeNote={ activeNote } /> }
           </Col> }
@@ -73,6 +73,7 @@ export function App(){
       </div>
 
       <Footer /> 
+      {data && <Stats />}
     </Container>
   )
 }

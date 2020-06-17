@@ -13,7 +13,6 @@ export const Navbar = (props:any):any =>{
         </Col>
         <Col className="col-xs-12 col-sm-10 col-md-8">
           <h1 className='d-none d-md-block text-center'>Repeat Learnings</h1>
-          {/* <h1 className='d-none d-md-block text-center'>Memory repeats</h1> */}
           <h3 className='d-sm-12 d-md-none text-center'>Repeat Learnings</h3>
           <Scheduler />
         </Col>
