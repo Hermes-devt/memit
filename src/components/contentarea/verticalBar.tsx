@@ -45,9 +45,9 @@ export function Navbar(props:any){
     setList(list);
     setData2(data);
 
-    setTodayCards( todayCards ); setCheckboxes( Data.dailyCards ); 
-
-    setCardsMissed( cardsMissed);
+    setTodayCards( todayCards ); 
+    setCheckboxes( Data.dailyCards ); 
+    setCardsMissed( cardsMissed );
   },[Data]) // eslint-disable-line
 
 
@@ -58,16 +58,12 @@ export function Navbar(props:any){
   const setMissedCards = (data:any): any=>{
     let missedCardObj:any = [];
     data.missedCards.forEach( (card:any)=>{
-
       for(let i=0; i<data.list.length;i++){
-        // if( card.ID === data.list[i].onDay){
-        //   const {tags, creationDate} = data.list[i];
-
-        //   let arr = creationDate.split('-');
-        //   let dateStr = parseInt(arr[2]) + "/" + parseInt(arr[1]);
-
-        //   missedCardObj.push( {index: i, tags, date: dateStr, done: card.done, id: card.ID});
-        // }
+        if( card.ID === data.list[i].onDay){
+          // missedCardObj.push( data.list[i]);
+          missedCardObj.push({ data: data.list[i], done: card.done })
+          break;
+        }
       }
     });
     return missedCardObj;
@@ -81,7 +77,7 @@ export function Navbar(props:any){
       props.onClick( listIndex );
     },
 
-    dailyCardsToRepeat: (evt:any)=>{
+    dailyCardsToRepeat: (card:any, evt:any)=>{
       const indexPos = parseInt( evt.target.getAttribute('data-index') );
       // Prevents the checkboxes to activate this function
       if( !indexPos && indexPos !== 0) return;
@@ -116,31 +112,25 @@ export function Navbar(props:any){
       }
     },
 
-    onOneMissedCard: (card:any, setDone: boolean | undefined = undefined)=>{
-      props.onClick( card.index);
-      let cardMissed = cardsMissed;
-      cardMissed.forEach( (m:any) =>{ if( m.id === card.id ){ m.done = setDone; } })
+    onOneMissedCard: (card:any, index:number)=>{
+      for( let I=0; I<Data.list.length; I++){
+        if( Data.list[I].onDay === card.data.onDay ){
+          props.onClick( I );
+          break;
+        }
+      }
 
-      setCardsMissed( cardMissed );
-
-      
-      let nData = Data;
-      let missed = cardMissed.map( (item:any)=> { return {ID: item.id, done: item.done}});
-      nData.missedCards = [...missed];
+      let nData = {...Data};
+      nData.missedCards[index].done = true;
       dispatch( setData(nData) );
       save( nData );
     }
   }
 
   const onCheckbox = {
-    missedCards: (card:any)=>{
-      let cardMissed =  [...cardsMissed];
-      cardMissed.forEach( (m:any) =>{ if( m.id === card.id ){ m.done = !m.done; } })
-
-      setCardsMissed( cardMissed );
-      let nData = Data;
-      let missed = cardMissed.map( (item:any)=> { return {ID: item.id, done: item.done}});
-      nData.missedCards = [...missed];
+    missedCards: (card:any, index:number)=>{
+      let nData = {...Data};
+      nData.missedCards[index].done = !nData.missedCards[index].done;
       dispatch( setData(nData) );
       save( nData );
     },
@@ -182,9 +172,17 @@ export function Navbar(props:any){
 
     onMissingCards: (card:any)=>{ 
       let _activeCard = list.length - 1 - activeCard;
-      return card.index === _activeCard ? 
-      {...styling.card, ...styling.active} as CSSProperties  : 
-      {...styling.card, ...styling.passive} as CSSProperties; },
+
+      let indexPos = -1;
+      for(let I=0; I<data.list.length; I++){
+        if(data.list[I] === card.data){
+          indexPos = I; break; }
+      }
+
+      return indexPos === _activeCard ? 
+        {...styling.card, ...styling.active} as CSSProperties  : 
+        {...styling.card, ...styling.passive} as CSSProperties; 
+    },
 
     todaysCardToRepeat: (evt:any, index:number)=>{
       let todaysCard = evt, _activeCard = list[activeCard];
@@ -212,14 +210,14 @@ export function Navbar(props:any){
             <div key={index} 
               style={styles.onMissingCards(card)}
               data-index={card.index}
-              onClick={ ()=> onCard.onOneMissedCard(card, true) } >
-              {dateHandling.getDayMonthFromInt(card.onDay) }
-               - {card.tags}
-              {/* <span>{card.date} - {card.tags}</span>  */}
+              onClick={ ()=> {
+                onCard.onOneMissedCard(card, index) ;
+              }} >
+                <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.data.onDay) } </span>
+                <span> {card.data.tags.join(', ')}</span>
 
                 <div 
-                // onClick={ (ev)=> { ev.stopPropagation(); onCard.onOneMissedCard(card, !card.done) }}
-                onClick={ (ev)=> { ev.stopPropagation(); onCheckbox.missedCards(card) }}
+                onClick={ (ev)=> { ev.stopPropagation(); onCheckbox.missedCards(card, index) }}
                 style={styling.checkbox as CSSProperties} > 
                   {card.done && <CheckboxTrue />}
                   {!card.done && <CheckboxFalse />}
@@ -238,11 +236,10 @@ export function Navbar(props:any){
             <div key={index} 
               style={ styles.todaysCardToRepeat(card, index)} 
               data-index={index} 
-              onClick={ onCard.dailyCardsToRepeat } 
+              onClick={ (evt)=>{ onCard.dailyCardsToRepeat(card, evt); }} 
               >
                 <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.onDay) }</span>
                 - {card.tags}
-
 
               { activeDay === getDaysAfter1970() && <span>
                 {checkBoxes[index].done && 

@@ -35,6 +35,7 @@ export function SettingsBar(props:any):any{
     <span style={{...styles.schedule, ...{}}} onClick={ ()=>props.onDisplayWindow( 1 ) }>Home</span>
     <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 2 ) }>Schedule</span>
     <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 3 ) }>Search</span>
+    <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 4 ) }>Later learnings</span>
 
     <span style={{opacity: 1}}>
     <div style={styles.layoutContainer as CSSProperties}>

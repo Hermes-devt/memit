@@ -15,6 +15,7 @@ import TagInput from './components/contentarea/tagInput';
 import Schedule from './components/schedule';
 import Search from './components/contentarea/search';
 import Stats from './components/stats';
+import LaterLearnings from './components/laterLearnings';
 
 
 export function App(){
@@ -57,6 +58,7 @@ export function App(){
 
       {data && displayWindow === 2 && <Schedule /> }
       {data && displayWindow === 3 && <Search /> }
+      {/* {data && displayWindow === 4 && <LaterLearnings /> } */}
 
       <div style={ displayContentAreas() }>
 

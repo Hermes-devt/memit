@@ -4,7 +4,7 @@ import {useState} from 'react';
 import {Container} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import {setData} from '../../store/data/action';
-import { save } from '../../js/storageHandling';
+import { save, setDailyCards } from '../../js/storageHandling';
 
 export const Scheduler = ()=> { 
   const data = useSelector( (state:any)=> state.data);
@@ -27,6 +27,7 @@ export const Scheduler = ()=> {
 
     let nData = {...data};
     nData.schedule = schedule;
+    setDailyCards( nData );
     dispatch( setData(nData));
     save(nData);
   }
