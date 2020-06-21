@@ -27,15 +27,16 @@ export function init(): UserData{
     removeMissedCardsThatsMatchAcurrentDailyCard(dataObj)
   }
 
-  dataObj.laterLearnings = {
-    list: [
-      {
-        name: 'Chinese characters',
-        questions: "Rabbit snossing in the wind",
-        answers: "And dies of an accidental overdose",
-      }
-    ]
-  }
+  // dataObj.laterLearnings = {
+  //   list: [
+  //     {
+  //       name: 'Chinese characters',
+  //       questionsFetch: 8,
+  //       questions: "Rabbit snossing in the windaa",
+  //       answers: "And dies of an accidental overdose",
+  //     }
+  //   ]
+  // }
   console.log('dataObj', dataObj);
   return dataObj;
 }

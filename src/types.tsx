@@ -26,3 +26,17 @@ export interface DailyNotes{
   questions: string,
   answers: string,
 }
+
+// export interface MyInterface extends Array<MyType> { }
+
+// export interface tLaterTypes extends Array<tLaterTypes>{
+export interface tLaterTypes{
+  name: string,
+  answers: string,
+  questions: string,
+  questionsFetch: string | number,
+}
+
+export interface tLaterTypesArr{
+  array: tLaterTypes,
+}

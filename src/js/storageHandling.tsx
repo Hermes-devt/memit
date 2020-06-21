@@ -12,10 +12,11 @@ export function save(data: UserData){
     lastUse: data.lastUse,
     schedule: data.schedule,
     missedCards: data.missedCards,
+    laterLearnings: data.laterLearnings,
   }
 
-  // localStorage.setItem( "dailyNotes", JSON.stringify(obj) ); 
-  // console.log('saving to localstorage:', obj);
+  localStorage.setItem( "dailyNotes", JSON.stringify(obj) ); 
+  console.log('saving to localstorage:', obj);
 }
 
 export function cleanListFromPastEmptyDays(dataObj: UserData){
