@@ -1,31 +1,43 @@
 
-import React, {} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Container} from 'react-bootstrap';
 import {useSelector} from 'react-redux';
 import {cardsCounter, cardCounter} from '../js/questionCounter';
 import {getDaysAfter1970} from '../js/util';
 import {cardsToRepeat} from '../js/cardsToRepeat';
 import {getDayMonthFromInt} from '../js/dateHandling';
+import {Day} from '../types';
 
-export function Schedule(props:any):any{
+interface dailySchedule {
+  cards: Day[],
+  totalNrOfQuestions: number,
+  daysFromNow: number,
+}
 
+export function Schedule():any{
   const data:any = useSelector( (state:any)=> state.data)
-  if( !data) return null;
+  const numberOfDaysForward: number = 14;
+  const [days, setDays] = useState<dailySchedule[]>([]);
 
-  let arr = [];
-  for( let i =0; i< 10; i++){
-    let todayCards = cardsToRepeat( data, getDaysAfter1970() + i );
-    const obj = {
-      cards: [...todayCards],
-      totalNrOfQuestions: cardsCounter( todayCards ),
-      daysFromNow: i
+  useEffect( ()=>{
+    let arr: dailySchedule[] = [];
+
+    for( let i =0; i< numberOfDaysForward; i++){
+      let todayCards: Day[] = cardsToRepeat( data, getDaysAfter1970() + i );
+
+      const obj: dailySchedule = {
+        cards: [...todayCards],
+        totalNrOfQuestions: cardsCounter( todayCards ),
+        daysFromNow: i
+      }
+      arr.push(obj);
     }
-    arr.push(obj);
-  }
+    setDays( arr );
+  },[]) //eslint-disable-line
 
   return(
     <Container fluid className='m-0 p-0' style={{ backgroundColor: 'silver'}}>
-      {arr.map( (item, index)=>{
+      {days.map( (item: dailySchedule, index:number)=>{
         if( item.totalNrOfQuestions === 0 ) return <span key={index}></span> 
 
         return(
@@ -35,7 +47,7 @@ export function Schedule(props:any):any{
               <span style={{color: 'orange'}}> - Total number of questions: {item.totalNrOfQuestions}</span>
             </div>
 
-            { item.cards.map( (item2, index2)=>{ return(
+            { item.cards.map( (item2: Day, index2:number)=>{ return(
               <div key={index2}>
                 <div style={{marginLeft: 20, fontWeight: 'bold'}}>
                   <span style={{display: 'inline-block', width: '400px'}}> {item2.tags} </span>

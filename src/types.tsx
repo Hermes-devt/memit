@@ -15,8 +15,15 @@ export interface UserData{
   missedCards: {ID: number, done:boolean}[],
   laterLearnings?: any,
 }
+export interface iDailyCard { ID: number, done: boolean }
+export interface iMissedCard { ID: number, done: boolean, }
 
 export interface CardsToRepeat{
+  ID: number,
+  done: boolean,
+}
+
+export interface iCardsToRepeat{
   ID: number,
   done: boolean,
 }
@@ -27,16 +34,11 @@ export interface DailyNotes{
   answers: string,
 }
 
-// export interface MyInterface extends Array<MyType> { }
-
-// export interface tLaterTypes extends Array<tLaterTypes>{
-export interface tLaterTypes{
+export interface tLaterType{
   name: string,
   answers: string,
   questions: string,
   questionsFetch: string | number,
 }
 
-export interface tLaterTypesArr{
-  array: tLaterTypes,
-}
+export interface tLaterTypes extends Array<tLaterType>{}

@@ -8,38 +8,43 @@ import {setData} from '../../store/data/action';
 import {save} from '../../js/storageHandling';
 import dateHandling from '../../js/dateHandling';
 
-
 import {ReactComponent as CheckboxTrue} from '../../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from '../../IMG/checkFalse.svg';
 import { cardsCounter } from '../../js/questionCounter';
 import {Container} from 'react-bootstrap';
+import {UserData, Day, iMissedCard, iCardsToRepeat} from '../../types';
 
+interface Props{
+  onClick(note:number): void,
+  activeNote: number,
+}
 
-export function Navbar(props:any){
-  const Data:any = useSelector<any>( state=> state.data );
+interface MissedCard { data: Day; done: boolean}
+
+export function Navbar(props: Props){
+  const Data:any = useSelector<any>( (state: {data: UserData })=> state.data );
   const dispatch = useDispatch();
 
-  const [data, setData2] = useState<any>({});
-  const [cardsMissed, setCardsMissed] = useState<any>([]);
+  const [data, setData2] = useState<UserData>( Data );
+  const [cardsMissed, setCardsMissed] = useState<MissedCard[]>([]);
+  const [todayCards, setTodayCards] = useState<Day[]>([]);
+  const [checkBoxes, setCheckboxes] = useState<iCardsToRepeat[]>([]);
 
-  const [todayCards, setTodayCards] = useState<any>([]);
-  const [checkBoxes, setCheckboxes] = useState<any>([]);
-
-  const [list, setList] = useState<any>(null);
+  const [list, setList] = useState<Day[]>([]);
   const [activeCard, setActiveCard] = useState<number>(0);
-
   const [activeDay, setActiveDay] = useState<number>( getDaysAfter1970())
-
   const [todaysNumberOfQuestion, setTodaysNumberOfQuestion] = useState<number>(0);
 
   useEffect( ()=>{
-    let data = Data;
+    let data: UserData = Data;
     if( !data ) return;
-    let todayCards = cardsToRepeat( data, getDaysAfter1970());
-    let list= [...data.list];
+
+    let todayCards: Day[] = cardsToRepeat( data, getDaysAfter1970());
+    let list: Day[] = [...data.list];
     list.reverse();
 
     const cardsMissed = setMissedCards(data);
+
     setTodaysNumberOfQuestion( cardsCounter( todayCards ));
 
     setList(list);
@@ -55,12 +60,13 @@ export function Navbar(props:any){
     setActiveCard( Data.list.length - 1 - props.activeNote )
   }, [props.activeNote, Data.list.length])
 
-  const setMissedCards = (data:any): any=>{
-    let missedCardObj:any = [];
-    data.missedCards.forEach( (card:any)=>{
+
+  const setMissedCards = (data: UserData ): MissedCard[]=>{
+    let missedCardObj: MissedCard[] = [];
+
+    data.missedCards.forEach( (card: iMissedCard)=>{
       for(let i=0; i<data.list.length;i++){
         if( card.ID === data.list[i].onDay){
-          // missedCardObj.push( data.list[i]);
           missedCardObj.push({ data: data.list[i], done: card.done })
           break;
         }
@@ -71,7 +77,7 @@ export function Navbar(props:any){
 
 
   const onCard = {
-    todaysCardOrFullList: (e:any)=>{
+    todaysCardOrFullList: (e:any, card = null)=>{
       let _active = parseInt( e.target.getAttribute('data-index')); 
       let listIndex = list.length - 1 - _active;
       props.onClick( listIndex );
@@ -82,6 +88,7 @@ export function Navbar(props:any){
       // Prevents the checkboxes to activate this function
       if( !indexPos && indexPos !== 0) return;
   
+
       const cardsToRepeat = todayCards;
       const isToday = getDaysAfter1970();
 
@@ -112,8 +119,8 @@ export function Navbar(props:any){
       }
     },
 
-    onOneMissedCard: (card:any, index:number)=>{
-      for( let I=0; I<Data.list.length; I++){
+    onOneMissedCard: (card: MissedCard, index:number)=>{
+      for( let I=0, len=Data.list.length; I<len; I++){
         if( Data.list[I].onDay === card.data.onDay ){
           props.onClick( I );
           break;
@@ -128,23 +135,23 @@ export function Navbar(props:any){
   }
 
   const onCheckbox = {
-    missedCards: (card:any, index:number)=>{
+    missedCards: (index:number)=>{
       let nData = {...Data};
       nData.missedCards[index].done = !nData.missedCards[index].done;
       dispatch( setData(nData) );
       save( nData );
     },
 
-    todaysCards: (index:any, bool:any)=>{
+    todaysCards: (index:number, bool:boolean)=>{
       let cardsToRepeat = todayCards;
-      let dailyCheckboxes = [...Data.dailyCards];
+      let dailyCheckboxes: iCardsToRepeat[] = [...Data.dailyCards];
   
-      dailyCheckboxes.forEach( (item:any)=>{
+      dailyCheckboxes.forEach( (item: iCardsToRepeat)=>{
         let cardID = cardsToRepeat[index].onDay;
         if( item.ID === cardID ){item.done = !bool; }
       })
-      let nData = Data;
-      
+
+      let nData: UserData = Data;
       setCheckboxes( dailyCheckboxes)
       nData.dailyCards = dailyCheckboxes;
       dispatch( setData(nData));
@@ -152,13 +159,11 @@ export function Navbar(props:any){
     }
   }
 
-  const changeDayOfRepeat = (day:any)=>{
-    const _active = 0;
+  const changeDayOfRepeat = (day:number)=>{
     let _todayCards = cardsToRepeat(data, day);
-
-    setActiveCard(_active);
     setActiveDay(day);
     setTodayCards( _todayCards);
+    // const _active: number = 0; setActiveCard(_active);
   }
 
   const styles = {
@@ -170,11 +175,12 @@ export function Navbar(props:any){
       {...styling.card, ...styling.passive, ...{textAlign: 'center', fontSize: 18}} as CSSProperties ,
 
 
-    onMissingCards: (card:any)=>{ 
-      let _activeCard = list.length - 1 - activeCard;
+    onMissingCards: (card: MissedCard )=>{ 
+      let _activeCard: number = list.length - 1 - activeCard;
 
-      let indexPos = -1;
-      for(let I=0; I<data.list.length; I++){
+      let indexPos:number = -1;
+
+      for(let I=0, len=data.list.length; I<len; I++){
         if(data.list[I] === card.data){
           indexPos = I; break; }
       }
@@ -184,8 +190,8 @@ export function Navbar(props:any){
         {...styling.card, ...styling.passive} as CSSProperties; 
     },
 
-    todaysCardToRepeat: (evt:any, index:number)=>{
-      let todaysCard = evt, _activeCard = list[activeCard];
+    todaysCardToRepeat: (card:any, index:number)=>{
+      let todaysCard = card, _activeCard = list[activeCard];
       return todaysCard === _activeCard ? 
         {...styling.card, ...styling.active} as CSSProperties :
         {...styling.card, ...styling.passive} as CSSProperties;
@@ -206,20 +212,23 @@ export function Navbar(props:any){
 
           {cardsMissed.length > 0 && <div style={{ ...styling.card, ...styling.header} as CSSProperties}>Missed repeats</div> }
 
-          {cardsMissed.map( (card:any, index:number)=>{ return(
+          {cardsMissed.map( (card: MissedCard, index:number)=>{ 
+            return(
             <div key={index} 
               style={styles.onMissingCards(card)}
-              data-index={card.index}
               onClick={ ()=> {
                 onCard.onOneMissedCard(card, index) ;
               }} >
-                <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.data.onDay) } </span>
+                <span style={{fontWeight: 'bold'}}>{ dateHandling.getDayMonthFromInt(card.data.onDay) } </span>
                 <span> {card.data.tags.join(', ')}</span>
 
                 <div 
-                onClick={ (ev)=> { ev.stopPropagation(); onCheckbox.missedCards(card, index) }}
-                style={styling.checkbox as CSSProperties} > 
-                  {card.done && <CheckboxTrue />}
+                style={styling.checkbox as CSSProperties}
+                onClick={ (ev)=> { 
+                  ev.stopPropagation(); 
+                  onCheckbox.missedCards(index) 
+                }}
+                > {card.done && <CheckboxTrue />}
                   {!card.done && <CheckboxFalse />}
                 </div>
             </div>)
@@ -231,7 +240,7 @@ export function Navbar(props:any){
             >Notes to repeat - ({todaysNumberOfQuestion})</div>
           <DayToRepeat onClick={ changeDayOfRepeat}/>
 
-          { todayCards.map( (card:any, index:number)=>{ 
+          { todayCards.map( (card: Day, index:number)=>{ 
             return(
             <div key={index} 
               style={ styles.todaysCardToRepeat(card, index)} 
@@ -258,7 +267,7 @@ export function Navbar(props:any){
 
       { list && <React.Fragment>
         <div style={{...styling.card, ...styling.header} as CSSProperties}>Previous Days</div>
-        {list.map( (card:any, index:number)=>{ return(
+        {list.map( (card: Day, index:number)=>{ return(
           <div key={index} 
             style={ styles.cardStyle(index)}
             data-index={index}

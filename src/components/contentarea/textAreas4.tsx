@@ -5,13 +5,12 @@ import TextArea from './TextArea';
 import {useState, useEffect} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 
-export function TextAreas4(props:any){
+export function TextAreas4(props: {activeNote: number}){
   const [activeNote, setActiveNote] = useState(0);
 
   useEffect( ()=>{
-    setActiveNote( props.data.activeNote );
+    setActiveNote( props.activeNote );
   },[props])
-
 
   return(
     <Container fluid>

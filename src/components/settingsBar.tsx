@@ -8,7 +8,15 @@ import {ReactComponent as Menu} from '../IMG/menuWhite.svg';
 import Timer from '../components/navbar/timer';
 
 
-export function SettingsBar(props:any):any{
+interface Props {
+  onClick(nr:number): void,
+  menuClick(): void,
+  onDisplayWindow(window: number): void,
+  displayVerticalBar: boolean,
+  windowDisplay: number,
+}
+
+export function SettingsBar(props: Props):any{
   return(
   <div style={styles.container as CSSProperties}>
     <Timer />

@@ -5,13 +5,10 @@ import TextArea from './TextArea';
 import {useState, useEffect} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 
-export function TextAreas(props:any){
+export function TextAreas(props: {activeNote: number}){
   const [activeNote, setActiveNote] = useState(0);
 
-  useEffect( ()=>{
-    setActiveNote( props.data.activeNote );
-  },[props])
-
+  useEffect( ()=>{ setActiveNote( props.activeNote ); },[props])
 
   return(
     <Container fluid >
@@ -33,7 +30,7 @@ export function TextAreas(props:any){
             <TextArea style={{backgroundColor: ''}} 
               data={{ 
                 activeNote: activeNote, 
-                placeholder:"User input", 
+                placeholder: "User input", 
                 tabIndex: -1, 
                 name: "userInput", }} />
           </div>

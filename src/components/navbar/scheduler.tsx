@@ -5,28 +5,33 @@ import {Container} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import {setData} from '../../store/data/action';
 import { save, setDailyCards } from '../../js/storageHandling';
+import {UserData} from '../../types';
 
+type stringNumber = string | number;
 export const Scheduler = ()=> { 
   const data = useSelector( (state:any)=> state.data);
 
-  const [schedule, setSchedule] = useState( data ? data.schedule: []);
+  const [schedule, setSchedule] = useState<stringNumber[]>( data ? data.schedule: []);
   const dispatch = useDispatch();
 
-  const saveChanges = (index:number, evt:any)=>{
-    let schedule= [...data.schedule];
-    let value = evt.target.value
-    if( isNaN(value) && value.length > 0) return;
-    schedule[index] = value;
-    setSchedule(schedule);
+  const onChange = (evt:any, index:number)=>{
+    let val = evt.target.value;
+    if( val.length > 0 && isNaN( Number(val)) ){
+      return;
+    }
 
-    schedule = schedule.map( (item, index)=>{
+    let _schedule = [...schedule];
+    _schedule[index] = val;
+
+    setSchedule( _schedule );
+
+    const convertedSchedule: number[] = _schedule.map( (item: stringNumber, index:number): number=>{
       if( item === '') return 0;
-      if( !isNaN(item) ) return parseInt(item);
-      return data.schedule[index];
+      return Number(item);
     })
 
-    let nData = {...data};
-    nData.schedule = schedule;
+    let nData: UserData = {...data};
+    nData.schedule = [...convertedSchedule];
     setDailyCards( nData );
     dispatch( setData(nData));
     save(nData);
@@ -36,11 +41,11 @@ export const Scheduler = ()=> {
     <Container fluid style={container}> 
       <div className='text-center' style={{color: 'white'}}>Scheduler - Days from now</div>
       <div className='d-flex justify-content-center'>
-      {schedule && schedule.map( (item:number, index:number)=>{ return(
+      {schedule && schedule.map( (item: stringNumber, index:number)=>{ return(
         <input key={index} type="text" 
           value={item === 0 ? 0 : item}
           style={inputBox}
-          onChange={(evt)=>saveChanges(index, evt)}
+          onChange={(evt)=> onChange(evt, index) }
         />
       )})}
       </div>

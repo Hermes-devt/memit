@@ -4,24 +4,25 @@ import {Container, Row, Col} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import {setData} from '../../store/data/action';
 import {save} from '../../js/storageHandling';
+import {UserData} from '../../types';
 
 
-export function TagInput(props:any):any{
+export function TagInput({activeNote}: {activeNote: number}):any{
   const Data = useSelector((state:any)=> state.data);
   const dispatch = useDispatch();
   const [tags, setTags] = useState('');
 
   
   useEffect( ()=>{
-    let tags2 =  Data.list[props.activeNote].tags;
-    setTags( tags2.join(','));
-  },[props.activeNote]) //eslint-disable-line
+    let _tags: string[] =  Data.list[activeNote].tags;
+    setTags( _tags.join(','));
+  },[activeNote]) //eslint-disable-line
 
   const saveToStorage = (evt:any)=>{
-    let data = {...Data};
-    let _tags = evt.target.value;
-    let arr = _tags.split(',');
-    data.list[props.activeNote].tags = arr;
+    let data: UserData = {...Data};
+    let _tags: string = evt.target.value;
+    let arr: string[] = _tags.split(',');
+    data.list[activeNote].tags = arr;
     save( data );
   };
 
@@ -37,7 +38,7 @@ export function TagInput(props:any):any{
                 placeholder="Card Tags"
                 onChange={( (evt)=>{ 
                   let data = {...Data}
-                  data.list[props.activeNote].tags = evt.target.value;
+                  data.list[activeNote].tags = evt.target.value;
                   setTags(evt.target.value);
                   dispatch( setData(data));
                 })}
@@ -60,7 +61,6 @@ const styling = {
     backgroundColor: '#242424',
     paddingTop: 3,
     boxShadow: '-3px 0px 10px black', 
-    // top: '4px',
   } as CSSProperties,
 
   t2: {

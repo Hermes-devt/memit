@@ -2,35 +2,46 @@
 import React, {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {save} from '../../js/storageHandling';
+import {UserData} from '../../types';
 
+interface Props {
+  data: {
+    activeNote: number,
+    placeholder: string,
+    name: string,
+    tabIndex?: number,
+  }
+  style?: object,
+}
 
-export function TextArea(props: any){
-  const data: any = useSelector<any>(state=> state.data);
-  const [text, setText] = useState([]);
+export function TextArea( props: Props){
+  const {name, placeholder, activeNote, tabIndex} = props.data;
+
+  const data: any = useSelector<{data: UserData}>(state=> state.data);
+  const [text, setText] = useState<string>('');
 
   useEffect( ()=>{
-    let nText = data.list[props.data.activeNote][props.data.name];
+    let nText = data.list[activeNote][name];
+    if( nText === undefined) nText = "";
     setText(nText);
   }, [props, data.list])
 
   const onChange = (evt:any)=>{
-    const text = evt.target.value;
-    setText( text );
+    const _text: string = evt.target.value;
+    setText( _text );
     let nData:any = Object.assign({}, data)
-
-    if( props.data.name === 'userInput') return;
-    nData.list[props.data.activeNote][props.data.name] = text;
+    nData.list[activeNote][name] = _text;
     save(data);
   }
 
   return(
       <textarea 
         value={ text || ""}
-        placeholder={props.data.placeholder || ""}
+        placeholder={placeholder || ""}
         style={ props.style ? {...styling.textarea, ...props.style} : styling.textarea } 
-        name={props.data.name || ""} 
-        id={props.data.name || "" }
-        tabIndex={props.data.tabIndex || 1}
+        name={name || ""} 
+        id={name || "" }
+        tabIndex={tabIndex || 1}
         onChange={ onChange }
       />
   )

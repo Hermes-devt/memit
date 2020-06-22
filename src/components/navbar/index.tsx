@@ -4,7 +4,7 @@ import Scheduler from './scheduler';
 import {Container, Row, Col} from 'react-bootstrap';
 import {ReactComponent as Clockcss} from '../../IMG/clock1.svg';
 
-export const Navbar = (props:any):any =>{
+export const Navbar = ()=>{
   return(
     <Container fluid style={container}>
       <Row>

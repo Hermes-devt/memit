@@ -5,13 +5,11 @@ import TextArea from './TextArea';
 import {useState, useEffect} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 
-export function TextAreas2(props:any){
+export function TextAreas2(props: {activeNote: number}){
   const [activeNote, setActiveNote] = useState(0);
-  // const [fieldView, setFieldView] = useState(0);
-  // const [expandDir, setExpandDir] = useState('<');
 
   useEffect( ()=>{
-    setActiveNote( props.data.activeNote );
+    setActiveNote( props.activeNote);
   },[props])
 
   return(

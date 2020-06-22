@@ -7,28 +7,30 @@ import {useSelector} from 'react-redux';
 export const Search = ()=> {
   const [tags, setTags] = useState<string>('');
   const [stringFind, setStringFind] = useState<string>('');
-  const [showBlocks, setShowBlocks] = useState<any>([]);
+  const [showBlocks, setShowBlocks] = useState<{display: string}[]>([]);
 
-  let data:any = useSelector( state=> state);
+  let data:any = useSelector<any>( state=> state.data);
 
-  const questionTextAreas = useRef<any>(data.data.list.map(() => createRef()));
-  const answerTextAreas = useRef<any>(data.data.list.map(() => createRef()));
+  const questionTextAreas = useRef<any>(data.list.map(() => createRef()));
+  const answerTextAreas = useRef<any>(data.list.map(() => createRef()));
 
-  data.data.list.forEach( (item:any) =>{
+  data.list.forEach( (item:any) =>{
     item.answers = item.answers.trim(); 
     item.questions = item.questions.trim();
   });
 
   useEffect( ()=>{
-    let tagsObj = [];
-    let tagArr = (tags || "").split(/[,]/);
-    const {list} = data.data;
+    let tagsObj : {display: string }[] = [];
+    let tagArr: string[] = (tags || "").split(/[,]/);
+
+    const list = data.list
 
     for(let i=0, len:number= list.length; i<len; i++){
-      let tagStr: string = typeof list[i].tags === 'object' ? list[i].tags.join(' ') : list[i].tags;
+      let tagStr: string = list[i].tags.join(' ');
+      let includes: boolean = false;
 
-      let includes = false;
-      for(let y=0, len=tagArr.length; y<len; y++){
+      let len: number = tagArr.length;
+      for(let y=0; y<len; y++){
         if( tagArr[y].length === 0 || tagArr[y] === ' ') continue;
 
         if( tagStr.trim().toLowerCase().includes(tagArr[y].toLowerCase())){
@@ -44,14 +46,12 @@ export const Search = ()=> {
     if( stringFind.length === 0 || stringFind === ' ') return;
 
     const strArr = stringFind.split(/,/);
+    let tagsObj: {display: string}[] = [];
+    const {list} = data;
 
-
-    let tagsObj = [];
-    const {list} = data.data;
 
     for(let i=0, len:number=list.length; i<len; i++){
-
-      let includes = false;
+      let includes: boolean = false;
       for(let y=0, len=strArr.length; y<len; y++){
         if( strArr[y].length === 0 || strArr[y] === ' ') continue;
         if( list[i].questions.includes(strArr[y]) || list[i].answers.includes(strArr[y])){
@@ -62,13 +62,11 @@ export const Search = ()=> {
 
     }
     setShowBlocks( tagsObj);
-    
-
   }, [stringFind]) //eslint-disable-line
 
 
   useEffect( ()=>{
-    setShowBlocks( ()=>data.data.list.map( ()=>{ return{display: 'block'}}) )
+    setShowBlocks( ()=>data.list.map( ()=>{ return{display: 'block'}}) )
 
     for( let i=0, len=questionTextAreas.current.length; i<len; i++){
       let questionHeight = questionTextAreas.current[i].current.scrollHeight;
@@ -98,7 +96,7 @@ export const Search = ()=> {
         onChange={ (evt)=>{ setStringFind(evt.target.value)}}
       />
 
-      {data.data.list.map( (item:any, index:number)=>{
+      {data.list.map( (item:any, index:number)=>{
         return(
           <div key={index} style={{...{verticalAlign: 'top'}, ...showBlocks[index] }}>
 

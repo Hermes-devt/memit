@@ -1,28 +1,20 @@
 
-import React, {useRef, useEffect, useState, CSSProperties} from 'react';
+import React, {useEffect, useState, CSSProperties} from 'react';
 import {Container} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import storage from '../store/data/action'
 import {save} from '../js/storageHandling';
-import { tLaterTypes } from '../types';
+import { tLaterType, UserData } from '../types';
+import templates from '../templates';
 
 export function LaterLearnings(){
   const data:any = useSelector<any>(state=>state.data);
   const dispatch = useDispatch();
 
-  const [obj, setObj] = useState<any>( [ { name: '', answers: '', questions: '', questionsFetch: '' }])
+  const [obj, setObj] = useState<tLaterType[]>( 
+    [ templates.laterType() ])
 
-  useEffect( ()=>{
-    let arr = data.laterLearnings.list.map( (item:any)=>{
-      return ( {
-        name: item.name,
-        answers: item.answers,
-        questions: item.questions,
-        questionsFetch: item.questionsFetch,
-      })
-    })
-    setObj( arr );
-  }, [])
+  useEffect( ()=>{ setObj( data.laterLearnings.list ); }, []) //eslint-disable-line
 
   useEffect( ()=>{
     let _data = data;
@@ -33,11 +25,23 @@ export function LaterLearnings(){
 
 
   const createNewTextArea = ()=>{
-    let _obj = [...obj];
-    _obj.push( { name: '', answers: '', questions: '', questionsFetch: '' });
+    let _obj: tLaterType[] = [...obj];
+    _obj.push( templates.laterType() )
     setObj(_obj);
 
-    let _data = data;
+    let _data: UserData = data;
+    _data.laterLearnings.list = obj;
+    dispatch( storage.setData(_data));
+    save( _data );
+  }
+
+  const deleteTextArea = (index:number)=>{
+    let _obj: tLaterType[] = [...obj];
+    _obj.splice(index, 1);
+    if(_obj.length === 0) _obj.push( templates.laterType() );
+    setObj(_obj);
+
+    let _data: UserData = data;
     _data.laterLearnings.list = obj;
     dispatch( storage.setData(_data));
     save( _data );
@@ -52,7 +56,8 @@ export function LaterLearnings(){
         onClick={ ()=>{ createNewTextArea() }}
         >Create new textarea</span>
       </div>
-      {obj.map( (item:any, index:number)=>{
+
+      {obj.map( (item: tLaterType, index:number)=>{
         return(
           <div key={index}
           style={{marginBottom: 30}}
@@ -60,7 +65,7 @@ export function LaterLearnings(){
             <div style={{paddingBottom: 10}}>
               <input 
                 style={{width: '80%', color:'black', paddingLeft: 10}}
-                value={obj[index].name}
+                value={item.name}
                 type="text" 
                 placeholder={"Headline"}
                 onChange={ (evt:any)=>{ 
@@ -73,14 +78,13 @@ export function LaterLearnings(){
               <span style={{marginLeft: 15}}>Daily Fetch: </span>
               <input 
                 style={{width: '30px', textAlign: 'center', color:'black'}}
-                value={obj[index].questionsFetch}
+                value={item.questionsFetch}
                 type="text" 
                 placeholder={"0"}
                 onChange={ (evt)=>{ 
                   let str = evt.target.value;
                   if( str.length > 0 && isNaN(Number(str))) return;
                   if( str.length > 2 ) return;
-
                   let _obj = [...obj];
                   _obj[index].questionsFetch = str;
                   setObj( _obj );
@@ -88,6 +92,7 @@ export function LaterLearnings(){
               />
 
               <span
+                onClick={ ()=>{ deleteTextArea(index)}}
                 style={{color: 'red', fontWeight: 'bold', display: 'inline-block', padding: '2px 3px', border: '1px solid black', cursor: 'pointer', marginLeft: 10, borderRadius: 5, backgroundColor: ''}}
               >X</span>
             </div>
@@ -95,7 +100,7 @@ export function LaterLearnings(){
             <div style={{verticalAlign: 'top', width: '100%', display: 'inline-block', height: '400px'}}>
               <textarea 
                 style={{height: '100%', width: '50%', verticalAlign: 'top'}}
-                value={obj[index].questions}
+                value={item.questions}
                 placeholder={"Questions"}
                 onChange={ (evt)=>{ 
                   let _obj = [...obj];
@@ -106,7 +111,7 @@ export function LaterLearnings(){
 
               <textarea 
                 style={{height: '100%', width: '50%', verticalAlign: 'top'}}
-                value={obj[index].answers}
+                value={item.answers}
                 placeholder={"Answers"}
                 onChange={ (evt)=>{ 
                   let _obj = [...obj];

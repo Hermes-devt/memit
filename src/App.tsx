@@ -30,15 +30,12 @@ export function App(){
   const dispatch = useDispatch();
 
   useEffect( ()=>{
-    let data = init();
+    let data: UserData  = init();
     dispatch( storage.setData(data) );
-
 
     let active: number = Util.lastElement(data.list);
     setData(data);
     setActiveNote( active );
-
-
     // save(data);
   },[]); //eslint-disable-line
   
@@ -68,7 +65,11 @@ export function App(){
 
         <Row className='no-gutters m-0 p-0 position-relative'>
           { displayVerticalBar && <Col className='m-0 p-0 col-sm-2 overflow-auto'>
-              {data && <VerticalBar onClick={(note:number)=> setActiveNote(note)} activeNote={ activeNote } /> }
+              {data && 
+                <VerticalBar 
+                onClick={(note:number)=> setActiveNote(note)} 
+                activeNote={ activeNote } /> 
+              }
           </Col> }
             
           <Col className={ setContentOnFullWidth()}>
