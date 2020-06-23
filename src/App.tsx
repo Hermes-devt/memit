@@ -18,6 +18,7 @@ import Schedule from './components/schedule';
 import Search from './components/contentarea/search';
 import Stats from './components/stats';
 import LaterLearnings from './components/laterLearnings';
+import InsertLaterLearnings from './components/insertLaterLearnings';
 import {save} from './js/storageHandling';
 
 export function App(){
@@ -56,6 +57,8 @@ export function App(){
         windowDisplay={ displayWindow }
         onDisplayWindow={ (window:number)=> { setDisplayWindow(window)}}
       />
+
+      {data && <InsertLaterLearnings data={data}/>}
 
       {data && displayWindow === 2 && <Schedule /> }
       {data && displayWindow === 3 && <Search /> }
