@@ -2,33 +2,30 @@ import React, {useEffect, useState} from 'react';
 import {Container} from 'react-bootstrap';
 import {tLaterType} from '../types';
 import InsertLaterLearningsPopup from './insertLaterLearningsPopup';
+import {useSelector, useDispatch} from 'react-redux';
+import {UserData} from '../types';
+import storage, { setData } from '../store/data/action';
 
-export function InsertLaterLearnings(props:any){
-  // const [displayPopup, setDisplayPopup] = useState<boolean>(false);
-  const [pressed, setPressed] = useState<number>(-1);
+interface Props{
+  data: UserData;
+  setData(nData: UserData): void;
+}
+
+export function InsertLaterLearnings(props: Props){
+  const Data: any = useSelector<any>( (state: {data: UserData })=> state.data );
   const [popup, setPopup] = useState<any>( { display: false, indexClicked: 0, })
-  const [list, setList] = useState<any>( props.data.laterLearnings.list)
+  const dispatch = useDispatch();
 
-  useEffect( ()=>{
-    console.log( 'data in insertlaterlearnings', props.data.laterLearnings.list );
-    console.log( list );
-  },[] );
-
-  useEffect( ()=>{
-  }, [props]);
 
   return(
     <Container fluid style={container}>
-      <span>
-        Insert new data: 
-      </span>
-      { props.data.laterLearnings.list.map( (item: tLaterType, index:number)=>{
+      <span> Insert new data: </span>
+      {Data.laterLearnings.list.map( (item: tLaterType, index:number)=>{
         return(
           <span 
             key={index} 
             style={insertion}
             onClick={ ()=>{ 
-              // setDisplayPopup(true);
               setPopup( {display: true, indexClicked: index});
             }}
           >
@@ -43,7 +40,30 @@ export function InsertLaterLearnings(props:any){
         )
       })}
 
-      {popup.display && <InsertLaterLearningsPopup questions={ list[popup.indexClicked].questions} answers={list[popup.indexClicked].answers} /> }
+      {popup.display && 
+        <InsertLaterLearningsPopup 
+          questions={ Data.laterLearnings.list[popup.indexClicked].questions} 
+          answers={ Data.laterLearnings.list[popup.indexClicked].answers} 
+          cancel={ ()=>{ setPopup({display: false, indexClicked: 0})}}
+
+          insert={ (questions, answers)=>{
+            if( Data.list.length <= 0) return;
+            let nData = {...Data};
+            nData.list[ nData.list.length - 1 ].questions += '\n' + questions;
+            nData.list[ nData.list.length - 1 ].answers += '\n' + answers;
+
+            let questionsLeftover = nData.laterLearnings.list[ popup.indexClicked].questions.substring( questions.length );
+            let answersLeftover = nData.laterLearnings.list[ popup.indexClicked].answers.substring( answers.length );
+            nData.laterLearnings.list[ popup.indexClicked].questions = questionsLeftover;
+            nData.laterLearnings.list[ popup.indexClicked].answers = answersLeftover;
+
+            setPopup({display: false, indexClicked: 0});
+            props.setData( nData );
+            dispatch( storage.setData(nData) );
+          }}
+
+          questionsToFetch={ Data.laterLearnings.list[popup.indexClicked].questionsFetch}
+      /> }
 
     </Container>
   )

@@ -20,7 +20,7 @@ export function TextAreas4(props: {activeNote: number}){
             <TextArea 
               data={{ 
                 activeNote: activeNote,
-                placeholder:"Type your answers here", 
+                placeholder:"Type your questions here", 
                 name: "questions" }} 
               />
           </div>

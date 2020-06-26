@@ -14,7 +14,7 @@ export function save(data: UserData){
     laterLearnings: data.laterLearnings,
   }
 
-  localStorage.setItem( "dailyNotes", JSON.stringify(obj) ); 
+  // localStorage.setItem( "dailyNotes", JSON.stringify(obj) ); 
   // console.log('saving to localstorage:', obj);
 }
 

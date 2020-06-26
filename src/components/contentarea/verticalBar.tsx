@@ -248,7 +248,8 @@ export function Navbar(props: Props){
               onClick={ (evt)=>{ onCard.dailyCardsToRepeat(card, evt); }} 
               >
                 <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.onDay) }</span>
-                - {card.tags}
+                {/* - { card.tags.join(', ')} */}
+                - { card.tags }
 
               { activeDay === getDaysAfter1970() && <span>
                 {checkBoxes[index].done && 
@@ -274,7 +275,8 @@ export function Navbar(props: Props){
             onClick={ onCard.todaysCardOrFullList }
           >
             <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.onDay) } </span>
-            - {card.tags}
+            {/* - {card.tags.join(', ')} */}
+            - {card.tags }
           </div>
       )})}
       </React.Fragment> }

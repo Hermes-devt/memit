@@ -5,7 +5,7 @@ import Navbar from './components/navbar/';
 import InterfaceOptions from './components/contentarea/interfaceOptions';
 import {init} from './js/init';
 import {useState} from 'react';
-import {UserData} from './interfaces';
+// import {UserData} from './interfaces';
 import VerticalBar from './components/contentarea/verticalBar';
 import Util from './js/util';
 
@@ -20,14 +20,17 @@ import Stats from './components/stats';
 import LaterLearnings from './components/laterLearnings';
 import InsertLaterLearnings from './components/insertLaterLearnings';
 import {save} from './js/storageHandling';
+import {UserData} from './types';
 
 export function App(){
-  const [data, setData]: [UserData | null, any] = useState(null);
+  const [data, setData] = useState<any>(null);
   const [layout, setLayout] = useState<number>(2);
   const [displayVerticalBar, setDisplayVerticalBar] = useState<boolean>(true);
   const [activeNote, setActiveNote] = useState<number>(0);
 
-  const [displayWindow, setDisplayWindow] = useState<number>(4)
+  const [forceUpdate, setForceUpdate] = useState<number>(1);
+
+  const [displayWindow, setDisplayWindow] = useState<number>(1)
   const dispatch = useDispatch();
 
   useEffect( ()=>{
@@ -39,11 +42,9 @@ export function App(){
     setActiveNote( active );
     // save(data);
   },[]); //eslint-disable-line
-  
+
   const onSettingsBarClick = (nr: number): void => setLayout( nr );
   const onMenuClick = ()=> setDisplayVerticalBar( (displayVerticalBar=> !displayVerticalBar));
-
-
   const setContentOnFullWidth = (): string=>{ return displayVerticalBar ? 'm-0 p-0 col-sm-10' : 'm-0 p-0 col-sm-12'; }
   const displayContentAreas = ():any=>{ return (displayWindow === 1 ? {display: 'block'} : {display: 'none'}) }
 
@@ -58,26 +59,36 @@ export function App(){
         onDisplayWindow={ (window:number)=> { setDisplayWindow(window)}}
       />
 
-      {data && <InsertLaterLearnings data={data}/>}
 
       {data && displayWindow === 2 && <Schedule /> }
       {data && displayWindow === 3 && <Search /> }
       {data && displayWindow === 4 && <LaterLearnings /> }
 
       <div style={ displayContentAreas() }>
+        {data && 
+          <InsertLaterLearnings 
+          data={data} 
+          setData={ (nData)=>{ 
+            dispatch( storage.setData(nData) ); 
+            let active: number = Util.lastElement(data.list);
+            setActiveNote( active );
+            // setActiveNote(0);
+            setForceUpdate( forceUpdate => forceUpdate + 1);
+          }}
+        /> }
 
         <Row className='no-gutters m-0 p-0 position-relative'>
           { displayVerticalBar && <Col className='m-0 p-0 col-sm-2 overflow-auto'>
               {data && 
                 <VerticalBar 
-                onClick={(note:number)=> setActiveNote(note)} 
+                onClick={(note:number)=> { setActiveNote(note) }} 
                 activeNote={ activeNote } /> 
               }
           </Col> }
             
           <Col className={ setContentOnFullWidth()}>
             {data && <TagInput  activeNote={ activeNote }/> }
-            {data && <InterfaceOptions layout={layout} activeNote={activeNote}/> }
+            {data && forceUpdate && <InterfaceOptions layout={layout} activeNote={activeNote}/> }
           </Col>
         </Row>
       </div>

@@ -17,7 +17,7 @@ export function LaterLearnings(){
   useEffect( ()=>{ setObj( data.laterLearnings.list ); }, []) //eslint-disable-line
 
   useEffect( ()=>{
-    let _data = data;
+    let _data: UserData = data;
     _data.laterLearnings.list = obj;
     dispatch( storage.setData(_data));
     save( _data );
