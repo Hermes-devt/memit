@@ -3,7 +3,6 @@ import {UserData} from '../interfaces';
 import {cardsToRepeat} from './cardsToRepeat';
 import {getDaysAfter1970} from '../js/util'
 
-
 export function save(data: UserData){
   const obj: UserData = {
     list: data.list,
@@ -27,6 +26,16 @@ export function cleanListFromPastEmptyDays(dataObj: UserData){
       dataObj.list.splice( i, 1);
   }
 }
+
+export function cleanlistFromUserInput(dataObj: UserData){
+  dataObj.list.forEach( (item:any)=>{
+    if( 'userInput' in item ){
+      console.log( item.userInput);
+      delete item.userInput;
+    }
+  });
+}
+
 
 interface DailyCards { ID: number, done: boolean }
 

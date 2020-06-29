@@ -83,7 +83,7 @@ const styles = {
   menu: {
     display: 'inline-block',
     marginLeft: 10,
-    width: 125,
+    width: 140,
     cursor: 'pointer',
     borderRight: '1px solid silver',
   },

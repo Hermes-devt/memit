@@ -14,7 +14,7 @@ export function TextAreas3(props: {activeNote: number}){
 
 
   return(
-    <Container fluid> 
+    <Container fluid className='px-0 mx-0'> 
       <Row className='no-gutters'>
         <Col>
             <div className='' 

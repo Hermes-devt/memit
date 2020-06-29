@@ -1,10 +1,11 @@
 
 export interface Day {
-  questions: string,
-  answers: string,
-  tags: string[],
-  creationDate?: string,
-  onDay: number,
+  questions: string;
+  answers: string;
+  tags: string[];
+  creationDate?: string;
+  onDay: number;
+  userInput?: string;
 }
 
 export interface UserData{

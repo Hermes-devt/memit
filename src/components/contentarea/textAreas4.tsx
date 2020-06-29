@@ -13,7 +13,7 @@ export function TextAreas4(props: {activeNote: number}){
   },[props])
 
   return(
-    <Container fluid>
+    <Container fluid className='px-0 mx-0'>
       <Row className='no-gutters'>
         <Col>
           <div className='' style={{ ...{width: '100%', height: '100vh', position: 'relative'}}}>

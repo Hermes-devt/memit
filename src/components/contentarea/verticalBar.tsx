@@ -83,34 +83,27 @@ export function Navbar(props: Props){
       props.onClick( listIndex );
     },
 
-    dailyCardsToRepeat: (card:any, evt:any)=>{
-      const indexPos = parseInt( evt.target.getAttribute('data-index') );
-      // Prevents the checkboxes to activate this function
-      if( !indexPos && indexPos !== 0) return;
+    dailyCardsToRepeat: (card: Day)=>{
+      //Also mark the checkbox. 
+
+      // const isToday = getDaysAfter1970();
+      // if( activeDay === isToday){
+      //   let data = Data.dailyCards;
+        // data.forEach( (item:any)=>{
+      //     let cardID = todayCards[indexPos].onDay;
+      //     if( item.ID === cardID ){ item.done = true; }
+      //   })
+      //   let nData = {...Data};
+      //   nData.dailyCards = data;
+      //   dispatch( setData(nData));
+      //   save( nData );
+      // }
   
-
-      const cardsToRepeat = todayCards;
-      const isToday = getDaysAfter1970();
-
-      if( activeDay === isToday){
-        let data = Data.dailyCards;
-        data.forEach( (item:any)=>{
-          let cardID = cardsToRepeat[indexPos].onDay;
-          if( item.ID === cardID ){ item.done = true; }
-        })
-
-        let nData = {...Data};
-        nData.dailyCards = data;
-        dispatch( setData(nData));
-        save( nData );
-      }
-  
-      let cardPressed = cardsToRepeat[indexPos];
       let _list = list;
 
       let listLength = _list.length;
       for(let i=0; i < listLength; i++){
-        if( cardPressed !== _list[i]) continue;
+        if( card !== _list[i]) continue;
         let _active = i;
         let nonReverseListActive = listLength - 1 - _active;
         setActiveCard(_active);
@@ -198,6 +191,11 @@ export function Navbar(props: Props){
     }
   }
 
+  const setTags = (tags:any): string => {
+    if( typeof tags === 'object')
+      tags = tags.join(', ');
+    return tags;
+  }
 
   return (
     <Container fluid className="m-0 p-0 vh-100">
@@ -244,21 +242,23 @@ export function Navbar(props: Props){
             return(
             <div key={index} 
               style={ styles.todaysCardToRepeat(card, index)} 
-              data-index={index} 
-              onClick={ (evt)=>{ onCard.dailyCardsToRepeat(card, evt); }} 
+              onClick={ (evt)=>{ onCard.dailyCardsToRepeat(card); }} 
               >
                 <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.onDay) }</span>
-                {/* - { card.tags.join(', ')} */}
-                - { card.tags }
+                - {setTags( card.tags )}
 
               { activeDay === getDaysAfter1970() && <span>
                 {checkBoxes[index].done && 
                 <div style={styling.checkbox as CSSProperties}
-                  onClick={ ()=> { onCheckbox.todaysCards(index, checkBoxes[index].done)}}
+                  onClick={ (ev:any)=> { 
+                    ev.stopPropagation(); 
+                    onCheckbox.todaysCards(index, checkBoxes[index].done)}}
                   ><CheckboxTrue /></div> }
 
                 {!checkBoxes[index].done && <div style={styling.checkbox as CSSProperties}
-                  onClick={ ()=> { onCheckbox.todaysCards(index, checkBoxes[index].done)}}
+                  onClick={ (ev:any)=> { 
+                    // ev.stopPropagation(); 
+                    onCheckbox.todaysCards(index, checkBoxes[index].done)}}
                   ><CheckboxFalse/></div> }
               </span> }
             </div>
@@ -275,8 +275,7 @@ export function Navbar(props: Props){
             onClick={ onCard.todaysCardOrFullList }
           >
             <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.onDay) } </span>
-            {/* - {card.tags.join(', ')} */}
-            - {card.tags }
+            - {setTags( card.tags ) }
           </div>
       )})}
       </React.Fragment> }

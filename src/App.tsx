@@ -20,7 +20,9 @@ import Stats from './components/stats';
 import LaterLearnings from './components/laterLearnings';
 import InsertLaterLearnings from './components/insertLaterLearnings';
 import {save} from './js/storageHandling';
+import HorizontalDailyCards from './components/horizontalDailyCards';
 import {UserData} from './types';
+
 
 export function App(){
   const [data, setData] = useState<any>(null);
@@ -45,12 +47,12 @@ export function App(){
 
   const onSettingsBarClick = (nr: number): void => setLayout( nr );
   const onMenuClick = ()=> setDisplayVerticalBar( (displayVerticalBar=> !displayVerticalBar));
-  const setContentOnFullWidth = (): string=>{ return displayVerticalBar ? 'm-0 p-0 col-sm-10' : 'm-0 p-0 col-sm-12'; }
+  const setContentOnFullWidth = (): string=>{ return displayVerticalBar ? 'm-0 p-0 col-sm-10 no-gutters' : 'm-0 p-0 col-sm-12 no-gutters'; }
   const displayContentAreas = ():any=>{ return (displayWindow === 1 ? {display: 'block'} : {display: 'none'}) }
 
   return(
     <Container fluid className='m-0 p-0'>
-      {data && <Navbar />}
+      {/* {data && <Navbar />} */}
       <SettingsBar 
         onClick={ onSettingsBarClick } 
         menuClick={ onMenuClick } 
@@ -77,15 +79,21 @@ export function App(){
           }}
         /> }
 
-        <Row className='no-gutters m-0 p-0 position-relative'>
+        { !displayVerticalBar && data && <>
+          <HorizontalDailyCards 
+            onClick={(note:number)=> { setActiveNote(note) }} 
+            activeNote={activeNote}
+          />
+        </>}
+
+        <Row className='m-0 p-0 no-gutters'>
           { displayVerticalBar && <Col className='m-0 p-0 col-sm-2 overflow-auto'>
               {data && 
                 <VerticalBar 
                 onClick={(note:number)=> { setActiveNote(note) }} 
                 activeNote={ activeNote } /> 
-              }
-          </Col> }
-            
+            } </Col> } 
+
           <Col className={ setContentOnFullWidth()}>
             {data && <TagInput  activeNote={ activeNote }/> }
             {data && forceUpdate && <InterfaceOptions layout={layout} activeNote={activeNote}/> }
@@ -93,7 +101,7 @@ export function App(){
         </Row>
       </div>
 
-      <Footer /> 
+      {/* <Footer />  */}
       {data && <Stats />}
     </Container>
   )

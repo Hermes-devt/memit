@@ -4,7 +4,7 @@ import {createNewDay} from './createNewDay';
 import {UserData} from '../interfaces';
 // import {cardsCounter} from '../js/questionCounter';
 // import { cleanListFromPastEmptyDays, removeMissedCardsThatIsCompleted, moveUncheckedDailyCardsToMissedCardsList, setDailyCards, getAllMissedCardsFromThePastDays, removeMissedCardsThatsMatchAcurrentDailyCard } from '../js/storageHandling';
-import { cleanListFromPastEmptyDays, setDailyCards } from '../js/storageHandling';
+import { cleanListFromPastEmptyDays, cleanlistFromUserInput, setDailyCards } from '../js/storageHandling';
 import {removeMissedCardsThatIsCompleted, moveUncheckedDailyCardsToMissedCardsList, getAllMissedCardsFromThePastDays, removeMissedCardsThatsMatchAcurrentDailyCard} from '../js/missedCardHandling';
 
 export function init(): UserData{
@@ -18,6 +18,7 @@ export function init(): UserData{
     dataObj.list.push( createNewDay() )
 
     cleanListFromPastEmptyDays(dataObj);
+    cleanlistFromUserInput(dataObj);
 
     removeMissedCardsThatIsCompleted(dataObj);
     moveUncheckedDailyCardsToMissedCardsList(dataObj);

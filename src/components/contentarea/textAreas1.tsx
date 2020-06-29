@@ -11,7 +11,7 @@ export function TextAreas(props: {activeNote: number}){
   useEffect( ()=>{ setActiveNote( props.activeNote ); },[props])
 
   return(
-    <Container fluid >
+    <Container fluid className='px-0 mx-0' style={{backgroundColor: 'red'}}>
       <Row className='no-gutters'>
         <Col>
             <div className='' 

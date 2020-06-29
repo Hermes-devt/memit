@@ -18,6 +18,8 @@ export function InsertLaterLearningsPopup(props: Props){
   useEffect( ()=>{
     let {questions, answers} = props;
 
+    console.log('questions', questions)
+    console.log('answer', answers);
     //get number of total questions in field
     const re = /\r\n|\r|\n\s*\d\./g;
     const totalNumberOfQuestions:number = ((questions || '').match(re) || []).length;
@@ -41,8 +43,8 @@ export function InsertLaterLearningsPopup(props: Props){
 
   return(
     <div style={container} onClick={ ()=>{ }} >
-      <textarea readOnly style={textarea} value={answers} />
       <textarea readOnly style={textarea} value={questions} />
+      <textarea readOnly style={textarea} value={answers} />
       <div onClick={ ()=> props.insert( questions, answers)} style={insert} >INSERT</div>
       <div onClick={ props.cancel } style={cancel}>CANCEL</div> </div>
   )

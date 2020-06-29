@@ -28,7 +28,7 @@ export function TagInput({activeNote}: {activeNote: number}):any{
 
   return(
       <Container fluid>
-          <Row className="no-gutters">
+          <Row className="">
             <Col className="m-0 p-0 col-sm-10">
               <input 
                 style={styling.t2}

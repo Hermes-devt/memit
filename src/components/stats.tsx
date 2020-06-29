@@ -13,9 +13,6 @@ export function Stats():any{
 
   let [displayAdditionalData, setDisplayAdditionalData] = useState<boolean>(false);
   useEffect( ()=>{
-    // let dataStringified = JSON.stringify(data);
-    // setDataStringified(dataStringified);
-    // setDataSize( dataStringified.length  * 8 / 1000 );
     setInsertedDays(data.list.length);
     setTotalNrQuestions( cardsCounter(data.list));
   },[]);
@@ -24,9 +21,8 @@ export function Stats():any{
     let dataStringified = JSON.stringify(data);
     setDataStringified(dataStringified);
     setDataSize( dataStringified.length  * 8 / 1000 );
-    // setInsertedDays(data.list.length);
-    // setTotalNrQuestions( cardsCounter(data.list));
   }
+
   return(
     <Container fluid style={container}>
       <span style={{display: 'inline-block', width: 50, color: 'silver', cursor: 'pointer', borderRight: ''}}
