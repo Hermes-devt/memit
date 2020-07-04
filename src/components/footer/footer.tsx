@@ -3,6 +3,7 @@ import React from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 import NewsLetter from './newsletter';
 import Contact from './contact';
+// import img from '../../IMG/topbarBG.svg';
 import About from './about';
 
 export function Footer(){
@@ -33,6 +34,10 @@ export function Footer(){
  
 const styles = {
   footer: {
+    paddingTop: 15,
+    // backgroundImage: "url(" + img + ")",
+    // backgroundSize: 'cover',
+    // backgroundRepeat: 'no-repeat',
     color: 'white', 
     backgroundColor: '#242424',
     paddingBottom: 20,

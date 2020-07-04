@@ -1,8 +1,10 @@
 import React, {useEffect, useState, CSSProperties} from 'react';
-import {UserData, Day, iMissedCard, iCardsToRepeat} from '../types';
+import {UserData, Day, iCardsToRepeat} from '../types';
 import {cardsToRepeat} from './../js/cardsToRepeat';
 import {getDaysAfter1970} from './../js/util';
+import storage from '../store/data/action'
 
+import {save} from '../js/storageHandling';
 import {ReactComponent as CheckboxTrue} from './../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from './../IMG/checkFalse.svg';
 
@@ -17,11 +19,11 @@ interface Props{
 export function HorizontalDailyCards(props: Props){
   const [daily, setDaily] = useState<any>([])
   const [checkBoxes, setCheckboxes] = useState<iCardsToRepeat[]>([]);
-  const Data:any = useSelector<any>( (state: {data: UserData })=> state.data );
+  const Data: any = useSelector<any>( (state: {data: UserData })=> state.data );
   const dispatch = useDispatch();
 
   useEffect( ()=>{
-    let data: UserData = Data;
+    let data: UserData = {...Data};
     if( !data ) return;
     let todayCards: Day[] = cardsToRepeat( data, getDaysAfter1970());
     setDaily( todayCards );
@@ -29,7 +31,7 @@ export function HorizontalDailyCards(props: Props){
   },[]) //eslint-disable-line
   
   useEffect( ()=>{
-    setCheckboxes( Data.dailyCards ); 
+    setCheckboxes( [...Data.dailyCards] ); 
   },[Data]) 
 
 
@@ -43,8 +45,14 @@ export function HorizontalDailyCards(props: Props){
     }
   };
 
-  const setTags = (tags:any): string => {
+  const setTags = (tags:any, abbr:boolean=false): string => {
     if( typeof tags === 'object') tags = tags.join(', ');
+
+    if( abbr ) return tags;
+    if( tags.length > 14){
+      tags = tags.substring(0, 12);
+      tags += '..';
+    }
     return tags;
   }
 
@@ -53,37 +61,66 @@ export function HorizontalDailyCards(props: Props){
     return card === _activeCard ? {...cardStyle, ...active} : cardStyle;
   }
 
-  return<div>
+  return<span>
+    <span style={{fontWeight: 'bold', fontSize: 15, paddingLeft: 5}}>Daily cards:</span>
     { daily.map( (card: Day, index:number)=>{
-      return (<span 
+      return (<abbr
+        title={ setTags(card.tags, true) }
         onClick={()=>{ cardClicked( card); }}
         style={setStyle(card, index)}
         key={index}
       >
         <span >{setTags( card.tags)} </span>
-        {checkBoxes[index].done && <span style={{position: 'absolute', right: 2, top: 0, width: 10, height: 10}} > <CheckboxTrue /> </span> }
-        {!checkBoxes[index].done && <span style={{position: 'absolute', right: 2, top: 0, width: 10, height: 10}} > <CheckboxFalse /> </span> }
-      </span>
+        {checkBoxes[index].done && 
+          <span style={{position: 'absolute', right: 2, top: 4, width: 10, height: 10}} 
+          onClick={ (ev:any)=>{
+            ev.stopPropagation();
+            let nData = {...Data};
+            let _checkboxes = [...checkBoxes];
+            _checkboxes[index].done = !_checkboxes[index].done;
+            setCheckboxes( _checkboxes);
+            nData.dailyCards = [..._checkboxes];
+            dispatch( storage.setData(nData));
+            save(nData);
+          }}
+          ><CheckboxTrue /> </span> }
+        {!checkBoxes[index].done && 
+        <span style={{position: 'absolute', right: 2, top: 4, width: 10, height: 10}} 
+          onClick={ (ev:any)=>{
+            ev.stopPropagation();
+            let nData = {...Data};
+            let _checkboxes = [...checkBoxes];
+            _checkboxes[index].done = !_checkboxes[index].done;
+            setCheckboxes( _checkboxes);
+
+            nData.dailyCards = [..._checkboxes];
+            dispatch( storage.setData(nData));
+            save(nData);
+          }}
+        > <CheckboxFalse /> </span> }
+      </abbr>
     )})}
-  </div>
+  </span>
 }
 
 const active ={
   // backgroundColor: 'black',
   fontWeight: 'bold',
+  // color: 'white',
   fontSize: 9,
 } as CSSProperties
 
 const cardStyle={
-  position: 'relative',
+  verticalAlign: 'top',
   display: 'inline-block',
-  backgroundColor: 'white',
+  position: 'relative',
   color: 'black',
   width: '100px', 
-  height: '15px',
+  height: '25px',
   borderRight: '1px solid silver',
-  padding: '0px 7px', 
-  paddingRight: 12,
+  paddingTop: '6px',
+  paddingLeft: '5px',
+  paddingRight: '12px',
   fontSize: 10,
   overflow:  'hidden',
   wordWrap: 'normal',

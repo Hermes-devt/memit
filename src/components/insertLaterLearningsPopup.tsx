@@ -1,7 +1,4 @@
 import React, {CSSProperties, useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-
-import {UserData} from '../types';
 
 interface Props{
   questions: string;
@@ -15,31 +12,44 @@ export function InsertLaterLearningsPopup(props: Props){
   const [questions, setQuestions] = useState<string>("")
   const [answers, setAnswers] = useState<string>("")
 
+
   useEffect( ()=>{
-    let {questions, answers} = props;
-
-    console.log('questions', questions)
-    console.log('answer', answers);
-    //get number of total questions in field
+    let {questions, answers}: {questions:string, answers:string} = props;
     const re = /\r\n|\r|\n\s*\d\./g;
-    const totalNumberOfQuestions:number = ((questions || '').match(re) || []).length;
 
-    // check if textarea has enough question otherwise just grab all of them. 
-    let getQuestions:number = totalNumberOfQuestions  <= props.questionsToFetch  ?
-      totalNumberOfQuestions  : props.questionsToFetch;
+    function grabAtomizedPieces(dataString: string){
+      let totalNumberOfQuestions:number = ((dataString || '').match(re) || []).length;
+      let matches: string[] = (dataString || '').match(re) || [];
+      if( dataString.length > 2 && dataString.substring(0, 2).match(/\d\./)){
+        totalNumberOfQuestions += 1; 
+        matches.unshift( dataString.substring(0, 2));
+      }
+      if( totalNumberOfQuestions <= Number(props.questionsToFetch)){ return dataString }
+      let fetchStringToThisMatch: string = matches[props.questionsToFetch];
+      let cutoffIndexAnswers: number = dataString.indexOf(fetchStringToThisMatch);
+      let answersToInsert: string = dataString.slice( 0, cutoffIndexAnswers );
 
-    const matches: string[] = (questions || '').match(re) || [];
-    let fetchStringToThisMatch: string = matches[getQuestions];
+      return answersToInsert;
+    }
+    const questionString = grabAtomizedPieces(questions);
+    const answersString = grabAtomizedPieces(answers);
 
-    let cutoffIndexQuestions: number = questions.indexOf(fetchStringToThisMatch);
-    let questionsToInsert: string = questions.slice( 0, cutoffIndexQuestions );
-
-    let cutoffIndexAnswers: number = answers.indexOf(fetchStringToThisMatch);
-    let answersToInsert: string = answers.slice( 0, cutoffIndexAnswers );
-
-    setQuestions( questionsToInsert);
-    setAnswers(answersToInsert);
+    setQuestions( questionString );
+    setAnswers( answersString);
   }, [props])
+
+  useEffect( ()=>{
+    const onPress = (evt:any)=>{
+      switch( evt.key ){
+        case 'Enter': props.insert(questions, answers); break;
+        case 'Escape': props.cancel(); break;
+        default: break;
+      }
+    }
+
+    document.addEventListener('keydown', onPress, true);
+    return( ()=>{ document.removeEventListener( 'keydown', onPress, true); })
+  },[questions, answers]) //eslint-disable-line
 
   return(
     <div style={container} onClick={ ()=>{ }} >

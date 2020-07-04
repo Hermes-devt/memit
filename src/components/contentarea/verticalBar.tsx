@@ -77,28 +77,13 @@ export function Navbar(props: Props){
 
 
   const onCard = {
-    todaysCardOrFullList: (e:any, card = null)=>{
-      let _active = parseInt( e.target.getAttribute('data-index')); 
-      let listIndex = list.length - 1 - _active;
-      props.onClick( listIndex );
+    todaysCardOrFullList: (index:number)=>{
+        let _active = index;
+        let listIndex = list.length - 1 - _active;
+        props.onClick( listIndex );
     },
 
     dailyCardsToRepeat: (card: Day)=>{
-      //Also mark the checkbox. 
-
-      // const isToday = getDaysAfter1970();
-      // if( activeDay === isToday){
-      //   let data = Data.dailyCards;
-        // data.forEach( (item:any)=>{
-      //     let cardID = todayCards[indexPos].onDay;
-      //     if( item.ID === cardID ){ item.done = true; }
-      //   })
-      //   let nData = {...Data};
-      //   nData.dailyCards = data;
-      //   dispatch( setData(nData));
-      //   save( nData );
-      // }
-  
       let _list = list;
 
       let listLength = _list.length;
@@ -119,11 +104,6 @@ export function Navbar(props: Props){
           break;
         }
       }
-
-      let nData = {...Data};
-      nData.missedCards[index].done = true;
-      dispatch( setData(nData) );
-      save( nData );
     }
   }
 
@@ -204,8 +184,7 @@ export function Navbar(props: Props){
           <div style={{ ...styling.card, ...styling.header} as CSSProperties}>Today</div>
           <div 
             style={ styles.todaysCard() } 
-            data-index={0} 
-            onClick={ onCard.todaysCardOrFullList }
+            onClick={ ()=>{ onCard.todaysCardOrFullList(0) }}
             >Todays card</div>
 
           {cardsMissed.length > 0 && <div style={{ ...styling.card, ...styling.header} as CSSProperties}>Missed repeats</div> }
@@ -214,7 +193,8 @@ export function Navbar(props: Props){
             return(
             <div key={index} 
               style={styles.onMissingCards(card)}
-              onClick={ ()=> {
+              onClick={ (ev)=> {
+                // ev.stopPropagation(); 
                 onCard.onOneMissedCard(card, index) ;
               }} >
                 <span style={{fontWeight: 'bold'}}>{ dateHandling.getDayMonthFromInt(card.data.onDay) } </span>
@@ -257,7 +237,7 @@ export function Navbar(props: Props){
 
                 {!checkBoxes[index].done && <div style={styling.checkbox as CSSProperties}
                   onClick={ (ev:any)=> { 
-                    // ev.stopPropagation(); 
+                    ev.stopPropagation(); 
                     onCheckbox.todaysCards(index, checkBoxes[index].done)}}
                   ><CheckboxFalse/></div> }
               </span> }
@@ -271,8 +251,7 @@ export function Navbar(props: Props){
         {list.map( (card: Day, index:number)=>{ return(
           <div key={index} 
             style={ styles.cardStyle(index)}
-            data-index={index}
-            onClick={ onCard.todaysCardOrFullList }
+            onClick={ ()=>{ onCard.todaysCardOrFullList(index) } }
           >
             <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.onDay) } </span>
             - {setTags( card.tags ) }
@@ -311,7 +290,15 @@ const styling = {
   },
 
   active: {
-    color: 'white', backgroundColor: '#242424',
+    // color: 'white', backgroundColor: '#242424',
+    // color: 'white', backgroundColor: '#190061',
+    // color: 'white', backgroundColor: '#0c0032',
+    // color: 'white', backgroundColor: '#282828',
+    // color: 'white', backgroundColor: '#86c232',
+    // color: 'white', backgroundColor: '#525b56',
+    // color: 'white', backgroundColor: '#BE9063',
+    color: 'white', backgroundColor: '#A4978E',
+    // color: 'white', backgroundColor: '#66FCF1',
   },
 
   passive: {

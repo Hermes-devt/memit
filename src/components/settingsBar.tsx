@@ -43,7 +43,13 @@ export function SettingsBar(props: Props):any{
     <span style={{...styles.schedule, ...{}}} onClick={ ()=>props.onDisplayWindow( 1 ) }>Home</span>
     <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 2 ) }>Schedule</span>
     <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 3 ) }>Search</span>
-    <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 4 ) }>Later learnings</span>
+    <span 
+      style={styles.schedule} 
+      // onMouseOver={ ()=>{ }}
+      // onMouseOut={ ()=>{ }}
+
+      onClick={ ()=>props.onDisplayWindow( 4 ) }
+      >Later learnings</span>
 
     <span style={{opacity: 1}}>
     <div style={styles.layoutContainer as CSSProperties}>
@@ -74,7 +80,7 @@ const styles = {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: 130,
+    width: 140,
     height: '100%',
     backgroundColor: '#242424',
     opacity: 0.8,
@@ -99,8 +105,8 @@ const styles = {
   container: {
     position: 'relative',
     height: '30px',
-    color: 'white', 
-    backgroundColor: '#242424',
+    backgroundColor: '#242424', color: 'white', 
+    // backgroundColor: 'white', color: 'black',
     borderBottom: '1px solid silver'
   },
 

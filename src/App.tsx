@@ -19,19 +19,17 @@ import Search from './components/contentarea/search';
 import Stats from './components/stats';
 import LaterLearnings from './components/laterLearnings';
 import InsertLaterLearnings from './components/insertLaterLearnings';
-import {save} from './js/storageHandling';
+// import {save} from './js/storageHandling';
 import HorizontalDailyCards from './components/horizontalDailyCards';
 import {UserData} from './types';
 
 
 export function App(){
   const [data, setData] = useState<any>(null);
-  const [layout, setLayout] = useState<number>(2);
+  const [layout, setLayout] = useState<number>(1);
   const [displayVerticalBar, setDisplayVerticalBar] = useState<boolean>(true);
   const [activeNote, setActiveNote] = useState<number>(0);
-
   const [forceUpdate, setForceUpdate] = useState<number>(1);
-
   const [displayWindow, setDisplayWindow] = useState<number>(1)
   const dispatch = useDispatch();
 
@@ -51,8 +49,8 @@ export function App(){
   const displayContentAreas = ():any=>{ return (displayWindow === 1 ? {display: 'block'} : {display: 'none'}) }
 
   return(
-    <Container fluid className='m-0 p-0'>
-      {/* {data && <Navbar />} */}
+    <Container className='m-0 p-0' fluid>
+      {data && <Navbar />}
       <SettingsBar 
         onClick={ onSettingsBarClick } 
         menuClick={ onMenuClick } 
@@ -60,6 +58,16 @@ export function App(){
         windowDisplay={ displayWindow }
         onDisplayWindow={ (window:number)=> { setDisplayWindow(window)}}
       />
+      {/* {data && 
+        <InsertLaterLearnings 
+        data={data} 
+        setData={ (nData)=>{ 
+          dispatch( storage.setData(nData) ); 
+          let active: number = Util.lastElement(data.list);
+          setActiveNote( active );
+          setForceUpdate( forceUpdate => forceUpdate + 1);
+        }}
+        /> } */}
 
 
       {data && displayWindow === 2 && <Schedule /> }
@@ -67,23 +75,34 @@ export function App(){
       {data && displayWindow === 4 && <LaterLearnings /> }
 
       <div style={ displayContentAreas() }>
-        {data && 
+        {/* {data && 
           <InsertLaterLearnings 
           data={data} 
           setData={ (nData)=>{ 
             dispatch( storage.setData(nData) ); 
             let active: number = Util.lastElement(data.list);
             setActiveNote( active );
-            // setActiveNote(0);
             setForceUpdate( forceUpdate => forceUpdate + 1);
           }}
         /> }
+        <div></div> */}
 
         { !displayVerticalBar && data && <>
+
           <HorizontalDailyCards 
             onClick={(note:number)=> { setActiveNote(note) }} 
             activeNote={activeNote}
           />
+
+          <InsertLaterLearnings 
+            data={data} 
+            setData={ (nData)=>{ 
+              dispatch( storage.setData(nData) ); 
+              let active: number = Util.lastElement(data.list);
+              setActiveNote( active );
+              setForceUpdate( forceUpdate => forceUpdate + 1);
+          }} />
+
         </>}
 
         <Row className='m-0 p-0 no-gutters'>
@@ -101,7 +120,7 @@ export function App(){
         </Row>
       </div>
 
-      {/* <Footer />  */}
+      <Footer /> 
       {data && <Stats />}
     </Container>
   )
