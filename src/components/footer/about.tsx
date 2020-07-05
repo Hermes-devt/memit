@@ -3,7 +3,7 @@ import React from 'react';
 export const About = () => {
   return(<div>
     <h2 style={{color: 'orange'}}>About</h2>
-    <div>
+    <div style={{paddingBottom: 20}}>
       This is a application that lets you plugin your daily learnings
       to a set schedule so it allows you to repeat the information again
       just before you forget about it. 

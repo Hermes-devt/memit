@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 // class Contact extends Component {
 export function Contact(){
   return (
-    <div>
+    <div style={{paddingBottom: 20}}>
       <div>
         <h2 style={{color: 'orange'}}>Contact</h2>
         <div style={styles.col1}>Email: </div>

@@ -49,7 +49,7 @@ export function App(){
   const displayContentAreas = ():any=>{ return (displayWindow === 1 ? {display: 'block'} : {display: 'none'}) }
 
   return(
-    <Container className='m-0 p-0' fluid>
+    <div className="m-0 p-0" style={{display: 'block', width: '120vw'}}>
       {data && <Navbar />}
       <SettingsBar 
         onClick={ onSettingsBarClick } 
@@ -58,16 +58,6 @@ export function App(){
         windowDisplay={ displayWindow }
         onDisplayWindow={ (window:number)=> { setDisplayWindow(window)}}
       />
-      {/* {data && 
-        <InsertLaterLearnings 
-        data={data} 
-        setData={ (nData)=>{ 
-          dispatch( storage.setData(nData) ); 
-          let active: number = Util.lastElement(data.list);
-          setActiveNote( active );
-          setForceUpdate( forceUpdate => forceUpdate + 1);
-        }}
-        /> } */}
 
 
       {data && displayWindow === 2 && <Schedule /> }
@@ -75,18 +65,6 @@ export function App(){
       {data && displayWindow === 4 && <LaterLearnings /> }
 
       <div style={ displayContentAreas() }>
-        {/* {data && 
-          <InsertLaterLearnings 
-          data={data} 
-          setData={ (nData)=>{ 
-            dispatch( storage.setData(nData) ); 
-            let active: number = Util.lastElement(data.list);
-            setActiveNote( active );
-            setForceUpdate( forceUpdate => forceUpdate + 1);
-          }}
-        /> }
-        <div></div> */}
-
         { !displayVerticalBar && data && <>
 
           <HorizontalDailyCards 
@@ -122,7 +100,7 @@ export function App(){
 
       <Footer /> 
       {data && <Stats />}
-    </Container>
+    </div>
   )
 }
 

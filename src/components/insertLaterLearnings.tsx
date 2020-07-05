@@ -83,10 +83,12 @@ export function InsertLaterLearnings(props: Props){
 
 export default InsertLaterLearnings;
 const container = {
+  display: 'inline-block',
   fontSize: 10,
   verticalAlign: 'top',
   paddingLeft: '10px',
   height: '25px',
+  width: '330px',
 
 }
 

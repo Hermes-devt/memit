@@ -6,6 +6,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {setData} from '../../store/data/action';
 import { save, setDailyCards } from '../../js/storageHandling';
 import {UserData} from '../../types';
+import {Row, Col} from 'react-bootstrap';
 
 type stringNumber = string | number;
 export const Scheduler = ()=> { 
@@ -41,13 +42,18 @@ export const Scheduler = ()=> {
     <Container fluid style={container}> 
       <div className='text-center' style={{color: 'white'}}>Scheduler - Days from now</div>
       <div className='d-flex justify-content-center'>
-      {schedule && schedule.map( (item: stringNumber, index:number)=>{ return(
-        <input key={index} type="text" 
-          value={item === 0 ? 0 : item}
-          style={inputBox}
-          onChange={(evt)=> onChange(evt, index) }
-        />
-      )})}
+        <Row className="no-gutters">
+          {schedule && schedule.map( (item: stringNumber, index:number)=>{ return(
+            <Col key={index}>
+            <input type="text" 
+              value={item === 0 ? 0 : item}
+              style={inputBox}
+              onChange={(evt)=> onChange(evt, index) }
+            />
+            </Col>
+          )})}
+
+        </Row>
       </div>
     </Container>
   )
@@ -64,8 +70,10 @@ const inputBox: CSSProperties = {
   cursor: 'pointer',
   marginTop: 5,
   marginLeft: 5,
+  borderRadius: 4,
   fontSize: 9,
-
+  border: 'none',
+  outline: 'none',
 }
 
 export default Scheduler;

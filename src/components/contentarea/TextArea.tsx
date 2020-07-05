@@ -28,10 +28,10 @@ export function TextArea( props: Props){
 
   const onChange = (evt:any)=>{
     const _text: string = evt.target.value;
-    setText( _text );
     let nData:any = Object.assign({}, data)
     nData.list[activeNote][name] = _text;
     save(data);
+    setText( _text );
   }
 
   return(

@@ -36,10 +36,9 @@ export function Schedule():any{
   },[]) //eslint-disable-line
 
   return(
-    <Container fluid className='m-0 p-0' style={{ backgroundColor: 'silver'}}>
+    <Container className='m-0 p-0' fluid style={{ backgroundColor: 'silver', minHeight: '100vh'}}>
       {days.map( (item: dailySchedule, index:number)=>{
         if( item.totalNrOfQuestions === 0 ) return <span key={index}></span> 
-
         return(
           <div key={index} className='pt-0- m-0'>
             <div style={{backgroundColor:'black', color: 'white', padding: '4px 4px'}}>

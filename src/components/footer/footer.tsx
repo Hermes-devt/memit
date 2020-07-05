@@ -11,10 +11,10 @@ export function Footer(){
     <Container fluid style={styles.footer}>
       <div style={styles.footer}>
         <Row className="flex" style={{backgroundColor: '',}}>
-          <Col className="d-none d-md-block col-sm-4 ">
+          <Col className="d-none d-md-block col-sm-4 p-2">
             <About />
           </Col>
-          <Col className="d-none d-md-block col-sm-4">
+          <Col className="d-none d-md-block col-sm-4 p-2">
             <Contact />
           </Col>
           <Col className="d-none d-md-block col-sm-4">
@@ -35,12 +35,9 @@ export function Footer(){
 const styles = {
   footer: {
     paddingTop: 15,
-    // backgroundImage: "url(" + img + ")",
-    // backgroundSize: 'cover',
-    // backgroundRepeat: 'no-repeat',
     color: 'white', 
     backgroundColor: '#242424',
-    paddingBottom: 20,
+    // paddingBottom: 20,
   },
 }
 export default Footer;
