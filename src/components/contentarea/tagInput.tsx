@@ -26,6 +26,31 @@ export function TagInput({activeNote}: {activeNote: number}):any{
     save( data );
   };
 
+
+  const mobileInterface = ()=>{
+    return(
+        <Container fluid>
+            <Row className="">
+              <Col className="m-0 p-0 col-sm-12">
+                <input 
+                  style={styling.t2}
+                  type="text" 
+                  value={tags}
+                  onBlur={ saveToStorage }
+                  placeholder="Card Tags"
+                  onChange={( (evt)=>{ 
+                    let data = {...Data}
+                    data.list[activeNote].tags = evt.target.value;
+                    setTags(evt.target.value);
+                    dispatch( setData(data));
+                  })}
+                />
+              </Col>
+            </Row>
+      </Container>)
+  }
+
+  const desktopInterface = ()=>{
   return(
       <Container fluid>
           <Row className="">
@@ -45,9 +70,13 @@ export function TagInput({activeNote}: {activeNote: number}):any{
               />
             </Col>
             <Col className='m-0 p-0 col-sm-2'> <div style={styling.t1}>Tags</div> </Col>
-
           </Row>
     </Container>)
+  }
+
+  const mobile = false;
+  if( mobile) return mobileInterface();
+  else return desktopInterface();
 }
 
 const styling = {

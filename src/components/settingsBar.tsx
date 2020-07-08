@@ -17,63 +17,132 @@ interface Props {
 }
 
 export function SettingsBar(props: Props):any{
+  const mobile = false;
+
+
+
+  if( !mobile ) return desktopInterface(props);
+  else return mobileInterface(props);
+  // if( mobile){
+    // props.onClick(2);
+    // return mobileInterface(props);
+  // } 
+  // return(
+  // <div style={styles.container as CSSProperties}>
+  //   <Timer />
+
+  //   {/* Makes the menu unclickable and make it look transparant. */}
+  //   {props.windowDisplay !== 1 && <div style={styles.hideIt as CSSProperties}></div> }
+
+  //   <span style={styles.menu as CSSProperties} onClick={ ()=>{ props.menuClick() }} > 
+  //     <Menu onClick={ ()=>{ console.log('clicked on the menu icon!') }}
+  //     />
+
+  //     {props.displayVerticalBar && <span style={{ paddingLeft: 10,}}>Hide menu</span>}
+  //     {!props.displayVerticalBar && <span style={{paddingLeft: 10,}}>Display menu</span> }
+  //   </span>
+
+  //   {/* <div style={popup as CSSProperties}>
+  //     <div>Print cards</div>
+  //     <div>Style</div>
+  //     <div>Settings</div>
+  //     <div>Account</div>
+  //     <div>Login / Logout</div>
+  //   </div> */}
+
+  //   <span style={{...styles.schedule, ...{}}} onClick={ ()=>props.onDisplayWindow( 1 ) }>Home</span>
+  //   <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 2 ) }>Schedule</span>
+  //   <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 3 ) }>Search</span>
+  //   <span 
+  //     style={styles.schedule} 
+  //     onClick={ ()=>props.onDisplayWindow( 4 ) }
+  //     >Later learnings</span>
+
+  //   <span style={{position: 'absolute', right: 85, top: 3, opacity: 1}}>
+  //     <span style={ styles.layouts} onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>
+  //     <span style={ styles.layouts} onClick={ ()=> props.onClick(1)}> <Layout2 /> </span>
+  //     <span style={ styles.layouts} onClick={ ()=> props.onClick(3)}> <Layout3 /> </span>
+  //     <span style={ styles.layouts} onClick={ ()=> props.onClick(4)}> <Layout4 /> </span>
+  //   </span>
+  // </div>)
+}
+
+const mobileInterface = (props: Props )=>{
   return(
-  <div style={styles.container as CSSProperties}>
-    <Timer />
+    <div style={styles.container as CSSProperties}>
+     <Timer />
+      <span style={{display: 'inline-block', marginLeft: 5}} > 
+        <Menu onClick={ (evt)=>{ // evt.stopPropagation();
+          props.menuClick();
+          console.log('clicked on the menu icon!') 
+        }} />
+      </span>
 
-    {/* Makes the menu unclickable and make it look transparant. */}
-    {props.windowDisplay !== 1 && <div style={styles.hideIt as CSSProperties}></div> }
+      <span style={{position: 'absolute', right: 80, top: 3, opacity: 1}}>
+        <span style={ styles.layouts} onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>
+        {/* <span style={ styles.layouts} onClick={ ()=> props.onClick(1)}> <Layout2 /> </span> */}
+        <span style={ styles.layouts} onClick={ ()=> props.onClick(3)}> <Layout3 /> </span>
+        <span style={ styles.layouts} onClick={ ()=> props.onClick(4)}> <Layout4 /> </span>
+      </span>
 
-    <span style={styles.menu as CSSProperties} onClick={ ()=>{ props.menuClick() }} > 
-      <Menu onClick={ ()=>{ console.log('clicked on the menu icon!') }}
-      />
 
-      {props.displayVerticalBar && <span style={{ paddingLeft: 10,}}>Hide menu</span>}
-      {!props.displayVerticalBar && <span style={{paddingLeft: 10,}}>Display menu</span> }
-    </span>
-
-    {/* <div style={popup as CSSProperties}>
-      <div>Print cards</div>
-      <div>Style</div>
-      <div>Settings</div>
-      <div>Account</div>
-      <div>Login / Logout</div>
-    </div> */}
-
-    <span style={{...styles.schedule, ...{}}} onClick={ ()=>props.onDisplayWindow( 1 ) }>Home</span>
-    <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 2 ) }>Schedule</span>
-    <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 3 ) }>Search</span>
-    <span 
-      style={styles.schedule} 
-      // onMouseOver={ ()=>{ }}
-      // onMouseOut={ ()=>{ }}
-
-      onClick={ ()=>props.onDisplayWindow( 4 ) }
-      >Later learnings</span>
-
-    <span style={{opacity: 1}}>
-    <div style={styles.layoutContainer as CSSProperties}>
-      <span style={ styles.layouts} onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>
-      <span style={ styles.layouts} onClick={ ()=> props.onClick(1)}> <Layout2 /> </span>
-      <span style={ styles.layouts} onClick={ ()=> props.onClick(3)}> <Layout3 /> </span>
-      <span style={ styles.layouts} onClick={ ()=> props.onClick(4)}> <Layout4 /> </span>
     </div>
-    </span>
-  </div>)
+  )
 }
 
-const popup = {
-  position: 'absolute',
-  left: 0,
-  top: 30,
-  width: 200,
-  backgroundColor: 'black',
-  opacity: 0.9,
-  zIndex: 5,
-  color: 'white',
-  padding: 10,
-  cursor: 'pointer',
+const desktopInterface = (props: Props)=>{
+  return(
+    <div style={styles.container as CSSProperties}>
+      <Timer />
+  
+      {/* Makes the menu unclickable and make it look transparant. */}
+      {props.windowDisplay !== 1 && <div style={styles.hideIt as CSSProperties}></div> }
+  
+      <span style={styles.menu as CSSProperties} onClick={ ()=>{ props.menuClick() }} > 
+        <Menu onClick={ ()=>{ console.log('clicked on the menu icon!') }}
+        />
+  
+        {props.displayVerticalBar && <span style={{ paddingLeft: 10,}}>Hide menu</span>}
+        {!props.displayVerticalBar && <span style={{paddingLeft: 10,}}>Display menu</span> }
+      </span>
+  
+      {/* <div style={popup as CSSProperties}>
+        <div>Print cards</div>
+        <div>Style</div>
+        <div>Settings</div>
+        <div>Account</div>
+        <div>Login / Logout</div>
+      </div> */}
+  
+      <span style={{...styles.schedule, ...{}}} onClick={ ()=>props.onDisplayWindow( 1 ) }>Home</span>
+      <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 2 ) }>Schedule</span>
+      <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 3 ) }>Search</span>
+      <span 
+        style={styles.schedule} 
+        onClick={ ()=>props.onDisplayWindow( 4 ) }
+        >Later learnings</span>
+  
+      <span style={{position: 'absolute', right: 85, top: 3, opacity: 1}}>
+        <span style={ styles.layouts} onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>
+        <span style={ styles.layouts} onClick={ ()=> props.onClick(1)}> <Layout2 /> </span>
+        <span style={ styles.layouts} onClick={ ()=> props.onClick(3)}> <Layout3 /> </span>
+        <span style={ styles.layouts} onClick={ ()=> props.onClick(4)}> <Layout4 /> </span>
+      </span>
+    </div>) 
 }
+
+// const popup = {
+//   position: 'absolute',
+//   left: 0,
+//   top: 30,
+//   width: 200,
+//   backgroundColor: 'black',
+//   opacity: 0.9,
+//   zIndex: 5,
+//   color: 'white',
+//   padding: 10,
+//   cursor: 'pointer',
+// }
 
 const styles = {
   hideIt:{
@@ -112,7 +181,8 @@ const styles = {
 
   layoutContainer:{
     position: 'absolute',
-    right: 85,
+    zIndex: 999,
+    right: 80,
     top: 3,
   },
 

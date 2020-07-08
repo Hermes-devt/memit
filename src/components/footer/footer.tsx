@@ -11,15 +11,9 @@ export function Footer(){
     <Container fluid style={styles.footer}>
       <div style={styles.footer}>
         <Row className="flex" style={{backgroundColor: '',}}>
-          <Col className="d-none d-md-block col-sm-4 p-2">
-            <About />
-          </Col>
-          <Col className="d-none d-md-block col-sm-4 p-2">
-            <Contact />
-          </Col>
-          <Col className="d-none d-md-block col-sm-4">
-            <NewsLetter />
-          </Col>
+          <Col className="d-none d-md-block col-sm-4 p-2"> <About /> </Col>
+          <Col className="d-none d-md-block col-sm-4 p-2"> <Contact /> </Col>
+          <Col className="d-none d-md-block col-sm-4"> <NewsLetter /> </Col>
 
           <div className="px-5 d-md-none margin-auto">
             <About />

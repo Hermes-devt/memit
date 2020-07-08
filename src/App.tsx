@@ -48,8 +48,9 @@ export function App(){
   const setContentOnFullWidth = (): string=>{ return displayVerticalBar ? 'm-0 p-0 col-sm-10 no-gutters' : 'm-0 p-0 col-sm-12 no-gutters'; }
   const displayContentAreas = ():any=>{ return (displayWindow === 1 ? {display: 'block'} : {display: 'none'}) }
 
+  const mobile = false;
   return(
-    <div className="m-0 p-0" style={{display: 'block', width: '120vw'}}>
+    <div className="m-0 p-0" style={{display: 'block', width: '100vw'}}>
       {data && <Navbar />}
       <SettingsBar 
         onClick={ onSettingsBarClick } 
@@ -60,9 +61,21 @@ export function App(){
       />
 
 
+
       {data && displayWindow === 2 && <Schedule /> }
       {data && displayWindow === 3 && <Search /> }
       {data && displayWindow === 4 && <LaterLearnings /> }
+
+      { displayVerticalBar && mobile && data &&
+      <div style={{position: 'relative'}}>
+      <div 
+        style={{zIndex: 99999, position: 'absolute', top: 0, left: 0, width: '60vw', height: '100vh', overflow: 'scroll', backgroundColor: 'white'}}>
+          <VerticalBar 
+          onClick={(note:number)=> { setActiveNote(note) }} 
+          activeNote={ activeNote } /> 
+        </div>
+      </div>
+      }
 
       <div style={ displayContentAreas() }>
         { !displayVerticalBar && data && <>
@@ -83,13 +96,15 @@ export function App(){
 
         </>}
 
+
         <Row className='m-0 p-0 no-gutters'>
-          { displayVerticalBar && <Col className='m-0 p-0 col-sm-2 overflow-auto'>
+          { displayVerticalBar && !mobile && data && 
+          <Col className='m-0 p-0 col-sm-2 overflow-auto'>
               {data && 
                 <VerticalBar 
                 onClick={(note:number)=> { setActiveNote(note) }} 
                 activeNote={ activeNote } /> 
-            } </Col> } 
+              } </Col> } 
 
           <Col className={ setContentOnFullWidth()}>
             {data && <TagInput  activeNote={ activeNote }/> }

@@ -52,6 +52,7 @@ export function Navbar(props: Props){
 
     setTodayCards( todayCards ); 
     setCheckboxes( Data.dailyCards ); 
+
     setCardsMissed( cardsMissed );
   },[Data]) // eslint-disable-line
 
@@ -109,9 +110,20 @@ export function Navbar(props: Props){
 
   const onCheckbox = {
     missedCards: (index:number)=>{
-      let nData = {...Data};
-      nData.missedCards[index].done = !nData.missedCards[index].done;
+      let nData: UserData = Data;
+      let CardsMissed = [...Data.missedCards]
+
+      //Change the state in the global store object
+      CardsMissed[index].done = !CardsMissed[index].done;
+      nData.missedCards = [...CardsMissed ];
       dispatch( setData(nData) );
+
+      //Change state on the local stage object.
+      let temp = [...cardsMissed];
+      temp[index].done = CardsMissed[index].done;
+      setCardsMissed( temp );
+
+      //save to storaage
       save( nData );
     },
 
@@ -194,7 +206,7 @@ export function Navbar(props: Props){
             <div key={index} 
               style={styles.onMissingCards(card)}
               onClick={ (ev)=> {
-                // ev.stopPropagation(); 
+                ev.stopPropagation(); 
                 onCard.onOneMissedCard(card, index) ;
               }} >
                 <span style={{fontWeight: 'bold'}}>{ dateHandling.getDayMonthFromInt(card.data.onDay) } </span>
@@ -279,6 +291,7 @@ const styling = {
     position: 'absolute', 
     bottom: 10, 
     right: 3,
+    zIndex: 999999999,
   },
 
   card: {

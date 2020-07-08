@@ -51,13 +51,41 @@ export function InsertLaterLearningsPopup(props: Props){
     return( ()=>{ document.removeEventListener( 'keydown', onPress, true); })
   },[questions, answers]) //eslint-disable-line
 
-  return(
-    <div style={container} onClick={ ()=>{ }} >
-      <textarea readOnly style={textarea} value={questions} />
-      <textarea readOnly style={textarea} value={answers} />
-      <div onClick={ ()=> props.insert( questions, answers)} style={insert} >INSERT</div>
-      <div onClick={ props.cancel } style={cancel}>CANCEL</div> </div>
-  )
+
+
+  const MobileInterface = ()=>{
+    return(
+      <div style={containerMobile} onClick={ ()=>{ }} >
+        <textarea readOnly style={textarea} value={questions} />
+        <textarea readOnly style={textarea} value={answers} />
+        <div onClick={ ()=> props.insert( questions, answers)} style={insert} >INSERT</div>
+        <div onClick={ props.cancel } style={cancel}>CANCEL</div> </div>
+    )
+  }
+
+  const DesktopInterface = ()=>{
+    return(
+      <div style={container} onClick={ ()=>{ }} >
+        <textarea readOnly style={textarea} value={questions} />
+        <textarea readOnly style={textarea} value={answers} />
+        <div onClick={ ()=> props.insert( questions, answers)} style={insert} >INSERT</div>
+        <div onClick={ props.cancel } style={cancel}>CANCEL</div> </div>
+    )
+  }
+
+  const mobile = false;
+  if( mobile ) return MobileInterface();
+  else return DesktopInterface();
+  // if( !mobile ) return DesktopInterface();
+  // else return MobileInterface();
+  // return <span></span>
+  // return(
+  //   <div style={container} onClick={ ()=>{ }} >
+  //     <textarea readOnly style={textarea} value={questions} />
+  //     <textarea readOnly style={textarea} value={answers} />
+  //     <div onClick={ ()=> props.insert( questions, answers)} style={insert} >INSERT</div>
+  //     <div onClick={ props.cancel } style={cancel}>CANCEL</div> </div>
+  // )
 }
 
 export default InsertLaterLearningsPopup;
@@ -117,5 +145,22 @@ const container = {
   backgroundColor: 'white',
   border: '1px solid silver',
   borderRadius: 5,
+} as CSSProperties
 
+
+const containerMobile = {
+  color: 'black',
+  zIndex: 999,
+  fontSize: 8,
+  position: 'fixed',
+  left: '50%',
+  top: '50%',
+  boxSizing: 'border-box',
+  marginLeft: '-48vw',
+  marginTop: '-40vh',
+  width: '96vw',
+  height: '80vh',
+  backgroundColor: 'white',
+  border: '1px solid silver',
+  borderRadius: 5,
 } as CSSProperties
