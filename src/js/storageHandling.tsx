@@ -40,7 +40,16 @@ interface DailyCards { ID: number, done: boolean }
 
 export function setDailyCards(dataObj: UserData,){
   let todayCards = cardsToRepeat( dataObj, getDaysAfter1970() );
-  dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
+  // dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
+
+  //map to the new datastructure
+  let dailys: DailyCards[] = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
+
+  //Reverse the array so the newly learnt knowledge is in the fist place. 
+  let reverseDailys: DailyCards[] = dailys.reverse();
+
+  dataObj.dailyCards = [...reverseDailys];
+  // dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
 }
 
 
