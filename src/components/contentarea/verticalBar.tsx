@@ -50,6 +50,9 @@ export function Navbar(props: Props){
     setList(list);
     setData2(data);
 
+    // console.log( 'todaysCards1', todayCards );
+    // console.log('TOdayscard 2', Data.dailyCards );
+    // todayCards = todayCards.reverse();
     setTodayCards( todayCards ); 
     setCheckboxes( Data.dailyCards ); 
 

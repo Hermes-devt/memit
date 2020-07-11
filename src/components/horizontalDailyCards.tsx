@@ -62,10 +62,10 @@ export function HorizontalDailyCards(props: Props){
   }
 
   return<span>
+    <span style={{fontWeight: 'bold', fontSize: 15, paddingLeft: 5}}>Daily cards:</span>
     <span 
-      style={{display: 'inline-block', cursor: 'pointer', width: 80, textAlign: 'center'
-      , border: '1px solid black', borderRadius: 5, 
-    }}
+      style={{display: 'inline-block', cursor: 'pointer', width: 80, textAlign: 'center', marginLeft: '5px', fontSize: 12, border: '1px solid black', borderTop: 'none', borderBottom: 'none', borderRadius: 5, }}
+      // style={{display: 'inline-block', cursor: 'pointer', fontWeight: 'normal', width: '60px', borderRight: '1px solid black', textAlign: 'center', fontSize: 12}}
       onClick={ ()=>{
         let list = Data.list;
         let todaysCard = list.length > 0 ? list.length - 1 : 0;
@@ -74,7 +74,6 @@ export function HorizontalDailyCards(props: Props){
       >Todays
     </span>
 
-    <span style={{fontWeight: 'bold', fontSize: 15, paddingLeft: 5}}>Daily cards:</span>
     { daily.map( (card: Day, index:number)=>{
       return (
       <abbr

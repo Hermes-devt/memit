@@ -23,7 +23,7 @@ export function InsertLaterLearnings(props: Props){
     <span style={container}>
       <span style={{fontWeight:'bold'}}> Insert: </span>
       {Data.laterLearnings.list.map( (item: tLaterType, index:number)=>{
-
+        console.log( 'name', item.name);
         return(
           <span
             key={index} 
@@ -88,7 +88,6 @@ const container = {
   verticalAlign: 'top',
   paddingLeft: '10px',
   height: '25px',
-  width: '330px',
 
 }
 

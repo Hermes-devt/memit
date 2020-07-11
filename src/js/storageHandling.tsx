@@ -29,7 +29,6 @@ export function cleanListFromPastEmptyDays(dataObj: UserData){
 export function cleanlistFromUserInput(dataObj: UserData){
   dataObj.list.forEach( (item:any)=>{
     if( 'userInput' in item ){
-      console.log( item.userInput);
       delete item.userInput;
     }
   });
@@ -40,16 +39,22 @@ interface DailyCards { ID: number, done: boolean }
 
 export function setDailyCards(dataObj: UserData,){
   let todayCards = cardsToRepeat( dataObj, getDaysAfter1970() );
-  // dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
+  const notReverse = true;
+  if( notReverse ){
+    dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
+  }
 
-  //map to the new datastructure
-  let dailys: DailyCards[] = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
+  else{
+    //map to the new datastructure
+    // let dailys: DailyCards[] = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
 
-  //Reverse the array so the newly learnt knowledge is in the fist place. 
-  let reverseDailys: DailyCards[] = dailys.reverse();
+    // //Reverse the array so the newly learnt knowledge is in the fist place. 
+    // let reverseDailys: DailyCards[] = dailys.reverse();
 
-  dataObj.dailyCards = [...reverseDailys];
-  // dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
+    // dataObj.dailyCards = [...reverseDailys];
+    // console.log('dailyCads', dataObj.dailyCards);
+    // dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
+  }
 }
 
 
