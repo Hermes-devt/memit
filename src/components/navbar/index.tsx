@@ -5,7 +5,7 @@ import {Container, Row, Col} from 'react-bootstrap';
 import {ReactComponent as Clockcss} from '../../IMG/clock1.svg';
 // import {ReactComponent as BG} from '../../IMG/topbarBG.svg';
 // import img from '../../IMG/image20.png';
-import img from '../../IMG/topbarBG.svg';
+import img from '../../IMG/sky2.jpg';
 
 export const Navbar = ()=>{
   return(
@@ -31,8 +31,7 @@ const container: CSSProperties = {
   backgroundImage: "url(" + img + ")",
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
-  color: 'orange',
-
+  color: 'silver',
   paddingBottom: 10,
   marginBottom: 1,
   borderBottom: '1px solid #242424',

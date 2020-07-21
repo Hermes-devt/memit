@@ -21,9 +21,8 @@ export function InsertLaterLearnings(props: Props){
 
   return(
     <span style={container}>
-      <span style={{fontWeight:'bold'}}> Insert: </span>
-      {Data.laterLearnings.list.map( (item: tLaterType, index:number)=>{
-        console.log( 'name', item.name);
+      <span style={{display: 'inline-block', padding: '5px 10px 0px 5px', fontWeight:'bold', verticalAlign: 'bottom', fontSize: 12, cursor: 'pointer', borderRight: '1px solid black'}}>Later learnings</span>
+      {false && Data.laterLearnings.list.map( (item: tLaterType, index:number)=>{
         return(
           <span
             key={index} 
@@ -31,10 +30,7 @@ export function InsertLaterLearnings(props: Props){
             onClick={ ()=>{ 
               setPopup( {display: true, indexClicked: index});
             }}
-          >
-            <span
-            
-            >{item.name}</span>
+          > <span>{item.name}</span>
             <NumericInput 
               placeholder={"0"}
               value={ item.questionsFetch}

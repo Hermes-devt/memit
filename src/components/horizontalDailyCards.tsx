@@ -8,12 +8,12 @@ import {save} from '../js/storageHandling';
 import {ReactComponent as CheckboxTrue} from './../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from './../IMG/checkFalse.svg';
 
-
 import {useSelector, useDispatch} from 'react-redux';
 
 interface Props{
   activeNote: number;
   onClick(note:number): void;
+  mobile: boolean;
 }
 
 export function HorizontalDailyCards(props: Props){
@@ -61,11 +61,19 @@ export function HorizontalDailyCards(props: Props){
     return card === _activeCard ? {...cardStyle, ...active} : cardStyle;
   }
 
-  return<span>
-    <span style={{fontWeight: 'bold', fontSize: 15, paddingLeft: 5}}>Daily cards:</span>
+  const dailyCardStyle ={display: 'inline-block', cursor: 'pointer', width: 80, textAlign: 'center', marginLeft: '5px', fontSize: 12, border: '1px solid black', borderTop: 'none', borderBottom: 'none', borderRadius: 5 };
+  const setDailyCardStyle = ()=>{
+    let _activeCard = Data.list[props.activeNote];
+    let todaysCard = Data.list.length > 0 ? Data.list.length - 1 : 0;
+    const TODAY = Data.list[todaysCard];
+    return _activeCard.onDay === TODAY.onDay ? {...dailyCardStyle, ...{fontWeight: 'bold'}} : dailyCardStyle;
+  }
+
+  return<span style={{display: 'inline-block'}} className="noselect">
+    {!props.mobile && <span style={{fontWeight: 'bold', fontSize: 15, paddingLeft: 5}}>Daily cards:</span>}
+
     <span 
-      style={{display: 'inline-block', cursor: 'pointer', width: 80, textAlign: 'center', marginLeft: '5px', fontSize: 12, border: '1px solid black', borderTop: 'none', borderBottom: 'none', borderRadius: 5, }}
-      // style={{display: 'inline-block', cursor: 'pointer', fontWeight: 'normal', width: '60px', borderRight: '1px solid black', textAlign: 'center', fontSize: 12}}
+      style={ setDailyCardStyle() as CSSProperties }
       onClick={ ()=>{
         let list = Data.list;
         let todaysCard = list.length > 0 ? list.length - 1 : 0;
@@ -83,21 +91,7 @@ export function HorizontalDailyCards(props: Props){
         key={index}
       >
         <span >{setTags( card.tags)} </span>
-        {checkBoxes[index].done && 
-          <span style={{position: 'absolute', right: 2, top: 4, width: 10, height: 10}} 
-          onClick={ (ev:any)=>{
-            ev.stopPropagation();
-            let nData = {...Data};
-            let _checkboxes = [...checkBoxes];
-            _checkboxes[index].done = !_checkboxes[index].done;
-            setCheckboxes( _checkboxes);
-            nData.dailyCards = [..._checkboxes];
-            dispatch( storage.setData(nData));
-            save(nData);
-          }}
-          ><CheckboxTrue /> </span> }
-        {!checkBoxes[index].done && 
-        <span style={{position: 'absolute', right: 2, top: 4, width: 10, height: 10}} 
+        <span
           onClick={ (ev:any)=>{
             ev.stopPropagation();
             let nData = {...Data};
@@ -109,16 +103,21 @@ export function HorizontalDailyCards(props: Props){
             dispatch( storage.setData(nData));
             save(nData);
           }}
+        >
+        {checkBoxes[index].done && 
+          <span style={{position: 'absolute', right: 2, top: 4, width: 10, height: 10}} 
+          ><CheckboxTrue /> </span> }
+        {!checkBoxes[index].done && 
+        <span style={{position: 'absolute', right: 2, top: 4, width: 10, height: 10}} 
         > <CheckboxFalse /> </span> }
+        </span>
       </abbr>
     )})}
   </span>
 }
 
 const active ={
-  // backgroundColor: 'black',
   fontWeight: 'bold',
-  // color: 'white',
   fontSize: 9,
 } as CSSProperties
 

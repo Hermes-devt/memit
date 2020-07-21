@@ -7,7 +7,12 @@ import {save} from '../../js/storageHandling';
 import {UserData} from '../../types';
 
 
-export function TagInput({activeNote}: {activeNote: number}):any{
+interface Props {
+  activeNote: number;
+  mobile: boolean;
+}
+export function TagInput({activeNote, mobile}: {activeNote: number, mobile:boolean}):any{
+// export function TagInput({activeNote}: {activeNote: number}):any{
   const Data = useSelector((state:any)=> state.data);
   const dispatch = useDispatch();
   const [tags, setTags] = useState('');
@@ -74,9 +79,7 @@ export function TagInput({activeNote}: {activeNote: number}):any{
     </Container>)
   }
 
-  const mobile = false;
-  if( mobile) return mobileInterface();
-  else return desktopInterface();
+  return mobile ? mobileInterface() : desktopInterface();
 }
 
 const styling = {

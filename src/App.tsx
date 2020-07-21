@@ -30,7 +30,9 @@ export function App(){
   const [displayVerticalBar, setDisplayVerticalBar] = useState<boolean>(true);
   const [activeNote, setActiveNote] = useState<number>(0);
   const [forceUpdate, setForceUpdate] = useState<number>(1);
-  const [displayWindow, setDisplayWindow] = useState<number>(1)
+  const [displayWindow, setDisplayWindow] = useState<number>(1);
+  const [mobile, setMobile] = useState<boolean>(false);
+
   const dispatch = useDispatch();
 
   useEffect( ()=>{
@@ -41,16 +43,17 @@ export function App(){
     setData(data);
     setActiveNote( active );
     // save(data);
+    if( window.innerWidth < 700 ) setMobile(true);
   },[]); //eslint-disable-line
+
 
   const onSettingsBarClick = (nr: number): void => setLayout( nr );
   const onMenuClick = ()=> setDisplayVerticalBar( (displayVerticalBar=> !displayVerticalBar));
   const setContentOnFullWidth = (): string=>{ return displayVerticalBar ? 'm-0 p-0 col-sm-10 no-gutters' : 'm-0 p-0 col-sm-12 no-gutters'; }
   const displayContentAreas = ():any=>{ return (displayWindow === 1 ? {display: 'block'} : {display: 'none'}) }
 
-  const mobile = false;
   return(
-    <div className="m-0 p-0" style={{display: 'block', width: '100vw'}}>
+    <Container fluid className="m-0 p-0 overflow-hidden">
       {data && <Navbar />}
       <SettingsBar 
         onClick={ onSettingsBarClick } 
@@ -58,6 +61,7 @@ export function App(){
         displayVerticalBar={ displayVerticalBar }
         windowDisplay={ displayWindow }
         onDisplayWindow={ (window:number)=> { setDisplayWindow(window)}}
+        mobile={mobile}
       />
 
 
@@ -83,6 +87,7 @@ export function App(){
           <HorizontalDailyCards 
             onClick={(note:number)=> { setActiveNote(note) }} 
             activeNote={activeNote}
+            mobile={mobile}
           />
 
           <InsertLaterLearnings 
@@ -107,7 +112,7 @@ export function App(){
               } </Col> } 
 
           <Col className={ setContentOnFullWidth()}>
-            {data && <TagInput  activeNote={ activeNote }/> }
+            {data && <TagInput  activeNote={ activeNote } mobile={mobile} /> }
             {data && forceUpdate && <InterfaceOptions layout={layout} activeNote={activeNote}/> }
           </Col>
         </Row>
@@ -115,7 +120,7 @@ export function App(){
 
       <Footer /> 
       {data && <Stats />}
-    </div>
+    </Container>
   )
 }
 

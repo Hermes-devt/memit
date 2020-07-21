@@ -73,19 +73,9 @@ export function InsertLaterLearningsPopup(props: Props){
     )
   }
 
-  const mobile = false;
+  const mobile = window.innerWidth <= 700 ? true : false;
   if( mobile ) return MobileInterface();
   else return DesktopInterface();
-  // if( !mobile ) return DesktopInterface();
-  // else return MobileInterface();
-  // return <span></span>
-  // return(
-  //   <div style={container} onClick={ ()=>{ }} >
-  //     <textarea readOnly style={textarea} value={questions} />
-  //     <textarea readOnly style={textarea} value={answers} />
-  //     <div onClick={ ()=> props.insert( questions, answers)} style={insert} >INSERT</div>
-  //     <div onClick={ props.cancel } style={cancel}>CANCEL</div> </div>
-  // )
 }
 
 export default InsertLaterLearningsPopup;

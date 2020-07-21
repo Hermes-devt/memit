@@ -29,7 +29,6 @@ export function Navbar(props: Props){
   const [cardsMissed, setCardsMissed] = useState<MissedCard[]>([]);
   const [todayCards, setTodayCards] = useState<Day[]>([]);
   const [checkBoxes, setCheckboxes] = useState<iCardsToRepeat[]>([]);
-
   const [list, setList] = useState<Day[]>([]);
   const [activeCard, setActiveCard] = useState<number>(0);
   const [activeDay, setActiveDay] = useState<number>( getDaysAfter1970())
@@ -50,8 +49,6 @@ export function Navbar(props: Props){
     setList(list);
     setData2(data);
 
-    // console.log( 'todaysCards1', todayCards );
-    // console.log('TOdayscard 2', Data.dailyCards );
     // todayCards = todayCards.reverse();
     setTodayCards( todayCards ); 
     setCheckboxes( Data.dailyCards ); 
@@ -193,7 +190,7 @@ export function Navbar(props: Props){
   }
 
   return (
-    <Container fluid className="m-0 p-0 vh-100">
+    <Container fluid className="m-0 p-0 vh-100 noselect">
     <div>
       { todayCards && <React.Fragment>
           <div style={{ ...styling.card, ...styling.header} as CSSProperties}>Today</div>
