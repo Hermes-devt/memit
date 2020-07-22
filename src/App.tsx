@@ -43,7 +43,10 @@ export function App(){
     setData(data);
     setActiveNote( active );
     // save(data);
-    if( window.innerWidth < 700 ) setMobile(true);
+    if( window.innerWidth < 700 ) {
+      setLayout(3);
+      setMobile(true);
+    }
   },[]); //eslint-disable-line
 
 

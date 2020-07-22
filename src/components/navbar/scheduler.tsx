@@ -39,9 +39,9 @@ export const Scheduler = ()=> {
   }
 
   return(
-    <Container fluid style={container}> 
+    <Container fluid style={container} > 
       <div className='text-center' style={{color: 'white'}}>Scheduler - Days from now</div>
-      <div className='d-flex justify-content-center'>
+      <div className='d-flex justify-content-center' style={{marginRight: '3px'}}>
         <Row className="no-gutters">
           {schedule && schedule.map( (item: stringNumber, index:number)=>{ return(
             <Col key={index}>
@@ -66,14 +66,16 @@ const container: CSSProperties= {
 
 const inputBox: CSSProperties = {
   width: 30,
+  display: 'inline-block',
   textAlign: 'center',
   cursor: 'pointer',
   marginTop: 5,
   marginLeft: 5,
   borderRadius: 4,
-  fontSize: 9,
+  fontSize: '0.5em',
   border: 'none',
   outline: 'none',
+  borderRight: '1px solid silver',
 }
 
 export default Scheduler;

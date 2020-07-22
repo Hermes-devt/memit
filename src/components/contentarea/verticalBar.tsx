@@ -156,8 +156,8 @@ export function Navbar(props: Props){
     {...styling.card, ...styling.active} as CSSProperties : {...styling.card} as CSSProperties,
 
     todaysCard: ()=> (activeCard === 0) ? 
-      {...styling.card, ...styling.active, ...{textAlign: 'center', fontSize: 18}} as CSSProperties  : 
-      {...styling.card, ...styling.passive, ...{textAlign: 'center', fontSize: 18}} as CSSProperties ,
+      {...styling.card, ...styling.active, ...{textAlign: 'center', fontSize: '1em'}} as CSSProperties  : 
+      {...styling.card, ...styling.passive, ...{textAlign: 'center', fontSize: '1em'}} as CSSProperties,
 
 
     onMissingCards: (card: MissedCard )=>{ 
@@ -296,22 +296,16 @@ const styling = {
 
   card: {
     position: 'relative',
-    padding: '5px 3px',
+    padding: '3% 3%',
     borderBottom: '1px solid silver',
     cursor: 'pointer',
-    fontSize: 13,
+    fontSize: '0.7em',
   },
 
   active: {
-    // color: 'white', backgroundColor: '#242424',
-    // color: 'white', backgroundColor: '#190061',
-    // color: 'white', backgroundColor: '#0c0032',
-    // color: 'white', backgroundColor: '#282828',
-    // color: 'white', backgroundColor: '#86c232',
     // color: 'white', backgroundColor: '#525b56',
     // color: 'white', backgroundColor: '#BE9063',
     color: 'white', backgroundColor: '#A4978E',
-    // color: 'white', backgroundColor: '#66FCF1',
   },
 
   passive: {

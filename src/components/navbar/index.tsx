@@ -12,15 +12,15 @@ export const Navbar = ()=>{
     <Container fluid style={container}>
       <Row>
         <Col className="d-none d-md-block">
-          <div style={{width: '75px', height: '75px', position: 'absolute', left: 30, top: 25}}> <Clockcss /> </div>
+          <div style={{height: '75%', position: 'absolute', left: '-5%', top: '15%'}}> <Clockcss /> </div>
         </Col>
         <Col className="col-xs-12 col-sm-10 col-md-8">
-          <h1 className='d-none d-md-block text-center'>Repeat Learnings</h1>
+          <h1 className='d-none d-md-block text-center' style={{ fontSize: '2.5em'}}>Repeat Learnings</h1>
           <h3 className='d-sm-12 d-md-none text-center'>Repeat Learnings</h3>
           <Scheduler />
         </Col>
         <Col className="d-none d-sm-block">
-          <div style={{width: '75px', height: '75px', position: 'absolute', right: 30, top: 25, transform: 'rotateY(180deg)'}}> <Clockcss /> </div>
+          <div style={{height: '75%', position: 'absolute', right: '-5%', top: '15%', transform: 'rotateY(180deg)'}}> <Clockcss /> </div>
         </Col>
       </Row>
     </Container>
@@ -31,6 +31,7 @@ const container: CSSProperties = {
   backgroundImage: "url(" + img + ")",
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
+  position: 'relative',
   color: 'silver',
   paddingBottom: 10,
   marginBottom: 1,

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, CSSProperties} from 'react';
 import {tLaterType} from '../types';
 import InsertLaterLearningsPopup from './insertLaterLearningsPopup';
 import NumericInput from './numericInput';
@@ -14,38 +14,55 @@ interface Props{
 
 export function InsertLaterLearnings(props: Props){
   const Data: any = useSelector<any>( (state: {data: UserData })=> state.data );
+
+  const [displayDropdown, setDisplayDropdown] = useState<boolean>(false);
   const [popup, setPopup] = useState<any>( { display: false, indexClicked: 0, })
   const dispatch = useDispatch();
 
   if( Data.laterLearnings.list.length === 0) return <span></span>
 
   return(
-    <span style={container}>
-      <span style={{display: 'inline-block', padding: '5px 10px 0px 5px', fontWeight:'bold', verticalAlign: 'bottom', fontSize: 12, cursor: 'pointer', borderRight: '1px solid black'}}>Later learnings</span>
-      {false && Data.laterLearnings.list.map( (item: tLaterType, index:number)=>{
-        return(
-          <span
-            key={index} 
-            style={insertion}
-            onClick={ ()=>{ 
-              setPopup( {display: true, indexClicked: index});
-            }}
-          > <span>{item.name}</span>
-            <NumericInput 
-              placeholder={"0"}
-              value={ item.questionsFetch}
-              stopPropagation={true}
-              style={{width: 25, color: 'black', backgroundColor: 'white', textAlign: 'center', border: '1px solid silver', marginLeft: 5}}
-              onChange={(nr: number)=>{
-                let nData: UserData = {...Data};
-                nData.laterLearnings.list[index].questionsFetch = nr;
-                dispatch( storage.setData(nData));
-                save(nData);
-              }}
-            />
-          </span>
-        )
-      })}
+    <span style={container} >
+
+      <span 
+        onMouseEnter={ (evt)=>{ setDisplayDropdown(true) } } 
+        onClick={ ()=>{ setDisplayDropdown(true) } }
+        onMouseLeave={ ()=>{ setDisplayDropdown(false) }} 
+      >
+        <span 
+          style={{display: 'inline-block', padding: '5px 10px 0px 5px', fontWeight:'bold', verticalAlign: 'bottom', fontSize: 12, cursor: 'pointer', borderRight: '1px solid black'}}
+        >Later learnings</span>
+        
+        {displayDropdown && <div 
+          style={insertion}>
+          {Data.laterLearnings.list.map( (item: tLaterType, index:number)=>{
+            return(
+              <div
+                key={index} 
+                style={items}
+                onMouseOver={ (evt)=>{ evt.currentTarget.style.backgroundColor = 'silver'; evt.currentTarget.style.color  = 'black'; }}
+                onMouseOut={ (evt)=>{ evt.currentTarget.style.backgroundColor = 'black'; evt.currentTarget.style.color  = 'silver'; }}
+                onClick={ (evt)=>{ 
+                  setPopup( {display: true, indexClicked: index});
+                }}
+              > <span style={{display: 'inline-block', width: 120}}>{item.name}</span>
+                <NumericInput 
+                  placeholder={"0"}
+                  value={ item.questionsFetch}
+                  stopPropagation={true}
+                  style={{ display: 'inline-block', width: 25, color: 'black', backgroundColor: 'white', textAlign: 'center', border: '1px solid silver', marginLeft: 5}}
+                  onChange={(nr: number)=>{
+                    let nData: UserData = {...Data};
+                    nData.laterLearnings.list[index].questionsFetch = nr;
+                    dispatch( storage.setData(nData));
+                    save(nData);
+                  }}
+                />
+              </div>
+            )
+          })} 
+        </div>}
+      </span>
 
       {popup.display && 
         <InsertLaterLearningsPopup 
@@ -84,13 +101,27 @@ const container = {
   verticalAlign: 'top',
   paddingLeft: '10px',
   height: '25px',
-
-}
+  position: 'relative',
+  zIndex: 9,
+} as CSSProperties
 
 const insertion = {
-  display: 'inline-block',
-  padding: '2px 10px',
+  display: 'block',
+  position: 'absolute',
+  top: '23px', 
+  left: 0,
+  width: '190px',
+  verticalAlign: 'bottom',
+  padding: '5px 10px',
   border: '1px solid silver',
   borderRadius: 5,
   cursor: 'pointer',
+  backgroundColor: 'black',
+} as CSSProperties;
+
+const items = {
+  color: 'silver',
+  padding: '5px 0px',
+  borderBottom: '1px solid silver',
+  paddingLeft: '10px',
 }

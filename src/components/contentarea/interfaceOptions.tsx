@@ -11,12 +11,12 @@ interface Props {
 }
 
 export function InterfaceOptions({layout, activeNote}: Props){
-  return ( <>
+  return ( <span style={{fontSize: '0.8em', color: 'blue'}}>
     {layout === 1 && <TextAreas1 activeNote={activeNote} /> }
     {layout === 2 && <TextAreas2 activeNote={activeNote} /> }
     {layout === 3 && <TextAreas3 activeNote={activeNote} /> }
     {layout === 4 && <TextAreas4 activeNote={activeNote} /> }
-  </>);
+  </span>);
 
 }
  
