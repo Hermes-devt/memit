@@ -1,0 +1,72 @@
+
+$mobile: 749px;
+$desktop: 750px;
+
+
+#topbar{
+  position: relative;
+  color: silver;
+  text-shadow: 2px 2px black;
+  border-bottom: 1px solid #242424;
+  background-image: url(../IMG/sky2.jpg);
+  background-size: 'cover';
+  background-repeat: 'no-repeat';
+
+  h1{
+    text-align: center;
+  }
+  @media (max-width: $mobile){
+    h1{
+      font-size: 2em;
+    }
+  }
+
+  @media (min-width: $desktop){
+    h1{ 
+      font-size: 2.5em; 
+    }
+  }
+  $topSpacing: 15%;
+  .clockLeft{
+    position: absolute;
+    height: 75%;
+    left: 0%;
+    top: $topSpacing;
+  }
+  .clockRight{
+    height: 75%;
+    position: absolute;
+    right: 5%;
+    top: $topSpacing;
+    transform: rotate(75deg);
+  }
+
+
+  #schedulerContainer{
+    color: silver;
+    margin-top: 0px;
+    padding-bottom: 5px;
+
+    input{
+      width: 30px;
+      display: inline-block;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 5px;
+      margin-left: 5px;
+      border-radius: 4px;
+      font-size: 0.5em;
+      border: none;
+      outline: none;
+      border-right: 1px solid silver;
+    }
+
+    @media (max-width: 749px){
+      input{
+        font-size: 8px;
+      }
+    }
+  }
+
+
+}

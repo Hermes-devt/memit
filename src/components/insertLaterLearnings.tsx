@@ -6,6 +6,7 @@ import {save} from '../js/storageHandling';
 import {useSelector, useDispatch} from 'react-redux';
 import {UserData} from '../types';
 import storage, {} from '../store/data/action';
+import '../CSS/insertLaterLearnings.scss';
 
 interface Props{
   data: UserData;
@@ -22,16 +23,12 @@ export function InsertLaterLearnings(props: Props){
   if( Data.laterLearnings.list.length === 0) return <span></span>
 
   return(
-    <span style={container} >
+    <span style={container} id="insertLaterLearnings">
 
-      <span 
-        onMouseEnter={ (evt)=>{ setDisplayDropdown(true) } } 
-        onClick={ ()=>{ setDisplayDropdown(true) } }
-        onMouseLeave={ ()=>{ setDisplayDropdown(false) }} 
-      >
-        <span 
-          style={{display: 'inline-block', padding: '5px 10px 0px 5px', fontWeight:'bold', verticalAlign: 'bottom', fontSize: 12, cursor: 'pointer', borderRight: '1px solid black'}}
-        >Later learnings</span>
+      <span onClick={ ()=>{ 
+        // setDisplayDropdown(true) 
+        ;
+      }}> <span className="opener">Later learnings</span>
         
         {displayDropdown && <div 
           style={insertion}>
@@ -43,7 +40,9 @@ export function InsertLaterLearnings(props: Props){
                 onMouseOver={ (evt)=>{ evt.currentTarget.style.backgroundColor = 'silver'; evt.currentTarget.style.color  = 'black'; }}
                 onMouseOut={ (evt)=>{ evt.currentTarget.style.backgroundColor = 'black'; evt.currentTarget.style.color  = 'silver'; }}
                 onClick={ (evt)=>{ 
+                  evt.stopPropagation();
                   setPopup( {display: true, indexClicked: index});
+                  setDisplayDropdown(false);
                 }}
               > <span style={{display: 'inline-block', width: 120}}>{item.name}</span>
                 <NumericInput 

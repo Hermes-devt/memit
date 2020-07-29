@@ -7,6 +7,7 @@ import {getDaysAfter1970} from '../js/util';
 import {cardsToRepeat} from '../js/cardsToRepeat';
 import {getDayMonthFromInt} from '../js/dateHandling';
 import {Day} from '../types';
+import '../CSS/schedule.scss';
 
 interface dailySchedule {
   cards: Day[],
@@ -36,24 +37,33 @@ export function Schedule():any{
   },[]) //eslint-disable-line
 
   return(
-    <Container className='m-0 p-0' fluid style={{ backgroundColor: 'silver', minHeight: '100vh'}}>
+    <Container className='m-0 p-0' id="scheduleComponent" fluid >
       {days.map( (item: dailySchedule, index:number)=>{
         if( item.totalNrOfQuestions === 0 ) return <span key={index}></span> 
         return(
           <div key={index} className='pt-0- m-0'>
-            <div style={{backgroundColor:'black', color: 'white', padding: '4px 4px'}}>
-              <span style={{display: 'inline-block', paddingRight: 0, fontWeight: 'bold'}}>{getDayMonthFromInt( getDaysAfter1970() + item.daysFromNow )}</span>
-              <span style={{color: 'orange'}}> - Total number of questions: {item.totalNrOfQuestions}</span>
+            <div className="headline">
+              <span className="date">
+                <span style={{color: 'orange'}}>Date: </span> 
+                <span style={{paddingLeft: 3}}>
+                  {getDayMonthFromInt( getDaysAfter1970() + item.daysFromNow )}
+                </span>
+                </span>
+              <span className="nrOfQuestionsHeadline">Questions</span>
             </div>
 
             { item.cards.map( (item2: Day, index2:number)=>{ return(
               <div key={index2}>
-                <div style={{marginLeft: 20, fontWeight: 'bold'}}>
-                  <span style={{display: 'inline-block', width: '400px'}}> {item2.tags} </span>
-                  <span>{cardCounter( item2)} questions</span>
+                <div className="lineContainer">
+                  <span className="tags"> {item2.tags} </span>
+                  <span className="nrOfCardQuestions">{cardCounter( item2)}</span>
                 </div>
               </div>
             ) })}
+            <div>
+              <span className="tags" style={{color: 'green'}}>Total:</span>
+              <span className="nrOfCardQuestions" style={{color: 'green'}}>{item.totalNrOfQuestions}</span>
+            </div>
           </div>
         )
       })}

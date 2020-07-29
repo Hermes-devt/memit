@@ -6,6 +6,7 @@ import storage from '../store/data/action'
 import {save} from '../js/storageHandling';
 import { tLaterType, UserData } from '../types';
 import templates from '../templates';
+import '../CSS/laterLearnings.scss';
 
 export function LaterLearnings(){
   const data:any = useSelector<any>(state=>state.data);
@@ -48,23 +49,20 @@ export function LaterLearnings(){
   }
 
   return(
-    <Container fluid style={{paddingBottom: 20}}>
-      <div style={{padding: 10}}>
-        <span style={{fontSize: 25}}>Create data you want to insert at a later point</span>
-        <span 
-        style={newInputArea}
+    <Container fluid id="laterLearningsContainer">
+      <div>
+        <h1>Create new data-block:</h1>
+        <span className="newInputArea"
         onClick={ ()=>{ createNewTextArea() }}
-        >Create new textarea</span>
+        >Create</span>
       </div>
 
       {obj.map( (item: tLaterType, index:number)=>{
         return(
-          <div key={index}
-          style={{marginBottom: 30}}
-          >
-            <div style={{paddingBottom: 10}}>
+          <div key={index} style={{marginBottom: 30}} >
+            <div>
               <input 
-                style={{width: '80%', color:'black', paddingLeft: 10}}
+                className="tagInput"
                 value={item.name}
                 type="text" 
                 placeholder={"Headline"}
@@ -75,26 +73,28 @@ export function LaterLearnings(){
                 }}
               />
 
-              <span style={{marginLeft: 15}}>Daily Fetch: </span>
-              <input 
-                style={{width: '30px', textAlign: 'center', color:'black'}}
-                value={item.questionsFetch}
-                type="text" 
-                placeholder={"0"}
-                onChange={ (evt)=>{ 
-                  let str = evt.target.value;
-                  if( str.length > 0 && isNaN(Number(str))) return;
-                  if( str.length > 2 ) return;
-                  let _obj = [...obj];
-                  _obj[index].questionsFetch = str;
-                  setObj( _obj );
-                }}
-              />
+              <span className="settings">
+                <span>Daily Fetch: </span>
+                <input 
+                  className="input"
+                  value={item.questionsFetch}
+                  type="text" 
+                  placeholder={"0"}
+                  onChange={ (evt)=>{ 
+                    let str = evt.target.value;
+                    if( str.length > 0 && isNaN(Number(str))) return;
+                    if( str.length > 2 ) return;
+                    let _obj = [...obj];
+                    _obj[index].questionsFetch = str;
+                    setObj( _obj );
+                  }}
+                />
 
-              <span
-                onClick={ ()=>{ deleteTextArea(index)}}
-                style={{color: 'red', fontWeight: 'bold', display: 'inline-block', padding: '2px 3px', border: '1px solid black', cursor: 'pointer', marginLeft: 10, borderRadius: 5, backgroundColor: ''}}
-              >X</span>
+                <span
+                  onClick={ ()=>{ deleteTextArea(index)}}
+                  style={{color: 'red', fontWeight: 'bold', display: 'inline-block', padding: '2px 3px', border: '1px solid black', cursor: 'pointer', marginLeft: 10, borderRadius: 5, backgroundColor: ''}}
+                >X</span>
+              </span>
             </div>
 
             <div style={{verticalAlign: 'top', width: '100%', display: 'inline-block', height: '400px'}}>

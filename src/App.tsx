@@ -1,7 +1,7 @@
 import React, { useEffect} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 import Footer from './components/footer/footer';
-import Navbar from './components/navbar/';
+import Navbar from './components/navbar/navbar';
 import InterfaceOptions from './components/contentarea/interfaceOptions';
 import {init} from './js/init';
 import {useState} from 'react';
@@ -22,6 +22,7 @@ import InsertLaterLearnings from './components/insertLaterLearnings';
 // import {save} from './js/storageHandling';
 import HorizontalDailyCards from './components/horizontalDailyCards';
 import {UserData} from './types';
+import DailySummary from './components/dailyNotes';
 
 
 export function App(){
@@ -55,6 +56,7 @@ export function App(){
   const setContentOnFullWidth = (): string=>{ return displayVerticalBar ? 'm-0 p-0 col-sm-10 no-gutters' : 'm-0 p-0 col-sm-12 no-gutters'; }
   const displayContentAreas = ():any=>{ return (displayWindow === 1 ? {display: 'block'} : {display: 'none'}) }
 
+  const displayDailySummary = ():any=> (displayWindow === 5) ? {display: 'block'} : {display: 'none'};
   return(
     <Container fluid className="m-0 p-0 overflow-hidden">
       {data && <Navbar />}
@@ -67,18 +69,28 @@ export function App(){
         mobile={mobile}
       />
 
-
-
       {data && displayWindow === 2 && <Schedule /> }
       {data && displayWindow === 3 && <Search /> }
       {data && displayWindow === 4 && <LaterLearnings /> }
 
+
+
+      {data && <span style={ displayDailySummary() }>
+        <DailySummary data={data} /> 
+      </span>
+      }
+
+
       { displayVerticalBar && mobile && data &&
       <div style={{position: 'relative'}}>
       <div 
-        style={{zIndex: 99999, position: 'absolute', top: 0, left: 0, width: '60vw', height: '100vh', overflow: 'scroll', backgroundColor: 'white'}}>
+        style={{zIndex: 99999, position: 'absolute', top: 0, left: 0, minWidth: '200px', maxWidth: '40%', height: '100vh', overflow: 'scroll', backgroundColor: 'white'}}>
           <VerticalBar 
-          onClick={(note:number)=> { setActiveNote(note) }} 
+          onClick={(note:number)=> { 
+            setActiveNote(note) 
+            if( mobile)  onMenuClick();
+          }} 
+          // menuClick={ onMenuClick } 
           activeNote={ activeNote } /> 
         </div>
       </div>
@@ -121,8 +133,10 @@ export function App(){
         </Row>
       </div>
 
-      <Footer /> 
-      {data && <Stats />}
+      <Footer> 
+        {data && <Stats />}
+      </Footer>
+
     </Container>
   )
 }

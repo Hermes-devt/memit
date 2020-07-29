@@ -13,13 +13,19 @@ import {ReactComponent as CheckboxFalse} from '../../IMG/checkFalse.svg';
 import { cardsCounter } from '../../js/questionCounter';
 import {Container} from 'react-bootstrap';
 import {UserData, Day, iMissedCard, iCardsToRepeat} from '../../types';
+import '../../CSS/verticalBar.scss';
+
 
 interface Props{
-  onClick(note:number): void,
-  activeNote: number,
+  onClick(note:number): void;
+  activeNote: number;
+  menuClick?(): void;
 }
 
-interface MissedCard { data: Day; done: boolean}
+interface MissedCard { 
+  data: Day; 
+  done: boolean;
+}
 
 export function Navbar(props: Props){
   const Data:any = useSelector<any>( (state: {data: UserData })=> state.data );
@@ -152,15 +158,11 @@ export function Navbar(props: Props){
   }
 
   const styles = {
-    cardStyle: (index:number) => index === activeCard ? 
-    {...styling.card, ...styling.active} as CSSProperties : {...styling.card} as CSSProperties,
-
-    todaysCard: ()=> (activeCard === 0) ? 
-      {...styling.card, ...styling.active, ...{textAlign: 'center', fontSize: '1em'}} as CSSProperties  : 
-      {...styling.card, ...styling.passive, ...{textAlign: 'center', fontSize: '1em'}} as CSSProperties,
+    cardStyle: (index:number):string => index === activeCard ? "card active" : "card",
+    todaysCard: (): string => (activeCard === 0) ? "card active extra" : "card passive extra",
 
 
-    onMissingCards: (card: MissedCard )=>{ 
+    onMissingCards: (card: MissedCard ): string=>{ 
       let _activeCard: number = list.length - 1 - activeCard;
 
       let indexPos:number = -1;
@@ -169,42 +171,31 @@ export function Navbar(props: Props){
         if(data.list[I] === card.data){
           indexPos = I; break; }
       }
-
-      return indexPos === _activeCard ? 
-        {...styling.card, ...styling.active} as CSSProperties  : 
-        {...styling.card, ...styling.passive} as CSSProperties; 
+      return indexPos === _activeCard ? "card active" : "card passive";
     },
 
     todaysCardToRepeat: (card:any, index:number)=>{
       let todaysCard = card, _activeCard = list[activeCard];
-      return todaysCard === _activeCard ? 
-        {...styling.card, ...styling.active} as CSSProperties :
-        {...styling.card, ...styling.passive} as CSSProperties;
+      return todaysCard === _activeCard ? "card active" : "card passive"
     }
   }
-
-  const setTags = (tags:any): string => {
-    if( typeof tags === 'object')
-      tags = tags.join(', ');
-    return tags;
-  }
+  const setTags = (tags:any): string => typeof tags === 'object' ? tags.join(', ' ) : tags;
 
   return (
-    <Container fluid className="m-0 p-0 vh-100 noselect">
+    <Container fluid className="m-0 p-0 vh-100 noselect" id="verticalBar">
     <div>
       { todayCards && <React.Fragment>
-          <div style={{ ...styling.card, ...styling.header} as CSSProperties}>Today</div>
-          <div 
-            style={ styles.todaysCard() } 
+          <div className="card header">Today</div>
+          <div className={ styles.todaysCard() }
             onClick={ ()=>{ onCard.todaysCardOrFullList(0) }}
             >Todays card</div>
 
-          {cardsMissed.length > 0 && <div style={{ ...styling.card, ...styling.header} as CSSProperties}>Missed repeats</div> }
+          {cardsMissed.length > 0 && <div className="card header">Missed repeats</div> }
 
           {cardsMissed.map( (card: MissedCard, index:number)=>{ 
             return(
             <div key={index} 
-              style={styles.onMissingCards(card)}
+              className={ styles.onMissingCards(card)}
               onClick={ (ev)=> {
                 ev.stopPropagation(); 
                 onCard.onOneMissedCard(card, index) ;
@@ -212,11 +203,8 @@ export function Navbar(props: Props){
                 <span style={{fontWeight: 'bold'}}>{ dateHandling.getDayMonthFromInt(card.data.onDay) } </span>
                 <span> {card.data.tags.join(', ')}</span>
 
-                <div 
-                style={styling.checkbox as CSSProperties}
-                onClick={ (ev)=> { 
-                  ev.stopPropagation(); 
-                  onCheckbox.missedCards(index) 
+                <div className="checkbox"
+                onClick={ (ev)=> { ev.stopPropagation(); onCheckbox.missedCards(index) 
                 }}
                 > {card.done && <CheckboxTrue />}
                   {!card.done && <CheckboxFalse />}
@@ -225,29 +213,30 @@ export function Navbar(props: Props){
 
           })}
 
-          <div 
-            style={{ ...styling.card, ...styling.header} as CSSProperties}
-            >Notes to repeat - ({todaysNumberOfQuestion})</div>
+          <div className="card header" >Notes to repeat - ({todaysNumberOfQuestion})</div>
           <DayToRepeat onClick={ changeDayOfRepeat}/>
 
           { todayCards.map( (card: Day, index:number)=>{ 
             return(
             <div key={index} 
-              style={ styles.todaysCardToRepeat(card, index)} 
-              onClick={ (evt)=>{ onCard.dailyCardsToRepeat(card); }} 
-              >
-                <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.onDay) }</span>
-                - {setTags( card.tags )}
+              className={ styles.todaysCardToRepeat(card, index)}
+              onClick={ ()=>{ onCard.dailyCardsToRepeat(card); }} 
+              > 
+
+              <span>
+                <span className="tags"> {dateHandling.getDayMonthFromInt(card.onDay) } </span>
+                <span> - {setTags( card.tags )} </span> 
+              </span>
 
               { activeDay === getDaysAfter1970() && <span>
                 {checkBoxes[index].done && 
-                <div style={styling.checkbox as CSSProperties}
+                <div className="checkbox"
                   onClick={ (ev:any)=> { 
                     ev.stopPropagation(); 
                     onCheckbox.todaysCards(index, checkBoxes[index].done)}}
                   ><CheckboxTrue /></div> }
 
-                {!checkBoxes[index].done && <div style={styling.checkbox as CSSProperties}
+                {!checkBoxes[index].done && <div className="checkbox"
                   onClick={ (ev:any)=> { 
                     ev.stopPropagation(); 
                     onCheckbox.todaysCards(index, checkBoxes[index].done)}}
@@ -259,14 +248,15 @@ export function Navbar(props: Props){
       }
 
       { list && <React.Fragment>
-        <div style={{...styling.card, ...styling.header} as CSSProperties}>Previous Days</div>
+        <div className="card header">Previous Days</div>
         {list.map( (card: Day, index:number)=>{ return(
           <div key={index} 
-            style={ styles.cardStyle(index)}
+            className={styles.cardStyle(index)}
             onClick={ ()=>{ onCard.todaysCardOrFullList(index) } }
-          >
-            <span style={{fontWeight: 'bold'}}>{dateHandling.getDayMonthFromInt(card.onDay) } </span>
-            - {setTags( card.tags ) }
+          > <span>
+              <span className="tags"> {dateHandling.getDayMonthFromInt(card.onDay) } </span>
+              <span> - {setTags( card.tags )} </span> 
+            </span>
           </div>
       )})}
       </React.Fragment> }
@@ -275,44 +265,4 @@ export function Navbar(props: Props){
   );
 }
 
-const styling = {
-  header: {
-    backgroundColor: '#242424', 
-    fontStyle: 'italic',
-    textAlign: 'left',
-    color: 'white',
-    opacity: 1,
-  },
-
-
-  checkbox: {
-    width: 16, 
-    height: 16, 
-    position: 'absolute', 
-    bottom: 10, 
-    right: 3,
-    zIndex: 999999999,
-  },
-
-  card: {
-    position: 'relative',
-    padding: '3% 3%',
-    borderBottom: '1px solid silver',
-    cursor: 'pointer',
-    fontSize: '0.7em',
-  },
-
-  active: {
-    // color: 'white', backgroundColor: '#525b56',
-    // color: 'white', backgroundColor: '#BE9063',
-    color: 'white', backgroundColor: '#A4978E',
-  },
-
-  passive: {
-    color: 'black',
-    backgroundColor: 'white',
-  }
-
-}
- 
 export default Navbar;

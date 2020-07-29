@@ -1,0 +1,50 @@
+
+#verticalBar{
+  border-right: 2px solid gray;
+  font-size: 1em;
+
+  .header{
+    background-color: #242424;
+    font-style: italic;
+    text-align: center;
+    color: white;
+    opacity: 1;
+    font-size: 1em;
+  }
+
+  .checkbox{
+    position: absolute;
+    width: 15px;
+    bottom: 5px;
+    right: 3px;
+    z-index: 2;
+  }
+
+  .card{
+    position: relative;
+    padding: 5px 5px;
+    border-bottom: 1px solid silver;
+    cursor: pointer;
+    font-size: 0.8em;
+  }
+
+  .active{
+    color: white;
+    background-color: #A4978E;
+  }
+
+  .passive{
+    color: black;
+    background-color: white;
+  }
+
+  .extra{
+    text-align: center;
+    font-size: 1em;
+  }
+
+  .tags{
+    display: inline-block;
+    font-weight: bold;
+  }
+}

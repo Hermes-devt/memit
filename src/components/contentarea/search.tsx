@@ -2,6 +2,7 @@
 import React, {useRef, createRef, useEffect, useState} from 'react';
 import {Container} from 'react-bootstrap';
 import {useSelector} from 'react-redux';
+import '../../CSS/search.scss';
 
 
 export const Search = ()=> {
@@ -80,18 +81,18 @@ export const Search = ()=> {
   }, []) //eslint-disable-line
 
   return(
-  <Container fluid style={{padding: 30}}>
-    <div>
+  <Container className='m-0 p-0' fluid>
+    <div id="searchComponent">
       <input 
         placeholder="Sort documents based on tags"
-        style={{width: '100%'}}
+        className="tagInput"
         value={ tags }
         onChange={ (evt)=>{ setTags(evt.target.value) }}
       />
 
       <input 
         placeholder="Sort documents after specific keywords"
-        style={{width: '100%', marginTop: 20}}
+        className="documentSortInput"
         value={stringFind}
         onChange={ (evt)=>{ setStringFind(evt.target.value)}}
       />
@@ -100,10 +101,12 @@ export const Search = ()=> {
         return(
           <div key={index} style={{...{verticalAlign: 'top'}, ...showBlocks[index] }}>
 
-            <div style={{fontSize: '18px', fontWeight: 'bold', padding: '3px 0px'}}>
+            {/* <div style={{fontSize: '18px', fontWeight: 'bold', padding: '3px 0px'}}> */}
+            <h3 className="tagStr">
               {typeof item.tags !== 'string' && item.tags.join(', ')}
               {typeof item.tags === 'string' && item.tags}
-            </div>
+            </h3>
+
             <textarea
               readOnly
               style={{width: '50%'}}

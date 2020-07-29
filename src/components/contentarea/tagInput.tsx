@@ -74,7 +74,7 @@ export function TagInput({activeNote, mobile}: {activeNote: number, mobile:boole
                 })}
               />
             </Col>
-            <Col className='m-0 p-0 col-sm-2'> <div style={styling.t1}>Tags</div> </Col>
+            <Col className='d-none d-md-block m-0 p-0 col-sm-2'> <div style={styling.t1}>Tags</div> </Col>
           </Row>
     </Container>)
   }

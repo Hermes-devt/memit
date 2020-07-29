@@ -1,0 +1,87 @@
+
+#laterLearningsContainer{
+  padding-bottom: 10px;
+
+  h1{
+    display: inline-block;
+    font-size: 1.5em;
+    padding: 10px 0px;
+    margin-bottom: 0px;
+  }
+
+  .newInputArea{
+    display: inline-block;
+    font-size: 0.8em;
+    padding: 3px 30px;
+    text-align: center;
+    border-radius: 4;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-top: 13px;
+    vertical-align: top;
+    font-weight: bold;
+  }
+
+  .newInputArea:hover{
+    color: silver;
+    background-color: black;
+  }
+
+  .settings{
+    display: inline-block;
+    padding-bottom: 10px;
+    width: 170px;
+    vertical-align: top;
+    margin-left: 15px;
+
+    .input{
+      width: 30px;
+      font-size: 0.8em;
+      text-align: center;
+      color: black;
+    }
+  }
+
+  .tagInput{
+    width: 65%;
+    color: black;
+    padding-left: 10px;
+  }
+
+  @media (max-width: 400px){
+    padding-bottom: 5px;
+    h1{
+      font-size: 1em;
+    }
+    .newInputArea{
+      margin-top: 7px;
+      padding-top: 1px;
+    }
+  }
+
+  @media (max-width: 570px){
+    padding-bottom: 5px;
+    .tagInput{ width: 50%}
+    font-size: 0.8em;
+    .settings{
+      width: 153px;
+      margin-left: 4px;
+    }
+  }
+
+  @media (max-width: 700px){
+    padding-bottom: 5px;
+    h1{
+      font-size: 1.5em;
+    }
+    .newInputArea{
+      margin-top: 14px;
+      padding-top: 1px;
+    }
+
+  }
+
+
+}

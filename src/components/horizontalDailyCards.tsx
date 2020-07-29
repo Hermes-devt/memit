@@ -1,4 +1,5 @@
 import React, {useEffect, useState, CSSProperties} from 'react';
+import {Container, Row, Col} from 'react-bootstrap';
 import {UserData, Day, iCardsToRepeat} from '../types';
 import {cardsToRepeat} from './../js/cardsToRepeat';
 import {getDaysAfter1970} from './../js/util';
@@ -9,6 +10,7 @@ import {ReactComponent as CheckboxTrue} from './../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from './../IMG/checkFalse.svg';
 
 import {useSelector, useDispatch} from 'react-redux';
+import '../CSS/horizontalDailyCards.scss'
 
 interface Props{
   activeNote: number;
@@ -20,7 +22,9 @@ export function HorizontalDailyCards(props: Props){
   const [daily, setDaily] = useState<any>([])
   const [checkBoxes, setCheckboxes] = useState<iCardsToRepeat[]>([]);
   const Data: any = useSelector<any>( (state: {data: UserData })=> state.data );
+  const [displayPopup, setDisplayPopup] = useState<boolean>( false );
   const dispatch = useDispatch();
+
 
   useEffect( ()=>{
     let data: UserData = {...Data};
@@ -28,6 +32,11 @@ export function HorizontalDailyCards(props: Props){
     let todayCards: Day[] = cardsToRepeat( data, getDaysAfter1970());
     setDaily( todayCards );
     setCheckboxes( Data.dailyCards ); 
+
+    const mobileBrowser:boolean = window.innerWidth <= 650 ? false : true;
+
+    setDisplayPopup( mobileBrowser );
+
   },[]) //eslint-disable-line
   
   useEffect( ()=>{
@@ -46,48 +55,62 @@ export function HorizontalDailyCards(props: Props){
   };
 
   const setTags = (tags:any, abbr:boolean=false): string => {
-    if( typeof tags === 'object') tags = tags.join(', ');
+    let tagStr: string = ""
 
-    if( abbr ) return tags;
-    if( tags.length > 14){
-      tags = tags.substring(0, 12);
-      tags += '..';
-    }
-    return tags;
+    tagStr = typeof tags === 'object' ? tags.join(', ') : tags;
+
+    if(tagStr.length === 0) 
+      tagStr = "No tags set";
+
+    if( abbr || props.mobile ) return tagStr;
+    return tagStr;
   }
 
-  const setStyle = (card: Day, index:number)=>{
-    let _activeCard = Data.list[props.activeNote];
-    return card === _activeCard ? {...cardStyle, ...active} : cardStyle;
-  }
 
-  const dailyCardStyle ={display: 'inline-block', cursor: 'pointer', width: 80, textAlign: 'center', marginLeft: '5px', fontSize: 12, border: '1px solid black', borderTop: 'none', borderBottom: 'none', borderRadius: 5 };
-  const setDailyCardStyle = ()=>{
-    let _activeCard = Data.list[props.activeNote];
-    let todaysCard = Data.list.length > 0 ? Data.list.length - 1 : 0;
+  const setDailyCardStyle = (): string=>{
+    const _activeCard = Data.list[props.activeNote];
+    const todaysCard = Data.list.length > 0 ? Data.list.length - 1 : 0;
     const TODAY = Data.list[todaysCard];
-    return _activeCard.onDay === TODAY.onDay ? {...dailyCardStyle, ...{fontWeight: 'bold'}} : dailyCardStyle;
+    return _activeCard.onDay === TODAY.onDay ? "cardStyle cardStyleActive" : "cardStyle";
   }
 
-  return<span style={{display: 'inline-block'}} className="noselect">
-    {!props.mobile && <span style={{fontWeight: 'bold', fontSize: 15, paddingLeft: 5}}>Daily cards:</span>}
 
+    return(<>
+    {displayPopup && <div className="mobile blackCover" onClick={ ()=>{ setDisplayPopup( false ); }}></div>}
+    <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup(true) }}>Daily Cards</span>
+    <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup(true) }}>Missed Cards</span>
+
+    {displayPopup && <span className="noselect horizontalDailycards">
+      <Row className='no-gutters'>
+      <span className="desktop headline">Cards: </span>
+
+      <div className="mobile headline">Cards to Repeat</div>
     <span 
-      style={ setDailyCardStyle() as CSSProperties }
+      className={ setDailyCardStyle() }
       onClick={ ()=>{
+        const mobileBrowser:boolean = window.innerWidth <= 650 ? true : false
+        if( mobileBrowser ) setDisplayPopup( false );
+
         let list = Data.list;
         let todaysCard = list.length > 0 ? list.length - 1 : 0;
         props.onClick( todaysCard );
-      }}
-      >Todays
+      }}>
+        <span className="mobile">Daily new card</span>
+        <span className="desktop">Todays</span>
     </span>
 
+
     { daily.map( (card: Day, index:number)=>{
-      return (
-      <abbr
+      return ( <span
         title={ setTags(card.tags, true) }
-        onClick={()=>{ cardClicked( card); }}
-        style={setStyle(card, index)}
+        onClick={()=>{ 
+          const mobileBrowser:boolean = window.innerWidth <= 650 ? true : false
+          if( mobileBrowser ) setDisplayPopup( false );
+          cardClicked( card); 
+        }}
+
+
+        className={ Data.list[props.activeNote] === card ? "cardStyle cardStyleActive" : "cardStyle" } 
         key={index}
       >
         <span >{setTags( card.tags)} </span>
@@ -104,39 +127,15 @@ export function HorizontalDailyCards(props: Props){
             save(nData);
           }}
         >
-        {checkBoxes[index].done && 
-          <span style={{position: 'absolute', right: 2, top: 4, width: 10, height: 10}} 
-          ><CheckboxTrue /> </span> }
-        {!checkBoxes[index].done && 
-        <span style={{position: 'absolute', right: 2, top: 4, width: 10, height: 10}} 
-        > <CheckboxFalse /> </span> }
+        {checkBoxes[index].done && <span className="checkbox" ><CheckboxTrue /> </span> }
+        {!checkBoxes[index].done && <span className="checkbox" > <CheckboxFalse /> </span> }
         </span>
-      </abbr>
-    )})}
-  </span>
+      </span>)
+    })}
+    </Row>
+    </span>}
+    </>);
+
 }
-
-const active ={
-  fontWeight: 'bold',
-  fontSize: 9,
-} as CSSProperties
-
-const cardStyle={
-  verticalAlign: 'top',
-  display: 'inline-block',
-  position: 'relative',
-  color: 'black',
-  width: '100px', 
-  height: '25px',
-  borderRight: '1px solid silver',
-  paddingTop: '6px',
-  paddingLeft: '5px',
-  paddingRight: '12px',
-  fontSize: 10,
-  overflow:  'hidden',
-  wordWrap: 'normal',
-  textAlign: 'center',
-  cursor: 'pointer',
-} as CSSProperties
 
 export default HorizontalDailyCards;

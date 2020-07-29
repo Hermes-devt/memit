@@ -15,45 +15,44 @@ export function Stats():any{
   useEffect( ()=>{
     setInsertedDays(data.list.length);
     setTotalNrQuestions( cardsCounter(data.list));
-  },[]);
+  },[]); //eslint-disable-line
 
   const loadData = ()=>{
     let dataStringified = JSON.stringify(data);
     setDataStringified(dataStringified);
-    setDataSize( dataStringified.length  * 8 / 1000 );
+
+    let dataSize:number = Number( dataStringified.length * 8 / 1000000);
+
+
+    setDataSize( Number( dataSize.toFixed(1)) );
+    // setDataSize( dataStringified.length  * 8 / 1000);
   }
 
   return(
-    <Container fluid style={container}>
-      <span style={{display: 'inline-block', width: 50, color: 'silver', cursor: 'pointer', borderRight: ''}}
-      >Stats |</span>
+    <Container fluid id="stats">
+      <span className="stats" >Stats</span>
 
-      <span style={{display: 'inline-block', paddingRight: 10, marginLeft: 10, borderRight: '1px solid silver'}}>
-        <span style={{color: 'silver'}}>Cards: </span>
+      <span className="days">
+        <span className='tSilver'>Cards: </span>
         <span>{insertedDays}</span>
       </span>
 
-      <span style={{display: 'inline-block', paddingRight: 10, marginLeft: 10, marginRight: 10, marginBottom: 15, borderRight: '1px solid silver'}}>
-        <span style={{color: 'silver'}}>Questions: </span>
+      <span className="nrOfQuestions">
+        <span className="tSilver">Questions: </span>
         <span>{totalNrQuestions}</span>
       </span>
 
-      { !displayAdditionalData && <span 
-        onClick={ (evt)=>{ loadData(); setDisplayAdditionalData(true); }}
-        style={{padding: '0px 10px', display: 'inline-block', border: '1px solid silver', textAlign: 'center', cursor: 'pointer', borderTop: 'none', borderBottom: 'none', borderRadius: 4,}}
-        > Load additional data </span>}
+      { !displayAdditionalData && <span onClick={ ()=>{ loadData(); setDisplayAdditionalData(true); }} className="loadMore" >More data </span>}
 
       { displayAdditionalData && <>
-        <span style={{display: 'inline-block', width: 175, marginRight: 10, marginBottom: 15, borderRight: '1px solid silver'}}>
-          <span style={{color: 'silver'}}>Data size: </span>
-          <span> {dataSize} kb</span>
+        <span className="dataSize">
+          <span className="tSilver">Data size: </span>
+          <span> {dataSize} / 5 MB</span>
         </span>
 
-        <span style={{display: 'inline-block', width: 270}}>
-          <span style={{color: 'silver'}}>Serialized data: </span>
-          <textarea 
-            style={{verticalAlign: 'bottom', color: 'orange', overflow: 'hidden', backgroundColor: '#242424', marginLeft: 20}}
-          onChange={ ()=>{}} name="" id="" cols={10} rows={1} value={dataStringified} /> 
+        <span className="serializeData">
+          <span className="tSilver">Serialized data: </span>
+          <textarea className="dataString" onChange={ ()=>{}} name="" id="" cols={10} rows={1} value={dataStringified} /> 
         </span>
       </>}
     </Container>
@@ -61,9 +60,3 @@ export function Stats():any{
 }
 
 export default Stats;
-
-const container = {
-  backgroundColor: '#242424',
-  color: 'orange',
-  paddingBottom: 20,
-}

@@ -1,0 +1,77 @@
+
+#scheduleComponent{
+  background-color:silver;
+  min-height: 100vh;
+
+  .headline{
+    background-color: black;
+    color:white;
+    padding: 4px 0px;
+  }
+
+  .totalNrOfQuestions{
+    display: inline-block;
+    color: orange;
+    width: 150px;
+    text-align: center;
+  }
+
+  .tags{
+    display: inline-block;
+    font-weight: bold;
+  }
+
+  .nrOfQuestionsHeadline{
+      display: inline-block;
+      color: orange;
+  }
+
+  .nrOfCardQuestions{
+    font-weight: bold;
+  }
+
+  .date{
+    display: inline-block;
+    font-weight: bold;
+    padding-left: 5px;
+    color: silver;
+  }
+
+  @media (min-width: 601px){
+    .tags{
+      width: 400px;
+      padding-left: 25px;
+    }
+
+    .nrOfCardQuestions{
+      display: inline-block;
+      width: 150px;
+      text-align: center;
+    }
+
+    .nrOfQuestionsHeadline{
+      text-align: center;
+      width: 150px;
+    }
+
+    .date{
+      width: 395px;
+      padding-left: 10px;
+    }
+  }
+
+  @media (max-width: 600px){
+    .lineContainer{
+      border-bottom: 1px solid black;
+    }
+
+    .tags{ 
+      width: 290px;
+      padding-left: 5px;
+    }
+
+    .date{
+      width: 265px;
+    }
+  }
+}

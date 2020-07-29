@@ -1,11 +1,12 @@
 
-import React, {CSSProperties} from 'react';
+import React, {} from 'react';
 import {ReactComponent as Layout1} from '../IMG/layout1.svg';
 import {ReactComponent as Layout2} from '../IMG/layout2.svg';
 import {ReactComponent as Layout3} from '../IMG/layout3.svg';
 import {ReactComponent as Layout4} from '../IMG/layout4.svg';
 import {ReactComponent as Menu} from '../IMG/menuWhite.svg';
 import Timer from '../components/navbar/timer';
+import '../CSS/settingbar.scss';
 
 
 interface Props {
@@ -24,114 +25,51 @@ export function SettingsBar(props: Props):any{
 
 const mobileInterface = (props: Props )=>{
   return(
-    <div style={styles.container as CSSProperties}>
+    <div id="settingbar">
      <Timer />
-      <span style={{display: 'inline-block', marginLeft: 5}} > 
-        <Menu onClick={ (evt)=>{ // evt.stopPropagation();
-          props.menuClick();
-        }} />
-      </span>
+      <span style={{display: 'inline-block', marginLeft: 5}}
+        > <Menu onClick={ ()=>{ props.menuClick(); }} /> </span>
 
       <span style={{position: 'absolute', right: 80, top: 3, opacity: 1}}>
-        <span style={ styles.layouts} onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>
-        {/* <span style={ styles.layouts} onClick={ ()=> props.onClick(1)}> <Layout2 /> </span> */}
-        <span style={ styles.layouts} onClick={ ()=> props.onClick(3)}> <Layout3 /> </span>
-        <span style={ styles.layouts} onClick={ ()=> props.onClick(4)}> <Layout4 /> </span>
+        <span className="layout" onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>
+        <span className="layout" onClick={ ()=> props.onClick(3)}> <Layout3 /> </span>
+        <span className="layout" onClick={ ()=> props.onClick(4)}> <Layout4 /> </span>
       </span>
-
-
     </div>
   )
 }
 
 const desktopInterface = (props: Props)=>{
+
+  const hideOrDisplayMenuText = ()=> props.displayVerticalBar ? "Hide Menu" : "Display Menu"
+
   return(
-    <div style={styles.container as CSSProperties} className="noselect">
+    <div className="noselect" id="settingbar">
       <Timer />
   
-      {/* Makes the menu unclickable and make it look transparant. */}
-      {props.windowDisplay !== 1 && <div style={styles.hideIt as CSSProperties}></div> }
+      {props.windowDisplay !== 1 && <div className="hideMenuOption"></div> }
   
-      <span style={styles.menu as CSSProperties} onClick={ ()=>{ props.menuClick() }} > 
-        <Menu 
-          onClick={ ()=>{ console.log('clicked on the menu icon!') }}
-        />
-  
-        {props.displayVerticalBar && <span style={{ paddingLeft: 10,}}>Hide menu</span>}
-        {!props.displayVerticalBar && <span style={{paddingLeft: 10,}}>Display menu</span> }
+      <span className="menu" onClick={ ()=>{ props.menuClick() }} > 
+        <Menu onClick={ ()=>{ console.log('clicked on the menu icon!') }} />
+        <span style={{paddingLeft: 10}}>{hideOrDisplayMenuText()}</span>
       </span>
   
-      {/* <div style={popup as CSSProperties}>
-        <div>Print cards</div>
-        <div>Style</div>
-        <div>Settings</div>
-        <div>Account</div>
-        <div>Login / Logout</div>
-      </div> */}
-  
-      <span style={{...styles.schedule, ...{}}} onClick={ ()=>props.onDisplayWindow( 1 ) }>Home</span>
-      <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 2 ) }>Schedule</span>
-      <span style={styles.schedule} onClick={ ()=>props.onDisplayWindow( 3 ) }>Search</span>
-      <span 
-        style={styles.schedule} 
-        onClick={ ()=>props.onDisplayWindow( 4 ) }
-        >Later learnings</span>
+      <span className="menuOptions">
+        <span className="schedule" onClick={ ()=>props.onDisplayWindow( 1 ) }>Home</span>
+        <span className="schedule" onClick={ ()=>props.onDisplayWindow( 2 ) }>Schedule</span>
+        <span className="schedule" onClick={ ()=>props.onDisplayWindow( 3 ) }>Search</span>
+        <span className="schedule" onClick={ ()=>props.onDisplayWindow( 5 ) }>Daily notes</span>
+
+      <span className="schedule" onClick={ ()=>props.onDisplayWindow( 4 ) } >Later learnings</span>
+      </span>
   
       <span style={{position: 'absolute', right: 85, top: 3, opacity: 1}}>
-        <span style={ styles.layouts} onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>
-        <span style={ styles.layouts} onClick={ ()=> props.onClick(1)}> <Layout2 /> </span>
-        <span style={ styles.layouts} onClick={ ()=> props.onClick(3)}> <Layout3 /> </span>
-        <span style={ styles.layouts} onClick={ ()=> props.onClick(4)}> <Layout4 /> </span>
+        <span className="layout" onClick={ ()=> props.onClick(2)}> <Layout1 /> </span>
+        <span className="layout" onClick={ ()=> props.onClick(1)}> <Layout2 /> </span>
+        <span className="layout" onClick={ ()=> props.onClick(3)}> <Layout3 /> </span>
+        <span className="layout" onClick={ ()=> props.onClick(4)}> <Layout4 /> </span>
       </span>
     </div>) 
 }
 
-
-const styles = {
-  hideIt:{
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: 140,
-    height: '100%',
-    backgroundColor: '#242424',
-    opacity: 0.8,
-  },
-
-  menu: {
-    display: 'inline-block',
-    marginLeft: 10,
-    width: 140,
-    cursor: 'pointer',
-    borderRight: '1px solid silver',
-  },
-
-
-  schedule: {
-    display: 'inline-block',
-    position: 'relative', 
-    cursor: 'pointer',
-    padding: '3px 5px 2px 10px',
-  } as CSSProperties,
-
-  container: {
-    position: 'relative',
-    height: '30px',
-    backgroundColor: '#242424', color: 'white', 
-    // backgroundColor: 'white', color: 'black',
-    borderBottom: '1px solid silver'
-  },
-
-  layoutContainer:{
-    position: 'absolute',
-    zIndex: 999,
-    right: 80,
-    top: 3,
-  },
-
-  layouts: {
-    cursor: 'pointer',
-    marginLeft: 3,
-  }
-}
 export default SettingsBar;

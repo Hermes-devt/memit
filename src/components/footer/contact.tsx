@@ -1,38 +1,24 @@
 
-import React, { Component } from 'react';
+import React, {} from 'react';
 
-
-// class Contact extends Component {
 export function Contact(){
   return (
-    <div style={{paddingBottom: 20}}>
+    <div id='contact'>
       <div>
-        <h2 style={{color: 'orange'}}>Contact</h2>
-        <div style={styles.col1}>Email: </div>
-        <div style={styles.col2}>kim@repetedScheduling.com</div>
+        <h2>Contact</h2>
+        <div className="col1">Email: </div>
+        <div className="col2">kim@repeatLearnings.com</div>
         <br/>
-        <div style={styles.col1}>Skype: </div>
-        <div style={styles.col2}>+46703861152</div>
 
+        <div className="col1">Skype: </div>
+        <div className="col2">+46703861152</div>
         <br/>
-        <div style={styles.col1}>Slack:</div>
-        <div style={styles.col2}>rk.westberg@gmail.com</div>
+
+        <div className="col1">Slack:</div>
+        <div className="col2">rk.westberg@gmail.com</div>
       </div>
     </div>
   );
-}
-
-const styles = {
-  col1:{
-    width: 65,
-    display: 'inline-block',
-    color: 'orange',
-  },
-  col2:{
-    display: 'inline-block', 
-    color: 'white',
-  }
-
 }
  
 export default Contact;

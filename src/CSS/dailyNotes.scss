@@ -1,0 +1,21 @@
+
+#dailyNotesComponent{
+  padding: 10px;
+  color: red;
+
+  textarea{
+    display: inline-block;
+    width: 49%;
+    height: 500px;
+    padding: 10px;
+    white-space: pre-wrap;
+    font-size: 0.8em;
+    vertical-align: top;
+  }
+
+  @media (max-size: 500px){
+    textarea{
+      font-size: 0.6em;
+    }
+  }
+}
