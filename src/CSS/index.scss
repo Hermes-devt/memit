@@ -43,3 +43,33 @@ textarea {
   z-index: 2;
 }
 
+.gBlackCoverAbsolute{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  @-moz-document url-prefix() { top: 15px; }
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  opacity: 0.8;
+  z-index: 2;
+}
+
+
+@media (min-width: 900px){
+  .gMobile{
+    display: none;
+  }
+}
+
+@media (min-width: 650px){
+  .gMobileMin{
+    display: none;
+  }
+}
+
+@media (max-width: 900px){
+  .gDesktop{
+    display: none;
+  }
+}

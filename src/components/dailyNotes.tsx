@@ -1,10 +1,19 @@
 import React, {useState, useEffect} from 'react';
+import clearAwayCommands from '../js/textManipulation/clearAwayCommands';
+import {useDispatch, useSelector} from 'react-redux';
+import {UserData} from '../types';
 import '../CSS/dailyNotes.scss';
-
 
 export const DailySummary = (props:any)=>{
   const [textArr, setTextArr] = useState<string[]>([]);
+  // const [data, setData] = useSelector<any>( state=> state.data);
+  const Data: any = useSelector<any>( (state: {data: UserData })=> state.data );
+  const dispatch = useDispatch();
+
+  // const questionTextAreas = useRef<any>(data.list.map(() => createRef()));
+
   useEffect( ()=>{
+    // console.log( 'd', Data);
 
     let arr: string[] = [];
     for( let i=0, len=props.data.list.length -1; i<len; i++){
@@ -13,17 +22,12 @@ export const DailySummary = (props:any)=>{
 
       if( item.userInput === undefined || item.userInput === null ) continue;
 
-        
-      // Insert the document tags into the document
-      // if( arr.length !== 0) text += "\n\n";
-      // if( typeof item.tags === 'object') text += "______" + item.tags.join(', ') + "_____\n\n"
-      // else                               text += "______ " + item.tags + "_____\n\n";
-
-      let itemText = item.userInput;
+      let itemText: string = clearAwayCommands( item.userInput )
       text += itemText.trim();
       arr.push( text );
     }
 
+    console.log('here');
     let twoSplitTextArea: string[] = ['', ''];
     let half: number = ( Math.floor( (Number(arr.length) / 2)));
     for( let i=0; i< arr.length; i++){
@@ -32,6 +36,8 @@ export const DailySummary = (props:any)=>{
     }
     setTextArr( twoSplitTextArea );
   },[]) //eslint-disable-line
+
+
 
   return(
     // <div style={{padding: 20}}>

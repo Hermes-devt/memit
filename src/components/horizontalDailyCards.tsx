@@ -1,14 +1,12 @@
-import React, {useEffect, useState, CSSProperties} from 'react';
-import {Container, Row, Col} from 'react-bootstrap';
+import React, {useEffect, useState} from 'react';
+import {Row} from 'react-bootstrap';
 import {UserData, Day, iCardsToRepeat} from '../types';
 import {cardsToRepeat} from './../js/cardsToRepeat';
 import {getDaysAfter1970} from './../js/util';
 import storage from '../store/data/action'
-
 import {save} from '../js/storageHandling';
 import {ReactComponent as CheckboxTrue} from './../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from './../IMG/checkFalse.svg';
-
 import {useSelector, useDispatch} from 'react-redux';
 import '../CSS/horizontalDailyCards.scss'
 
@@ -23,7 +21,11 @@ export function HorizontalDailyCards(props: Props){
   const [checkBoxes, setCheckboxes] = useState<iCardsToRepeat[]>([]);
   const Data: any = useSelector<any>( (state: {data: UserData })=> state.data );
   const [displayPopup, setDisplayPopup] = useState<boolean>( false );
+
+  const [missedCards, setMissedCards] = useState<any>( [] );
+  const [displayPopup2, setDisplayPopup2] = useState<boolean>( false );
   const dispatch = useDispatch();
+  const mobile = 900;
 
 
   useEffect( ()=>{
@@ -33,10 +35,22 @@ export function HorizontalDailyCards(props: Props){
     setDaily( todayCards );
     setCheckboxes( Data.dailyCards ); 
 
-    const mobileBrowser:boolean = window.innerWidth <= 650 ? false : true;
+    const mobileBrowser:boolean = window.innerWidth <= mobile ? false : true;
 
     setDisplayPopup( mobileBrowser );
 
+    // console.log( Data.missedCards);
+    let arr = [];
+    for( let i=0; i < Data.missedCards.length; i++){
+      for( let i2=0; i2 < Data.list.length; i2++){
+        if( Data.list[i2].onDay === Data.missedCards[i].ID){
+          arr.push( Data.list[i2]);
+          break;
+        }
+      }
+    }
+
+    setMissedCards(arr);
   },[]) //eslint-disable-line
   
   useEffect( ()=>{
@@ -75,20 +89,22 @@ export function HorizontalDailyCards(props: Props){
   }
 
 
-    return(<>
+    return(<span style={{display: 'block', position: 'relative'}}>
     {displayPopup && <div className="mobile blackCover" onClick={ ()=>{ setDisplayPopup( false ); }}></div>}
+    {displayPopup2 && <div className="mobile blackCover" onClick={ ()=>{ setDisplayPopup2( false ); }}></div>}
+
     <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup(true) }}>Daily Cards</span>
-    <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup(true) }}>Missed Cards</span>
+
+    {missedCards.length > 0 && <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup2(true) }}>Missed Cards</span>}
 
     {displayPopup && <span className="noselect horizontalDailycards">
       <Row className='no-gutters'>
       <span className="desktop headline">Cards: </span>
-
       <div className="mobile headline">Cards to Repeat</div>
     <span 
       className={ setDailyCardStyle() }
       onClick={ ()=>{
-        const mobileBrowser:boolean = window.innerWidth <= 650 ? true : false
+        const mobileBrowser:boolean = window.innerWidth <= mobile ? true : false
         if( mobileBrowser ) setDisplayPopup( false );
 
         let list = Data.list;
@@ -104,7 +120,7 @@ export function HorizontalDailyCards(props: Props){
       return ( <span
         title={ setTags(card.tags, true) }
         onClick={()=>{ 
-          const mobileBrowser:boolean = window.innerWidth <= 650 ? true : false
+          const mobileBrowser:boolean = window.innerWidth <= mobile ? true : false
           if( mobileBrowser ) setDisplayPopup( false );
           cardClicked( card); 
         }}
@@ -134,7 +150,50 @@ export function HorizontalDailyCards(props: Props){
     })}
     </Row>
     </span>}
-    </>);
+
+
+
+    {displayPopup2 && missedCards.length > 0 && <span className="noselect horizontalDailycards">
+      <Row className='no-gutters'>
+      <span className="desktop headline">Missed cards: </span>
+      <div className="mobile headline">Missed Cards</div>
+
+    { missedCards.map( (card: Day, index:number)=>{
+      return ( <span
+        title={ setTags(card.tags, true) }
+        onClick={()=>{ 
+          const mobileBrowser:boolean = window.innerWidth <= mobile ? true : false
+          if( mobileBrowser ) setDisplayPopup2( false );
+          cardClicked( card); 
+        }}
+
+
+        className={ Data.list[props.activeNote] === card ? "cardStyle cardStyleActive" : "cardStyle" } 
+        key={index}
+      >
+        <span >{setTags( card.tags)} </span>
+        <span
+          onClick={ (ev:any)=>{
+            ev.stopPropagation();
+            let nData = {...Data};
+            let _checkboxes = nData.missedCards;
+            _checkboxes[index].done = !_checkboxes[index].done;
+
+            _checkboxes[index].done = _checkboxes[index].done!;
+            nData.missedCards = [..._checkboxes];
+            dispatch( storage.setData(nData));
+            save(nData);
+          }}
+        >
+        {Data.missedCards[index].done && <span className="checkbox" ><CheckboxTrue /> </span> }
+        {!Data.missedCards[index].done && <span className="checkbox" > <CheckboxFalse /> </span> }
+        </span>
+      </span>)
+    })}
+    </Row>
+    </span>}
+
+    </span>);
 
 }
 

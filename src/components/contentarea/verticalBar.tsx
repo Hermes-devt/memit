@@ -1,5 +1,5 @@
 
-import React, {useEffect, useState, CSSProperties } from 'react';
+import React, {useEffect, useState} from 'react';
 import {cardsToRepeat} from '../../js/cardsToRepeat';
 import {getDaysAfter1970} from '../../js/util';
 import DayToRepeat from './dayToRepeat';
@@ -19,7 +19,7 @@ import '../../CSS/verticalBar.scss';
 interface Props{
   onClick(note:number): void;
   activeNote: number;
-  menuClick?(): void;
+  menuClick(): void;
 }
 
 interface MissedCard { 
@@ -181,13 +181,30 @@ export function Navbar(props: Props){
   }
   const setTags = (tags:any): string => typeof tags === 'object' ? tags.join(', ' ) : tags;
 
+
+  const closeOnClick = ()=>{
+    let elem = document.getElementById('verticalBar');
+
+    if( elem && elem.style){
+      const style = window.getComputedStyle(elem);
+      const pos = style.getPropertyValue('position');
+      if( pos === 'absolute'){
+        props.menuClick();
+      }
+    }
+  }
+
   return (
-    <Container fluid className="m-0 p-0 vh-100 noselect" id="verticalBar">
-    <div>
+    <Container fluid className="noselect" id="verticalBar">
+    <div id="">
       { todayCards && <React.Fragment>
           <div className="card header">Today</div>
           <div className={ styles.todaysCard() }
-            onClick={ ()=>{ onCard.todaysCardOrFullList(0) }}
+            onClick={ (evt)=>{ 
+              evt.stopPropagation();
+              closeOnClick();
+              onCard.todaysCardOrFullList(0) 
+            }}
             >Todays card</div>
 
           {cardsMissed.length > 0 && <div className="card header">Missed repeats</div> }
@@ -197,15 +214,17 @@ export function Navbar(props: Props){
             <div key={index} 
               className={ styles.onMissingCards(card)}
               onClick={ (ev)=> {
+                closeOnClick();
                 ev.stopPropagation(); 
                 onCard.onOneMissedCard(card, index) ;
               }} >
-                <span style={{fontWeight: 'bold'}}>{ dateHandling.getDayMonthFromInt(card.data.onDay) } </span>
-                <span> {card.data.tags.join(', ')}</span>
 
-                <div className="checkbox"
-                onClick={ (ev)=> { ev.stopPropagation(); onCheckbox.missedCards(index) 
-                }}
+                <span>
+                  <span className="tags"> {dateHandling.getDayMonthFromInt(card.data.onDay) } </span>
+                  <span> - {setTags( card.data.tags)} </span> 
+                </span>
+
+                <div className="checkbox" onClick={ (ev)=> { ev.stopPropagation(); onCheckbox.missedCards(index) }}
                 > {card.done && <CheckboxTrue />}
                   {!card.done && <CheckboxFalse />}
                 </div>
@@ -220,15 +239,17 @@ export function Navbar(props: Props){
             return(
             <div key={index} 
               className={ styles.todaysCardToRepeat(card, index)}
-              onClick={ ()=>{ onCard.dailyCardsToRepeat(card); }} 
-              > 
+              onClick={ ()=>{ 
+                closeOnClick();
+                onCard.dailyCardsToRepeat(card); 
+              }} > 
 
               <span>
                 <span className="tags"> {dateHandling.getDayMonthFromInt(card.onDay) } </span>
                 <span> - {setTags( card.tags )} </span> 
               </span>
 
-              { activeDay === getDaysAfter1970() && <span>
+              { activeDay === getDaysAfter1970() && <span style={{display: 'inline-block'}}>
                 {checkBoxes[index].done && 
                 <div className="checkbox"
                   onClick={ (ev:any)=> { 
@@ -237,9 +258,7 @@ export function Navbar(props: Props){
                   ><CheckboxTrue /></div> }
 
                 {!checkBoxes[index].done && <div className="checkbox"
-                  onClick={ (ev:any)=> { 
-                    ev.stopPropagation(); 
-                    onCheckbox.todaysCards(index, checkBoxes[index].done)}}
+                  onClick={ (ev:any)=> { ev.stopPropagation(); onCheckbox.todaysCards(index, checkBoxes[index].done)}}
                   ><CheckboxFalse/></div> }
               </span> }
             </div>
@@ -252,7 +271,10 @@ export function Navbar(props: Props){
         {list.map( (card: Day, index:number)=>{ return(
           <div key={index} 
             className={styles.cardStyle(index)}
-            onClick={ ()=>{ onCard.todaysCardOrFullList(index) } }
+            onClick={ ()=>{ 
+              closeOnClick();
+              onCard.todaysCardOrFullList(index)
+            }}
           > <span>
               <span className="tags"> {dateHandling.getDayMonthFromInt(card.onDay) } </span>
               <span> - {setTags( card.tags )} </span> 

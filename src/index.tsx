@@ -8,11 +8,14 @@ import './CSS/index.scss'
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import {rootReducer} from './store';
+import { BrowserRouter as Router} from "react-router-dom";
 
 const store = createStore(rootReducer);
 
 ReactDOM.render(
   <Provider store={store}>
-    <App /> 
+    <Router>
+      <App /> 
+    </Router>
   </Provider>, document.getElementById('root'));
 serviceWorker.unregister();

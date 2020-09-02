@@ -25,12 +25,10 @@ export function InsertLaterLearnings(props: Props){
   return(
     <span style={container} id="insertLaterLearnings">
 
-      <span onClick={ ()=>{ 
-        // setDisplayDropdown(true) 
-        ;
-      }}> <span className="opener">Later learnings</span>
+      <span onClick={ ()=>{ ; }}> 
+        {/* <span className="opener">Later learnings</span> */}
         
-        {displayDropdown && <div 
+        {displayDropdown && <span
           style={insertion}>
           {Data.laterLearnings.list.map( (item: tLaterType, index:number)=>{
             return(
@@ -60,7 +58,7 @@ export function InsertLaterLearnings(props: Props){
               </div>
             )
           })} 
-        </div>}
+        </span>}
       </span>
 
       {popup.display && 

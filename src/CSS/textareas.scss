@@ -1,0 +1,145 @@
+
+$maxHeight: 75vh;
+
+#interfaceContainer{
+  position: relative;
+  font-size: 0.8em;
+  color: black;
+
+  #textArea1{
+    .textarea{
+      width: 100%;
+      height: $maxHeight;
+      position: relative;
+    }
+  }
+
+  #textArea2{
+    .textarea1{
+      width: 100%;
+      height: 50vh;
+      position: relative;
+    }
+    .textarea2{
+      position: relative;
+      width: 100%;
+      height: 25vh;
+    }
+    .textarea3{
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  #textArea3{
+    .textareas{
+      width: 100%;
+      height: $maxHeight;
+      position: relative;
+    }
+  }
+
+  #textArea4{
+    .textarea{
+      width: 100%;
+      height: $maxHeight;
+      position: relative;
+    }
+  }
+
+  @media (max-width: 700px){
+  #textArea5{
+    .textarea1{
+      display: block;
+      height: 50vh;
+      width: 100%;
+    }
+
+    .textarea2{
+      display: block;
+      height: 12vh;
+      width: 100%;
+    }
+
+    .textarea3{
+      display: block;
+      height: 13vh;
+      width: 100%;
+    }
+  }
+
+  }
+
+  @media (min-width: 700px){
+    #textArea5{
+      .textarea1{
+        display: block;
+        height: 40vh;
+        width: 100%;
+      }
+
+      .textarea2{
+        display: block;
+        height: 20vh;
+        width: 100%;
+      }
+
+      .textarea3{
+        display: block;
+        height: 20vh;
+        width: 100%;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

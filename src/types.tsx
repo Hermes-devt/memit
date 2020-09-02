@@ -3,8 +3,9 @@ export interface Day {
   questions: string,
   answers: string,
   tags: string[],
-  creationDate?: string,
   onDay: number,
+  creationDate?: string,
+  userInput?: string,
 }
 
 export interface UserData{

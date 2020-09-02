@@ -4,45 +4,38 @@ import React, {} from 'react';
 import TextArea from './TextArea';
 import {useState, useEffect} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
+import UserInput from './userInput';
 
-export function TextAreas2(props: {activeNote: number}){
+interface Props{
+  activeNote: number;
+  forceUpdate?: any;
+}
+export function TextAreas2(props: Props){
+// export function TextAreas2(props: {activeNote: number}){
   const [activeNote, setActiveNote] = useState(0);
 
-  useEffect( ()=>{
-    setActiveNote( props.activeNote);
-  },[props])
+  useEffect( ()=>{ setActiveNote( props.activeNote); },[props])
 
   return(
-    <Container fluid className='px-0 mx-0'>
+    <Container fluid className='px-0 mx-0' id="textArea2">
       <Row className='no-gutters'>
         <Col>
-            <div className='' 
-              style={{ ...{width: '100%', height: '70vh', position: 'relative'}}}>
+            <div className='textarea1'>
             <TextArea 
-              data={{ 
-                activeNote: activeNote,
-                placeholder:"Type your questions here", 
-                name: "questions" }} />
+              data={{ activeNote: activeNote, placeholder:"Type your questions here", name: "questions" }} />
           </div>
 
-          <div className='vh-20' 
-            style={{...{width: '100%', height: '30vh', position: 'relative'}}}>
-            <TextArea style={{backgroundColor: ''}} 
-              data={{ 
-                activeNote: activeNote, 
-                placeholder:"User input", 
-                tabIndex: -1, 
-                name: "userInput", }} />
+          <div className='textarea2'>
+            {/* <TextArea
+              data={{ activeNote: activeNote, placeholder:"User input", tabIndex: -1, name: "userInput", }} /> */}
+            <UserInput forceUpdate={props.forceUpdate} 
+            data={{ activeNote: activeNote, placeholder: "User input", tabIndex: -1, name: "userInput", }} />
           </div>
         </Col>
-        <Col className=''>
-          <div className='' 
-            style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <Col>
+          <div className='textarea3'>
             <TextArea 
-              data={{ 
-                activeNote: activeNote, 
-                placeholder:"Answers", 
-                name: "answers", }} />
+              data={{ activeNote: activeNote, placeholder:"Answers", name: "answers", }} />
           </div>
         </Col>
       </Row>

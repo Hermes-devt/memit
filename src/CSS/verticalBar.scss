@@ -1,7 +1,15 @@
 
+
 #verticalBar{
+  position: relative;
   border-right: 2px solid gray;
   font-size: 1em;
+  display: inline-block;
+  width: 220px;
+  background-color: white;
+  height: 80vh;
+  overflow: scroll;
+  z-index: 99;
 
   .header{
     background-color: #242424;
@@ -47,4 +55,43 @@
     display: inline-block;
     font-weight: bold;
   }
+}
+
+@media (min-width: 700px){
+  #verticalBar{
+    margin: 0px;
+    padding: 0px;
+    float: left;
+    height: 80vh;
+  }
+}
+
+
+
+
+@media (max-width: 700px){
+  #verticalBar{
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+    z-index: 9;
+    top: 0px;
+
+    @-moz-document url-prefix() {
+      top: 15px;
+    }
+
+    left: 0px;
+    width: 240px;
+    height: 80vh;
+    overflow: scroll;
+    word-wrap: break-word;
+
+    .card{ padding-right: 0px; }
+    .checkbox{
+      right: 3px;
+      top: 0px;
+    }
+  }
+
 }

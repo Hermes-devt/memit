@@ -12,7 +12,10 @@ export function save(data: UserData){
     missedCards: data.missedCards,
     laterLearnings: data.laterLearnings,
   }
-  localStorage.setItem( "dailyNotes", JSON.stringify(obj) ); 
+
+  // console.log('here', obj);
+  // localStorage.setItem( "dailyNotes", JSON.stringify(obj) ); 
+
   // console.log('saving to localstorage:', obj);
 }
 

@@ -3,7 +3,7 @@
   background-color:silver;
   min-height: 100vh;
 
-  .headline{
+  .scheduleHeader{
     background-color: black;
     color:white;
     padding: 4px 0px;
@@ -49,6 +49,12 @@
       text-align: center;
     }
 
+    .creationDate{
+      display: inline-block;
+      width: 150px;
+      text-align: center;
+    }
+
     .nrOfQuestionsHeadline{
       text-align: center;
       width: 150px;
@@ -57,6 +63,12 @@
     .date{
       width: 395px;
       padding-left: 10px;
+    }
+  }
+
+  @media (max-width: 750px){
+    .creationDateDesktop{
+      display: none;
     }
   }
 

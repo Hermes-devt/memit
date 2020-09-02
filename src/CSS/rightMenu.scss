@@ -1,0 +1,47 @@
+
+
+@media (max-width: 900px){
+  .rightMenuContainer{
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    color: white;
+
+    .rightMenuOpener{
+      display: block;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      line-height: 25px;
+      // font-weight: bold;
+      text-align: center;
+      border: 1px solid silver;
+      border-radius: 3px;
+    }
+
+    .rotate{
+      transform: rotate(90deg);
+    }
+
+    .rightMenuPopup{
+      position: absolute;
+      display: inline-block;
+      top: -17px;
+      left: -150px;
+      width: 200px;
+      z-index: 1;
+      background-color: black;
+      color: silver;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    .rightMenuPopupLink{
+      display: block;
+      color: silver;
+      padding: 10px 0px;
+      border-bottom: 1px solid silver;
+    }
+  }
+
+}

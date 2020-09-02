@@ -8,33 +8,23 @@ import {Container, Row, Col} from 'react-bootstrap';
 export function TextAreas3(props: {activeNote: number}){
   const [activeNote, setActiveNote] = useState(0);
 
-  useEffect( ()=>{
-    setActiveNote( props.activeNote );
-  },[props])
+  useEffect( ()=>{ setActiveNote( props.activeNote ); },[props])
 
 
   return(
-    <Container fluid className='px-0 mx-0'> 
+    <Container fluid className='px-0 mx-0' id="textArea3"> 
       <Row className='no-gutters'>
         <Col>
-            <div className='' 
-              style={{ ...{width: '100%', height: '100vh', position: 'relative'}}}>
+            <div className='textareas' >
             <TextArea 
-              data={{ 
-                activeNote: activeNote,
-                placeholder:"Type your questions here", 
-                name: "questions" }} />
+              data={{ activeNote: activeNote, placeholder:"Type your questions here", name: "questions" }} />
           </div>
 
         </Col>
         <Col className=''>
-          <div className='' 
-            style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <div className='textareas'>
             <TextArea 
-              data={{ 
-                activeNote: activeNote, 
-                placeholder:"Answers", 
-                name: "answers", }} />
+              data={{ activeNote: activeNote, placeholder:"Answers", name: "answers", }} />
           </div>
         </Col>
 

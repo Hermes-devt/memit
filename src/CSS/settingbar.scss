@@ -1,29 +1,12 @@
 
 #settingbar{
   position: relative;
-  height: 30px;
-  background-color: #242424; 
   border-bottom: 1px solid silver;
+  background-color: #242424; 
   color:white;
 
 
-  .hideMenuOption{
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 140px;
-    height: 100%;
-    background-color: #242424;
-    opacity: 0.8;
-  }
 
-  .menu{
-    display: inline-block;
-    margin-left: 10px;
-    width: 140px;
-    cursor: pointer;
-    border-right: 1px solid silver;
-  }
 
   .layout{
     cursor: pointer;
@@ -37,9 +20,84 @@
     padding: 3px 5px 2px 10px;
   }
 
-  @media ( max-width: 750px ) {
+  @media (max-width: 900px){
+    .desktop{
+      display: none;
+    }
+
+    .layoutContainer{
+      position: absolute;
+      right: 50px;
+      top: 3px;
+      opacity: 1;
+    }
     .menuOptions{
       display: none;
     }
+
+    .menuOpener{
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      height: 30px;
+      width: 30px;
+      cursor: pointer;
+    }
+
+    .viewOption{
+      display: inline-block;
+      position: relative;
+      top: 2px;
+      width: 25px;
+      height: 30px;
+      margin-right: 10px;
+    }
+
+  }
+
+  @media(min-width: 900px){
+    height: 32px;
+
+    .layoutContainer{
+      position: absolute;
+      right: 80px;
+      top: 3px;
+      opacity: 1;
+    }
+
+    .menu{
+      position: relative;
+      margin-left: 10px;
+      padding-right: 10px;
+      width: 140px;
+      cursor: pointer;
+      border-right: 1px solid silver;
+      // overflow: hidden;
+
+      .hideMenuOption{
+        position: absolute;
+        display: inline-block;
+        top: 0px;
+        left: 0px;
+        padding: 12px;
+        width: 100%;
+        height: 100%;
+        opacity: 0.8;
+        background-color: #242424; 
+        z-index:999999;
+      }
+    }
+  }
+
+}
+
+@media (max-width: 900px){
+  #settingbar{
+    height: 40px;
   }
 }
+
+
+
+
+
