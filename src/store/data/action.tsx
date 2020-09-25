@@ -1,7 +1,6 @@
 
 // import React from 'react';
-import {dataType, SETDATA, DataActionTypes,
-        SETSCHEDULE } from './types';
+import {dataType, SETDATA, DataActionTypes, SETSCHEDULE } from './types';
 
 export const setData= (data: dataType): DataActionTypes =>{
   return({

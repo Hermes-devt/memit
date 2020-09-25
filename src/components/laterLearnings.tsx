@@ -1,148 +1,174 @@
 
-import React, {useEffect, useState, CSSProperties} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Container} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import storage from '../store/data/action'
 import {save} from '../js/storageHandling';
-import { tLaterType, UserData } from '../types';
-import templates from '../templates';
+import adjustNumbersFromQuestionAndAnswers from '../js/textManipulation/adjustNumbers';
+import { iLaterLearningsList, tLaterLearningsList, iDay, iUserData } from '../templatesTypes';
+
 import '../CSS/laterLearnings.scss';
 
 export function LaterLearnings(){
-  const data:any = useSelector<any>(state=>state.data);
+  const [list, setList] = useState<iLaterLearningsList[]>( [] )
+
+  const Data: any = useSelector<any>( (state: {data: iUserData })=> state.data );
   const dispatch = useDispatch();
 
-  const [obj, setObj] = useState<tLaterType[]>( 
-    [ templates.laterType() ])
-
-  useEffect( ()=>{ setObj( data.laterLearnings.list ); }, []) //eslint-disable-line
-
   useEffect( ()=>{
-    let _data: UserData = data;
-    _data.laterLearnings.list = obj;
-    dispatch( storage.setData(_data));
-    save( _data );
-  }, [obj]) // eslint-disable-line
+    let data: iUserData = Data;
+    setList( data.laterLearnings.list);
+  }, []) // eslint-disable-line
 
 
   const createNewTextArea = ()=>{
-    let _obj: tLaterType[] = [...obj];
-    _obj.push( templates.laterType() )
-    setObj(_obj);
+    let newListItem = tLaterLearningsList("", "", 5);
+    let copyOfList = [...list];
+    copyOfList.push( newListItem );
+    setList( copyOfList );
 
-    let _data: UserData = data;
-    _data.laterLearnings.list = obj;
-    dispatch( storage.setData(_data));
-    save( _data );
+    Data.laterLearnings.list = copyOfList;
+    dispatch( storage.setData(Data));
+    save( Data );
   }
 
   const deleteTextArea = (index:number)=>{
-    let _obj: tLaterType[] = [...obj];
-    _obj.splice(index, 1);
-    if(_obj.length === 0) _obj.push( templates.laterType() );
-    setObj(_obj);
+    if( !window.confirm("Are you sure you want to delete the data field?") ) return;
+    let copyOfList = [...list];
+    copyOfList.splice(index, 1);
+    saveData( copyOfList );
+  }
 
-    let _data: UserData = data;
-    _data.laterLearnings.list = obj;
-    dispatch( storage.setData(_data));
-    save( _data );
+  const splitOutQuestions = (str1: string, nrOfQuestionsToFetch: string | number):string=>{
+    let newInput = str1;
+
+    const toSplit = (textToSplit: string = "", regex2:any):string[] => {
+      let splitedText = textToSplit.split('\n') || [];
+      let arr: string[] = [""];
+      splitedText.forEach( (line=>{
+        let regMatch = line.match( regex2 );
+        if( regMatch !== null) {
+          arr.push( line + '\n');
+        } else{
+          arr[arr.length - 1] += line + '\n';
+        }
+      }));
+      return arr;
+    }
+
+    // Split out the questions from each other.
+    let questionAnswers = toSplit( newInput, /^#/)
+    let split: Array<string[]> = [];
+
+    questionAnswers.forEach( (questionAnswer:string)=>{
+      //split the answer from the question
+      let questionSeperatedFromTheAnswer = toSplit( questionAnswer, /^@/)
+      if( questionSeperatedFromTheAnswer.length === 2){
+        // Split the answer from the rest of the text below the question
+        let answer = questionSeperatedFromTheAnswer[1].split("\n\n")[0];
+        split.push([questionSeperatedFromTheAnswer[0], answer ]);
+        // Remove question and answer from the input field.
+        newInput = newInput.replace( '\n' + questionSeperatedFromTheAnswer[0], '');
+        newInput = newInput.replace( answer, '');
+      }
+    });
+
+    // questionStringToTodaysCard
+    let questionStringToTodaysCard:string = ''; 
+    let answerStringToTodaysCard: string = ''
+
+    newInput = '\n' + str1;
+    let maximumFetch = nrOfQuestionsToFetch > split.length ? split.length : nrOfQuestionsToFetch;
+    let unFetchedQuestionsAnswers:string = ""
+
+    for( let questionIndex:number=0; questionIndex < split.length; questionIndex++){
+      if( questionIndex < maximumFetch ){
+        questionStringToTodaysCard += questionIndex +1 + ". " +  split[questionIndex][0].substring(1);
+        answerStringToTodaysCard += questionIndex+1 + ". " +   split[questionIndex][1].substring(1).trim() + '\n';
+      }else{
+        unFetchedQuestionsAnswers += split[questionIndex][0] + split[questionIndex][1].trim() + '\n';
+      }
+    }
+
+    let todaysNote: iDay = {...Data.list[ Data.list.length - 1]};
+    todaysNote.questions = todaysNote.questions.trim() + (todaysNote.questions.includes("\n") ? '\n' : '') + questionStringToTodaysCard;
+    todaysNote.answers = todaysNote.answers.trim() + (todaysNote.answers.includes("\n") ? '\n' : '') + answerStringToTodaysCard;
+    todaysNote = adjustNumbersFromQuestionAndAnswers( todaysNote )
+
+    Data.list[Data.list.length -1] = todaysNote;
+    dispatch( storage.setData({...Data}));
+    // save( Data );
+
+    return unFetchedQuestionsAnswers;
+  }
+
+
+  const saveData = (newList:any):void=>{
+    setList( newList );
+    Data.laterLearnings.list = newList;
+    dispatch( storage.setData(Data));
+    save( Data );
   }
 
   return(
     <Container fluid id="laterLearningsContainer">
-      <div>
-        <h1>Create new data-block:</h1>
-        <span className="newInputArea"
-        onClick={ ()=>{ createNewTextArea() }}
-        >Create</span>
+      <div id="createDeleteDatablockContainer">
+        <span id="">Create new data block:</span>
+        <span id="createNewDatablockButton" onClick={ ()=>{ createNewTextArea() }} >Create</span>
       </div>
 
-      {obj.map( (item: tLaterType, index:number)=>{
-        return(
-          <div key={index} style={{marginBottom: 30}} >
-            <div>
-              <input 
-                className="tagInput"
-                value={item.name}
-                type="text" 
-                placeholder={"Headline"}
-                onChange={ (evt:any)=>{ 
-                  let _obj = [...obj];
-                  _obj[index].name = evt.target.value;
-                  setObj( _obj );
+      {list.map( (item: iLaterLearningsList, index:number)=>{
+        return(<div key={index} className="deckContainer">
+          <div className="settingsContainer">
+            <input className="inputDeckName" type="text" placeholder="Headline"
+              value={item.name}
+              onChange={ (evt:any)=>{ 
+                let newList = [...list];
+                newList[index].name = evt.target.value;
+                setList( newList );
+                saveData( newList );
+            }} />
+
+            <span className="fetchSettings">
+              <span id="fetch"
+                onClick={ ()=>{
+                  let leftOverQuestions: string = splitOutQuestions(list[index].questionsAnswers, list[index].questionsToFetch );
+                  let newList = [...list];
+                  newList[index].questionsAnswers = leftOverQuestions;
+                  saveData(newList);
+                }}
+              >Fetch Questions</span>
+
+              <input id="inputNumberOfQuestionsToFetch" type="text" placeholder="0"
+                value={item.questionsToFetch}
+                onChange={ (evt)=>{ 
+                  let newList = [...list];
+                  if( isNaN( Number(evt.target.value)) && evt.target.value !== "") return;
+                  newList[index].questionsToFetch = evt.target.value;
+                  saveData(newList);
                 }}
               />
-
-              <span className="settings">
-                <span>Daily Fetch: </span>
-                <input 
-                  className="input"
-                  value={item.questionsFetch}
-                  type="text" 
-                  placeholder={"0"}
-                  onChange={ (evt)=>{ 
-                    let str = evt.target.value;
-                    if( str.length > 0 && isNaN(Number(str))) return;
-                    if( str.length > 2 ) return;
-                    let _obj = [...obj];
-                    _obj[index].questionsFetch = str;
-                    setObj( _obj );
-                  }}
-                />
-
-                <span
-                  onClick={ ()=>{ deleteTextArea(index)}}
-                  style={{color: 'red', fontWeight: 'bold', display: 'inline-block', padding: '2px 3px', border: '1px solid black', cursor: 'pointer', marginLeft: 10, borderRadius: 5, backgroundColor: ''}}
-                >X</span>
+              <span id="deleteDatablockButton"
+              onClick={ ()=>{ deleteTextArea(index)}}>X</span>
               </span>
-            </div>
-
-            <div style={{verticalAlign: 'top', width: '100%', display: 'inline-block', height: '400px'}}>
-              <textarea 
-                style={{height: '100%', width: '50%', verticalAlign: 'top'}}
-                value={item.questions}
-                placeholder={"Questions"}
-                onChange={ (evt)=>{ 
-                  let _obj = [...obj];
-                  _obj[index].questions = evt.target.value;
-                  setObj( _obj );
-                }}
-              />
-
-              <textarea 
-                style={{height: '100%', width: '50%', verticalAlign: 'top'}}
-                value={item.answers}
-                placeholder={"Answers"}
-                onChange={ (evt)=>{ 
-                  let _obj = [...obj];
-                  _obj[index].answers = evt.target.value;
-                  setObj( _obj );
-                }}
-              />
-
-            </div>
           </div>
-        )
-      })
-    }
+
+          <textarea className="questionsAnswers" placeholder="Questions"
+            value={item.questionsAnswers}
+            onChange={ (evt)=>{ 
+              let newList = [...list];
+              newList[index].questionsAnswers = evt.target.value;
+              saveData( newList );
+            }}
+          />
+        </div>) })
+      }
 
     </Container>
   )
 }
 
 export default LaterLearnings;
-
-const newInputArea = {
-  position: 'absolute',
-  right: 50,
-  display: 'inline-block',
-  padding: '2px 10px',
-  textAlign: 'center',
-  borderRadius: 4,
-  border: '1px solid black',
-  cursor: 'pointer',
-  marginLeft: 30,
-} as CSSProperties
 
 
 

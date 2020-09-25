@@ -1,11 +1,11 @@
 
-import {Day} from '../../types';
+import {iDay} from '../../templatesTypes';
 
 import splitAwayQuestionAndAnswers from './splitAwayQuestionAndAnswers'
 
 interface itoCopy{ question: string; answer: string; tags?: string[] }
 
-export const copyToTodaysCard = (card: Day, toCopy: itoCopy): Day=>{
+export const copyToTodaysCard = (card: iDay, toCopy: itoCopy): iDay=>{
   card.questions += toCopy.question;
   card.answers += toCopy.answer;
   return card;
@@ -16,7 +16,7 @@ export interface Returnv{
   answer: string[];
 }
 
-export const copyQuestions = (card: Day, questionsToCopy: string[]): Returnv =>{
+export const copyQuestions = (card: iDay, questionsToCopy: string[]): Returnv =>{
   if( questionsToCopy.length === 0) return {question: [], answer: []}
   let obj = splitAwayQuestionAndAnswers( card);
   let question: string[] = []; let answer: string[] = [];

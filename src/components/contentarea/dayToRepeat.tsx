@@ -1,85 +1,54 @@
 
-import React, { CSSProperties, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {getDaysAfter1970} from '../../js/util';
 import {Container, Row, Col} from 'react-bootstrap';
 import {getDayMonthFromInt} from '../../js/dateHandling';
+import '../../CSS/dayToRepeat.scss';
 
-interface Props{
-  onClick: (day: number)=> void;
-}
-
-export function DayToRepeat(props: any){
-  const [active, setActive] = useState<number>(1);
+interface Props{ onClick: (day: number)=> void; }
+export function DayToRepeat(props: Props){
+  const [active, setActive] = useState<number>(1);//option of the 3 currently visible days in menu
   const [dayFrom, setDayFrom] = useState<number>(-1);
-  const [elements, setElements] = useState<any>(['', '', '']);
+  const [elements, setElements] = useState<string[]>(['', '', '']);
+
+  useEffect( ()=>{ setElementFromStartValue(dayFrom); },[]) //eslint-disable-line
 
   useEffect( ()=>{
-    setElementFromStartValue(dayFrom);
-  },[]) //eslint-disable-line
-
-  useEffect( ()=>{
-    toParent();
+    let todaysDay = getDaysAfter1970();
+    todaysDay += (dayFrom + active);
+    props.onClick( todaysDay );
   },[active, dayFrom]); //eslint-disable-line
 
-  const setElementFromStartValue = (value:number): void=>{
-    let days = getDaysAfter1970();
-    let arr = [value, value+1, value+2];
-    let elements = arr.map( (day, index):string => getDayMonthFromInt(days + day));
-    const dayFrom = value;
-    setElements(elements);
+  const setElementFromStartValue = (yesterdaysValue:number): void=>{
+    let today = getDaysAfter1970();
+    let yesterDayTodayTomorrow = [yesterdaysValue, yesterdaysValue+1, yesterdaysValue+2];
+    let MonthOf_YesterDay_Today_Tomorrow = yesterDayTodayTomorrow.map( (day:number, index:number):string => getDayMonthFromInt(today + day));
+    const dayFrom = yesterdaysValue;
+    setElements(MonthOf_YesterDay_Today_Tomorrow);
     setDayFrom( dayFrom );
   }
 
 
   const shift = (dir:number)=>{
-    if( active === 0 && dir < 0){
-      setElementFromStartValue(dayFrom-1); return; 
-    }
-
-    if( active === 2 && dir > 0){
-      setElementFromStartValue(dayFrom+1); return; 
-    }
+    if( active === 0 && dir < 0){ setElementFromStartValue(dayFrom-1); return; }
+    if( active === 2 && dir > 0){ setElementFromStartValue(dayFrom+1); return; }
     setActive(active=> active+dir);
   }
 
-  const toParent = ()=>{
-    let days = getDaysAfter1970();
-    days += (dayFrom + active);
-    props.onClick( days );
-  }
-
   return(
-    <Container fluid style={{backgroundColor: '', paddingBottom: 5, paddingTop: 5, borderBottom: '1px solid black'}}>
-      <Row className="text-center">
-        <Col onClick={ ()=>{ shift(-1); }} style={styling.sBlock} >{"<"}</Col>
-
-        {elements.map( (el:any, index:number)=>{
-          let style = index === active ? {...styling.sBlock, ...styling.active} : styling.sBlock;
-          let classStr = index === active ? '' : '';
-          return <Col key={index}
-            style={style} 
-            className={classStr}
+    <Container fluid id="dayToRepeatContainer">
+      <Row>
+        <Col onClick={ ()=>{ shift(-1); }} className="option">{"<"}</Col>
+        {elements.map( (dayOptions:string, index:number)=> 
+          <Col key={index}
+            className={ index === active ? "option active1" : "option"}
             onClick={ ()=>{ setActive(index); }}
-            >{el}</Col>
-        })}
-        <Col style={styling.sBlock} onClick={ ()=>{ shift(1); }} >{">"}</Col>
+          >{dayOptions}</Col>
+        )}
+        <Col className="option" onClick={ ()=>{ shift(1); }} >{">"}</Col>
       </Row>
     </Container>
   )
-}
-
-const styling = {
-  sBlock: {
-    cursor: 'pointer',
-    width: '20%',
-    padding: 0,
-    fontSize: 11,
-  } as CSSProperties,
-
-  active: {
-    backgroundColor: '', fontWeight: 'bold', color: 'black', textDecoration: 'underline', padding: '3px', borderRadius: 3, 
-  } as CSSProperties,
-
 }
 
 export default DayToRepeat;

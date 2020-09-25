@@ -1,9 +1,9 @@
 
 
-import {Day} from '../../types';
+import {iDay} from '../../templatesTypes';
 import {copyQuestions} from './copyQuestion';
 
-export const fetchQuestionsAnswersToInputField = (card1: Day, toFetch:any): Day=>{
+export const fetchQuestionsAnswersToInputField = (card1: iDay, toFetch:any): iDay=>{
 
   let card = {...card1};
   if( card.userInput === undefined || card.userInput === null) return card;

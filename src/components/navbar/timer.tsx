@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState, useEffect, useRef, CSSProperties} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import '../../CSS/timer.scss';
 
 export const Timer = ()=> {

@@ -1,12 +1,12 @@
 
-import {Day} from '../../types';
+import {iDay} from '../../templatesTypes';
 
 interface Returnv {
   questions: string[];
   answers: string[];
 }
 
-export const splitAwayQuestionAndAnswers = (card: Day): Returnv =>{
+export const splitAwayQuestionAndAnswers = (card: iDay): Returnv =>{
 
   const{questions, answers} = card;
 
@@ -50,12 +50,7 @@ export const splitAwayQuestionAndAnswers = (card: Day): Returnv =>{
     answersArr.push('');
   }
 
-
-  return ({
-    questions: questionsArr, 
-    answers: answersArr
-  })
-  // return activeCard;
+  return ({ questions: questionsArr, answers: answersArr })
 }
 
 export default splitAwayQuestionAndAnswers;

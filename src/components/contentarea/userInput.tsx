@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {save} from '../../js/storageHandling';
 import exe from '../../js/textManipulation/execute';
 import storage from '../../store/data/action'
-import {UserData} from '../../types';
+import {iUserData} from '../../templatesTypes';
 
 interface Props {
   data: {
@@ -20,7 +20,7 @@ interface Props {
 export function UserInput( props: Props){
   const {name, placeholder, activeNote, tabIndex} = props.data;
 
-  const data: any = useSelector<{data: UserData}>(state=> state.data);
+  const data: any = useSelector<{data: iUserData}>(state=> state.data);
   // const temptemp: any = useSelector<any>( (state: {data: UserData })=> state.data );
   const dispatch = useDispatch();
   const [text, setText] = useState<string>('');

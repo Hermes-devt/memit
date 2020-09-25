@@ -1,25 +1,27 @@
 
-import {Day} from '../../types';
+import {iDay} from '../../templatesTypes';
 
-import {copyQuestions} from './copyQuestion';
+// import {copyQuestions} from './copyQuestion';
 import deleteQuestions from './deleteQuestions';
 import transferFromQuestionsToAnswers from './transferFromQuestionsToAnswers';
 import fetchQuestionsAnswersToInputField from './fetchQuestionsAnswersToInputField';
 import clearAwayCommands from './clearAwayCommands';
 import clearCard from './clearCard';
 import copyToTodaysCard from './copyToTodaysCard';
+import fetchQuestionsFromInputField from './fetchQuestionsFromInputField';
 import adjustNumbersFromQuestionAndAnswers from './adjustNumbers';
 
 const fetchCommands = (str: string):string[] =>{
   let text = str.split('\n') || [];
   let arr: string[] = [];
   text.forEach( (line=>{
-    const regex2 = /^\d+[rxqaRQ]{1,4}$/
+    const regex2 = /^\d+[rxqaRQX]{1,4}$/
     // const regex2 = /^\d+[rx]{1,2}$/
     let m = line.match( regex2 );
     if( m !== null) 
       arr.push( m[0]);
   }));
+
   return arr;
 }
 
@@ -56,7 +58,8 @@ const groupCommands = (commandArr: string[] ): iGroupCommands=>{
       // console.log('command', command)
     }
 
-    if( command.indexOf('x') >= 0){  groupedCommands.questionsToDelete.push( number ); } 
+    if( command.indexOf('x') >= 0 || command.indexOf('X') >= 0){  
+      groupedCommands.questionsToDelete.push( number ); } 
     if( command.indexOf('q') >=0 || command.indexOf('a') >= 0){
       groupedCommands.fetchQuestionAnswer.push({
         command: (command.match(/\D+/) || []).join(""),
@@ -67,7 +70,7 @@ const groupCommands = (commandArr: string[] ): iGroupCommands=>{
   return groupedCommands;
 }
 
-export const execute = (list: Day[], activeNote: number): Day[]=>{
+export const execute = (list: iDay[], activeNote: number): iDay[]=>{
   if( list[activeNote].userInput === undefined || list[activeNote].userInput === null) 
     return list;
 
@@ -97,6 +100,9 @@ export const execute = (list: Day[], activeNote: number): Day[]=>{
     currentNote.userInput = clearAwayCommands( userInput );
   }
 
+  if( currentNote.userInput ){
+    currentNote = fetchQuestionsFromInputField( currentNote );
+  }
 
   currentNote = adjustNumbersFromQuestionAndAnswers( currentNote )
   list[activeNote] = {...currentNote};

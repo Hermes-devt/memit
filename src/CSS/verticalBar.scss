@@ -6,13 +6,15 @@
   font-size: 1em;
   display: inline-block;
   width: 220px;
-  background-color: white;
+  // background-color: white;
   height: 80vh;
   overflow: scroll;
   z-index: 99;
+  overflow-x: hidden;
 
   .header{
-    background-color: #242424;
+    // background-color: #242424;
+    background-image: url(../IMG/sky2.jpg);
     font-style: italic;
     text-align: center;
     color: white;
@@ -34,11 +36,17 @@
     border-bottom: 1px solid silver;
     cursor: pointer;
     font-size: 0.8em;
+    transition: 0.1s;
+  }
+  .card:hover{
+    color: white;
+    background-color: #A4978E;
   }
 
   .active{
     color: white;
     background-color: #A4978E;
+    // background-image: url(../IMG/sky2.jpg);
   }
 
   .passive{
@@ -76,6 +84,7 @@
     padding: 0px;
     z-index: 9;
     top: 0px;
+    display: none;
 
     @-moz-document url-prefix() {
       top: 15px;

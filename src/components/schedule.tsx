@@ -7,11 +7,11 @@ import {getDaysAfter1970} from '../js/util';
 import {cardsToRepeat} from '../js/cardsToRepeat';
 import {getDayMonthFromInt} from '../js/dateHandling';
 import dateHandling from '../js/dateHandling';
-import {Day} from '../types';
+import {iDay} from '../templatesTypes';
 import '../CSS/schedule.scss';
 
 interface dailySchedule {
-  cards: Day[],
+  cards: iDay[],
   totalNrOfQuestions: number,
   daysFromNow: number,
 }
@@ -25,7 +25,7 @@ export function Schedule():any{
     let arr: dailySchedule[] = [];
 
     for( let i =0; i< numberOfDaysForward; i++){
-      let todayCards: Day[] = cardsToRepeat( data, getDaysAfter1970() + i, true);
+      let todayCards: iDay[] = cardsToRepeat( data, getDaysAfter1970() + i, true);
 
       const obj: dailySchedule = {
         cards: [...todayCards],
@@ -51,11 +51,11 @@ export function Schedule():any{
                 </span>
                 </span>
               <span className="nrOfQuestionsHeadline">Questions</span>
+              <span className="creationDateHeadline creationDateDesktop">Created</span>
 
-              <span className="nrOfQuestionsHeadline creationDateDesktop">Created</span>
             </div>
 
-            { item.cards.map( (item2: Day, index2:number)=>{ 
+            { item.cards.map( (item2: iDay, index2:number)=>{ 
               return(
               <div key={index2}>
                 <div className="lineContainer">

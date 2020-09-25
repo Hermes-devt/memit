@@ -1,8 +1,9 @@
 
 import DateHandling from './dateHandling';
-import {Day} from '../interfaces';
+// import {Day} from '../interfaces';
+import {iDay} from '../templatesTypes';
 
-export function createNewDay(): Day{
+export function createNewDay(): iDay{
   let newDay = {
     questions: '',
     answers: '',

@@ -1,8 +1,8 @@
 
 import {getDaysAfter1970} from './util';
-import {UserData, CardsToRepeat} from '../interfaces';
+import {iUserData, iCardsToRepeat} from '../templatesTypes';
 
-export function getMissedCards( data: UserData, fromDaysPast: number){
+export function getMissedCards( data: iUserData, fromDaysPast: number){
   let schedule = [...data.schedule];
   let currentDay: number = getDaysAfter1970();
   let list = data.list;
@@ -24,7 +24,7 @@ export function getMissedCards( data: UserData, fromDaysPast: number){
   return missedList;
 }
 
-export function removeMissedCardsThatIsCompleted(dataObj: UserData){
+export function removeMissedCardsThatIsCompleted(dataObj: iUserData){
   let length = dataObj.missedCards.length-1;
   for(let i=length; i>= 0; i--){
     if( dataObj.missedCards[i].done === true ){
@@ -32,7 +32,7 @@ export function removeMissedCardsThatIsCompleted(dataObj: UserData){
   }
 }
 
-export function moveUncheckedDailyCardsToMissedCardsList(dataObj: UserData){
+export function moveUncheckedDailyCardsToMissedCardsList(dataObj: iUserData){
   let missed = dataObj.dailyCards.filter( (cards:any)=> !cards.done);
   missed.forEach( (item:any)=>{
     let exists = false;
@@ -43,13 +43,13 @@ export function moveUncheckedDailyCardsToMissedCardsList(dataObj: UserData){
   })
 }
 
-export function getAllMissedCardsFromThePastDays(dataObj: UserData){
+export function getAllMissedCardsFromThePastDays(dataObj: iUserData){
   const daysSinceLastUse = getDaysAfter1970() - dataObj.lastUse.date;
   getMissedCards(dataObj, daysSinceLastUse );
   dataObj.lastUse.date = getDaysAfter1970();
 }
 
-export function removeMissedCardsThatsMatchAcurrentDailyCard( dataObj: UserData){
+export function removeMissedCardsThatsMatchAcurrentDailyCard( dataObj: iUserData){
   for(let i=dataObj.missedCards.length -1; i>=0; i--){
     let match = false;
     dataObj.dailyCards.forEach( (card:any)=>{ if( dataObj.missedCards[i].ID === card.ID ) match = true; });
@@ -58,7 +58,7 @@ export function removeMissedCardsThatsMatchAcurrentDailyCard( dataObj: UserData)
 }
 
 // interface missingCard { ID:number, done: boolean};
-function unique( missingCards: CardsToRepeat[], ID: number) : boolean{
+function unique( missingCards: iCardsToRepeat[], ID: number) : boolean{
   for(let index=0; index<missingCards.length; index++){
     if( missingCards[index].ID === ID ) 
       return false;

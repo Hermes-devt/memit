@@ -1,6 +1,5 @@
 
-$mobile: 749px;
-$desktop: 750px;
+
 
 
 #topbar{
@@ -10,22 +9,33 @@ $desktop: 750px;
   border-bottom: 1px solid #242424;
   background-image: url(../IMG/sky2.jpg);
   background-size: 'cover';
-  background-repeat: 'no-repeat';
+  // background-repeat: 'no-repeat';
+  // overflow: display;
 
-  h1{
+  #topbarCover{
+    background-color: black;
+    opacity: 0.7;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  #topbarHeadline{
+    font-weight: normal;
+    color: silver;
+    text-decoration: none;
+    font-family: cursive;
+    font-size: 1.1em;
     text-align: center;
   }
-  @media (max-width: $mobile){
-    h1{
-      font-size: 2em;
-    }
-  }
 
-  @media (min-width: $desktop){
-    h1{ 
-      font-size: 2.5em; 
-    }
-  }
+  @media (max-width: 750px){
+    h1{ font-size: 2em; } }
+  @media (min-width: 750px){
+    h1{ font-size: 2.5em; } }
+
   $topSpacing: 15%;
   .clockLeft{
     position: absolute;
@@ -40,7 +50,6 @@ $desktop: 750px;
     top: $topSpacing;
     transform: rotate(75deg);
   }
-
 
   #schedulerContainer{
     color: silver;
@@ -61,10 +70,8 @@ $desktop: 750px;
       border-right: 1px solid silver;
     }
 
-    @media (max-width: 749px){
-      input{
-        font-size: 8px;
-      }
+    @media (max-width: 750px){
+      input{ font-size: 8px; }
     }
   }
 

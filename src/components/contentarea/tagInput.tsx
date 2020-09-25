@@ -4,7 +4,7 @@ import {Container, Row, Col} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import {setData} from '../../store/data/action';
 import {save} from '../../js/storageHandling';
-import {UserData} from '../../types';
+import {iUserData} from '../../templatesTypes';
 import '../../CSS/tagInput.scss'
 
 
@@ -28,7 +28,7 @@ export function TagInput({activeNote, mobile, forceUpdate=""}: Props):any{
   },[activeNote, forceUpdate]) //eslint-disable-line
 
   const saveToStorage = (evt:any)=>{
-    let data: UserData = {...Data};
+    let data: iUserData = {...Data};
     let _tags: string = evt.target.value;
     let arr: string[] = _tags.split(',');
     data.list[activeNote].tags = arr;

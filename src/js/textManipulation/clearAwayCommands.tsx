@@ -4,7 +4,7 @@ export const clearAwayCommands = (userInput: string): string=>{
 
   let newUserInputStr:string = '';
   userInputArr.forEach( (line=>{
-    const regex2 = /^\d+[rxqaRQ]{1,4}$/
+    const regex2 = /^\d+[rxqaRQX]{1,4}$/
     let line2 = line.replace( regex2, '');
 
     if( line !== 'e' && 

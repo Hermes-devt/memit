@@ -6,10 +6,10 @@ import {ReactComponent as Clockcss} from '../../IMG/clock1.svg';
 import {Link} from 'react-router-dom';
 import '../../CSS/topbar.scss';
 
-export const Navbar = ()=>{
+export const Topbar = ()=>{
   return(
     <Container fluid id='topbar'>
-        <div style={{backgroundColor: 'black', opacity: '0.7', position: 'absolute', left: 0, top: 0, width: '100%', height: '100%'}}></div>
+        <div id="topbarCover"></div>
       <Row>
 
         <Col className="d-none d-md-block">
@@ -17,7 +17,7 @@ export const Navbar = ()=>{
         </Col>
 
          <Col className="col-xs-12 col-sm-10 col-md-8"> 
-          <Link to="/" style={{color: 'orange', textDecoration: 'none'}}><h1>Repeat Learnings</h1></Link>
+          <Link to="/" id="topbarHeadline"><h1>Repeat Learnings</h1></Link>
           <Scheduler />
         </Col>
 
@@ -29,4 +29,4 @@ export const Navbar = ()=>{
     </Container>
   )
 }
-export default Navbar;
+export default Topbar;

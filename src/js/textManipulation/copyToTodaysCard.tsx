@@ -1,12 +1,12 @@
 
-import {Day} from '../../types';
+import {iDay} from '../../templatesTypes';
 import {copyQuestions} from './copyQuestion';
 import splitAwayQuestionAndAnswers from './splitAwayQuestionAndAnswers'
 import adjustNumbers from './adjustNumbers';
 
 
 // Copy questions to todays card. 
-export const copyToTodaysCard = (card: Day, toCopy: string[], list: Day): Day=>{
+export const copyToTodaysCard = (card: iDay, toCopy: string[], list: iDay): iDay=>{
   let questionAnswer = copyQuestions(card, toCopy);
   let temp = splitAwayQuestionAndAnswers(list);
 

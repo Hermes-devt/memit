@@ -1,9 +1,9 @@
 
-import {Day} from '../../types';
+import {iDay} from '../../templatesTypes';
 import splitAwayQuestionAndAnswers from './splitAwayQuestionAndAnswers'
 
 
-export const deleteQuestions= (card: Day, questionsToDelete: string[]): Day =>{
+export const deleteQuestions= (card: iDay, questionsToDelete: string[]): iDay =>{
   if(questionsToDelete.length === 0) return card;
 
   let obj = splitAwayQuestionAndAnswers( card );
@@ -20,10 +20,6 @@ export const deleteQuestions= (card: Day, questionsToDelete: string[]): Day =>{
 
   card.answers = obj.answers.join("");
   card.questions = obj.questions.join("");
-  // let q = obj.questions.join("");
-  // let a = obj.answers.join("");
-  // card.answers = a;
-  // card.questions = q;
   return card;
 }
 

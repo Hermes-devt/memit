@@ -1,8 +1,8 @@
 
 
-import {Day} from '../../types';
+import {iDay} from '../../templatesTypes';
 import splitAwayQuestionAndAnswers from './splitAwayQuestionAndAnswers'
-export const adjustNumbersOnQuestionAnswers = (obj: Day): Day=>{
+export const adjustNumbersOnQuestionAnswers = (obj: iDay): iDay=>{
 
   let temp = splitAwayQuestionAndAnswers(obj);
   let re = /^\d+\./

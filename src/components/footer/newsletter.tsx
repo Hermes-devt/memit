@@ -1,11 +1,11 @@
 
-import React, {CSSProperties } from 'react';
+import React, {} from 'react';
 import socialIcons from '../../IMG/social_icons.png';
 
 export function NewsLetter(){
     return ( 
     <span id="newsLetter"> 
-        <h2>Newsletter</h2>
+        <h2 className="footerHeadlines">Newsletter</h2>
         <div>
           <input className="signupInput" type="text" placeholder="Your email address" />
           <span className="signup">Signup</span>

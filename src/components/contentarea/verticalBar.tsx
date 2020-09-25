@@ -12,7 +12,8 @@ import {ReactComponent as CheckboxTrue} from '../../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from '../../IMG/checkFalse.svg';
 import { cardsCounter } from '../../js/questionCounter';
 import {Container} from 'react-bootstrap';
-import {UserData, Day, iMissedCard, iCardsToRepeat} from '../../types';
+import {iUserData, iDay, iMissedCard, iCardsToRepeat} from '../../templatesTypes';
+
 import '../../CSS/verticalBar.scss';
 
 
@@ -23,29 +24,29 @@ interface Props{
 }
 
 interface MissedCard { 
-  data: Day; 
+  data: iDay; 
   done: boolean;
 }
 
 export function Navbar(props: Props){
-  const Data:any = useSelector<any>( (state: {data: UserData })=> state.data );
+  const Data:any = useSelector<any>( (state: {data: iUserData })=> state.data );
   const dispatch = useDispatch();
 
-  const [data, setData2] = useState<UserData>( Data );
+  const [data, setData2] = useState<iUserData>( Data );
   const [cardsMissed, setCardsMissed] = useState<MissedCard[]>([]);
-  const [todayCards, setTodayCards] = useState<Day[]>([]);
+  const [todayCards, setTodayCards] = useState<iDay[]>([]);
   const [checkBoxes, setCheckboxes] = useState<iCardsToRepeat[]>([]);
-  const [list, setList] = useState<Day[]>([]);
+  const [list, setList] = useState<iDay[]>([]);
   const [activeCard, setActiveCard] = useState<number>(0);
   const [activeDay, setActiveDay] = useState<number>( getDaysAfter1970())
   const [todaysNumberOfQuestion, setTodaysNumberOfQuestion] = useState<number>(0);
 
   useEffect( ()=>{
-    let data: UserData = Data;
+    let data: iUserData = Data;
     if( !data ) return;
 
-    let todayCards: Day[] = cardsToRepeat( data, getDaysAfter1970());
-    let list: Day[] = [...data.list];
+    let todayCards: iDay[] = cardsToRepeat( data, getDaysAfter1970());
+    let list: iDay[] = [...data.list];
     list.reverse();
 
     const cardsMissed = setMissedCards(data);
@@ -68,7 +69,7 @@ export function Navbar(props: Props){
   }, [props.activeNote, Data.list.length])
 
 
-  const setMissedCards = (data: UserData ): MissedCard[]=>{
+  const setMissedCards = (data: iUserData ): MissedCard[]=>{
     let missedCardObj: MissedCard[] = [];
 
     data.missedCards.forEach( (card: iMissedCard)=>{
@@ -90,7 +91,7 @@ export function Navbar(props: Props){
         props.onClick( listIndex );
     },
 
-    dailyCardsToRepeat: (card: Day)=>{
+    dailyCardsToRepeat: (card: iDay)=>{
       let _list = list;
 
       let listLength = _list.length;
@@ -116,7 +117,7 @@ export function Navbar(props: Props){
 
   const onCheckbox = {
     missedCards: (index:number)=>{
-      let nData: UserData = Data;
+      let nData: iUserData = Data;
       let CardsMissed = [...Data.missedCards]
 
       //Change the state in the global store object
@@ -142,7 +143,7 @@ export function Navbar(props: Props){
         if( item.ID === cardID ){item.done = !bool; }
       })
 
-      let nData: UserData = Data;
+      let nData: iUserData = Data;
       setCheckboxes( dailyCheckboxes)
       nData.dailyCards = dailyCheckboxes;
       dispatch( setData(nData));
@@ -235,7 +236,7 @@ export function Navbar(props: Props){
           <div className="card header" >Notes to repeat - ({todaysNumberOfQuestion})</div>
           <DayToRepeat onClick={ changeDayOfRepeat}/>
 
-          { todayCards.map( (card: Day, index:number)=>{ 
+          { todayCards.map( (card: iDay, index:number)=>{ 
             return(
             <div key={index} 
               className={ styles.todaysCardToRepeat(card, index)}
@@ -268,7 +269,7 @@ export function Navbar(props: Props){
 
       { list && <React.Fragment>
         <div className="card header">Previous Days</div>
-        {list.map( (card: Day, index:number)=>{ return(
+        {list.map( (card: iDay, index:number)=>{ return(
           <div key={index} 
             className={styles.cardStyle(index)}
             onClick={ ()=>{ 

@@ -1,11 +1,10 @@
 
-import React, {CSSProperties} from 'react';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {Container} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import {setData} from '../../store/data/action';
 import { save, setDailyCards } from '../../js/storageHandling';
-import {UserData} from '../../types';
+import {iUserData} from '../../templatesTypes';
 import {Row, Col} from 'react-bootstrap';
 
 type stringNumber = string | number;
@@ -31,7 +30,7 @@ export const Scheduler = ()=> {
       return Number(item);
     })
 
-    let nData: UserData = {...data};
+    let nData: iUserData = {...data};
     nData.schedule = [...convertedSchedule];
     setDailyCards( nData );
     dispatch( setData(nData));

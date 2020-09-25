@@ -41,6 +41,8 @@ export const Search = ()=> {
     }
 
     setShowBlocks( tagsObj );
+    
+
   }, [tags]) //eslint-disable-line
 
   useEffect( ()=>{
@@ -109,12 +111,12 @@ export const Search = ()=> {
 
             <textarea
               readOnly
-              style={{width: '50%'}}
+              style={{width: '50%', padding: 10}}
               value={item.questions}
               ref={questionTextAreas.current[index]}
             />
             <textarea
-              style={{width: '50%', verticalAlign: 'top'}}
+              style={{width: '50%', verticalAlign: 'top', padding: 10}}
               readOnly
               onChange={ ()=>{}}
               ref={answerTextAreas.current[index]}

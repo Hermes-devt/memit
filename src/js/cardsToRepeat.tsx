@@ -1,11 +1,12 @@
 
 // import {Day, UserData} from '../interfaces/userData';
-import {Day, UserData} from '../interfaces';
+// import {Day, UserData} from '../interfaces';
 
+import {iDay, iUserData} from '../templatesTypes';
 import OPEARATORS from '../js/operators';
 //includeToday was added because the schedule component wants to have todays day included also
 
-export function cardsToRepeat( data: UserData, dayToRepeat: number, includeToday=false): Day[]{
+export function cardsToRepeat( data: iUserData, dayToRepeat: number, includeToday=false): iDay[]{
   let dailyNotes = data.list;
   let schedule = data.schedule;
   let todayCards:any = [];
@@ -16,8 +17,6 @@ export function cardsToRepeat( data: UserData, dayToRepeat: number, includeToday
   const OP = OPEARATORS();
   let operation = includeToday ? '<=' : '<';
   for( let index = 0; OP[operation](index, len); index++){
-  // for( let index = 0; index < len; index++){
-  // for( let index = 0; index < dailyNotes.length - 1; index++){
     let noteNr = dailyNotes[index].onDay;
 
     for( let i=0; i<schedule.length;i++){

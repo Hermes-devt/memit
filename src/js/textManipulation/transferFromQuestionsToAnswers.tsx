@@ -1,7 +1,7 @@
 
-import {Day} from '../../types';
+import {iDay} from '../../templatesTypes';
 
-export const TransferFromQuestions = (card: Day): Day=>{
+export const TransferFromQuestions = (card: iDay): iDay=>{
 
   let today = card;
   const toSplit = (str: string = "", regex2:any):string[] => {

@@ -1,8 +1,8 @@
 
 
-import {Day} from '../types';
+import {iDay} from '../templatesTypes';
 
-export function cardsCounter(cards: Day[]): number{
+export function cardsCounter(cards: iDay[]): number{
   let accumulator = 0;
   for(let i=0; i < cards.length; i++){
     accumulator += cardCounter( cards[i]);
@@ -10,13 +10,13 @@ export function cardsCounter(cards: Day[]): number{
   return accumulator;
 }
 
-export function cardCounter( card: Day): number {
+export function cardCounter( card: iDay): number {
   const re = /\r\n|\r|\n\s*\d/g;
   const count = ((card || {questions:''}).questions.match(re) || []).length;
   return count;
 }
 
-export function laterCardsCounter(cards: Day[]): number{
+export function laterCardsCounter(cards: iDay[]): number{
   let accumulator = 0;
   for(let i=0; i < cards.length; i++){
     accumulator += cardCounter( cards[i]);
@@ -24,7 +24,7 @@ export function laterCardsCounter(cards: Day[]): number{
   return accumulator;
 }
 
-export function laterCardCounter( card: Day): number {
+export function laterCardCounter( card: iDay): number {
   const re = /\r\n|\r|\n\s*\d/g;
   const count = ((card || {questions:''}).questions.match(re) || []).length;
   return count;

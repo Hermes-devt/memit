@@ -21,45 +21,24 @@ interface Props {
 }
 
 export function SettingsBar(props: Props):any{
-  const hideOrDisplayMenuText = ()=> props.displayVerticalBar ? "Hide Menu" : "Display Menu"
   let location = useLocation();
-
   return(
     <div className="noselect" id="settingbar">
       <Timer />
 
-
-      {/* {props.windowDisplay !== 1 && <div className="hideMenuOption"></div> } */}
+      <span className={ location.pathname !== '/' ? "menu hideIt" : 'menu'} onClick={ ()=>{ 
+        props.menuClick(); }} > 
+        <Menu className="menuOpener" />
+        <span className="menuString desktop" >{props.displayVerticalBar ? "Hide Menu" : "Display Menu"}</span>
+      </span> 
   
-      {/* <Link to="/" style={{color: 'white'}}> */}
-        <span className="menu" onClick={ ()=>{ props.menuClick(); }} > 
-          { location.pathname !== '/' && <div className="hideMenuOption" onClick={ (evt)=> evt.stopPropagation()}></div> }
-          {/* <div className="hideMenuOption" onClick={ (evt)=> evt.stopPropagation()}></div> */}
-          <Menu className="menuOpener" onClick={ ()=>{ ; }} />
-          <span className="desktop" style={{paddingLeft: 10}}>{hideOrDisplayMenuText()}</span>
-        </span>
-      {/* </Link> */}
-  
-      <span className="menuOptions desktop">
-        <Link to="/" style={{color: 'white'}}>
-          <span className="schedule desktop" onClick={ ()=>props.onDisplayWindow( 1 ) }>Home</span>
-        </Link>
-
-        <Link to="/schedule" style={{color: 'white'}}>
-          <span className="schedule desktop" onClick={ ()=>props.onDisplayWindow( 2 ) }>Schedule</span>
-        </Link>
-
-        <Link to="/search" style={{color: 'white'}}>
-          <span className="schedule desktop" onClick={ ()=>props.onDisplayWindow( 3 ) }>Search</span>
-        </Link>
-
-        <Link to="/dailyNotes" style={{color: 'white'}}>
-          <span className="schedule desktop" onClick={ ()=>props.onDisplayWindow( 5 ) }>Daily notes</span>
-        </Link>
-
-        <Link to="/laterlearnings" style={{color: 'white'}}>
-          <span className="schedule desktop" onClick={ ()=>props.onDisplayWindow( 4 ) } >Later learnings</span>
-        </Link>
+      <span className="menuOptions">
+        <Link to="/" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 1 ) }}>Home</Link>
+        <Link to="/schedule" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 2 ) }}>Schedule</Link>
+        <Link to="/search" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 3 ) }}>Search</Link>
+        <Link to="/dailyNotes" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 5 ) }}>Daily</Link>
+        <Link to="/note" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 6 ) }}>Notes</Link>
+        <Link to="/laterlearnings" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 4 ) }}>Later Learnings</Link>
       </span>
   
       <span className="layoutContainer">

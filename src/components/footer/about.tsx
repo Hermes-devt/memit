@@ -1,8 +1,9 @@
 import React from 'react';
 
+import '../../CSS/footer.scss'
 export const About = () => {
   return( <div id="about">
-    <h2>About</h2>
+    <h2 className="footerHeadlines">About</h2>
     <div>
       This is a application that lets you plugin your daily learnings
       to a set schedule so it allows you to repeat the information again

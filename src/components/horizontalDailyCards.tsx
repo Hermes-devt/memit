@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Row} from 'react-bootstrap';
-import {UserData, Day, iCardsToRepeat} from '../types';
+import {iUserData, iDay, iCardsToRepeat} from '../templatesTypes';
 import {cardsToRepeat} from './../js/cardsToRepeat';
 import {getDaysAfter1970} from './../js/util';
 import storage from '../store/data/action'
@@ -8,6 +8,7 @@ import {save} from '../js/storageHandling';
 import {ReactComponent as CheckboxTrue} from './../IMG/checkTrue.svg';
 import {ReactComponent as CheckboxFalse} from './../IMG/checkFalse.svg';
 import {useSelector, useDispatch} from 'react-redux';
+import {Link} from 'react-router-dom';
 import '../CSS/horizontalDailyCards.scss'
 
 interface Props{
@@ -19,19 +20,20 @@ interface Props{
 export function HorizontalDailyCards(props: Props){
   const [daily, setDaily] = useState<any>([])
   const [checkBoxes, setCheckboxes] = useState<iCardsToRepeat[]>([]);
-  const Data: any = useSelector<any>( (state: {data: UserData })=> state.data );
+  const Data: any = useSelector<any>( (state: {data: iUserData })=> state.data );
   const [displayPopup, setDisplayPopup] = useState<boolean>( false );
 
   const [missedCards, setMissedCards] = useState<any>( [] );
   const [displayPopup2, setDisplayPopup2] = useState<boolean>( false );
+  const [displayPopup3, setDisplayPopup3] = useState<boolean>( false );
   const dispatch = useDispatch();
-  const mobile = 900;
+  const mobile = 800;
 
 
   useEffect( ()=>{
-    let data: UserData = {...Data};
+    let data: iUserData = {...Data};
     if( !data ) return;
-    let todayCards: Day[] = cardsToRepeat( data, getDaysAfter1970());
+    let todayCards: iDay[] = cardsToRepeat( data, getDaysAfter1970());
     setDaily( todayCards );
     setCheckboxes( Data.dailyCards ); 
 
@@ -39,7 +41,6 @@ export function HorizontalDailyCards(props: Props){
 
     setDisplayPopup( mobileBrowser );
 
-    // console.log( Data.missedCards);
     let arr = [];
     for( let i=0; i < Data.missedCards.length; i++){
       for( let i2=0; i2 < Data.list.length; i2++){
@@ -53,12 +54,10 @@ export function HorizontalDailyCards(props: Props){
     setMissedCards(arr);
   },[]) //eslint-disable-line
   
-  useEffect( ()=>{
-    setCheckboxes( [...Data.dailyCards] ); 
-  },[Data]) 
+  useEffect( ()=>{ setCheckboxes( [...Data.dailyCards] ); },[Data]) 
 
 
-  const cardClicked = (card:Day): void =>{
+  const cardClicked = (card:iDay): void =>{
     let list = Data.list;
     let listLength = list.length;
     for(let i=0; i < listLength; i++){
@@ -89,34 +88,31 @@ export function HorizontalDailyCards(props: Props){
   }
 
 
-    return(<span style={{display: 'block', position: 'relative'}}>
-    {displayPopup && <div className="mobile blackCover" onClick={ ()=>{ setDisplayPopup( false ); }}></div>}
-    {displayPopup2 && <div className="mobile blackCover" onClick={ ()=>{ setDisplayPopup2( false ); }}></div>}
+    return(<span id="horinzontalDailyCard" style={{display: 'block', position: 'relative'}}>
+    {(displayPopup || displayPopup2 || displayPopup3) && <div className="mobile blackCover" onClick={ ()=>{ setDisplayPopup3(false); setDisplayPopup2(false); setDisplayPopup( false ); }}></div>}
 
     <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup(true) }}>Daily Cards</span>
-
-    {missedCards.length > 0 && <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup2(true) }}>Missed Cards</span>}
+    {missedCards.length > 0 && <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup2(true) }} >Missed Cards</span>}
+    <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup3(true); }} >Menu</span>
 
     {displayPopup && <span className="noselect horizontalDailycards">
       <Row className='no-gutters'>
       <span className="desktop headline">Cards: </span>
       <div className="mobile headline">Cards to Repeat</div>
-    <span 
-      className={ setDailyCardStyle() }
-      onClick={ ()=>{
-        const mobileBrowser:boolean = window.innerWidth <= mobile ? true : false
-        if( mobileBrowser ) setDisplayPopup( false );
-
-        let list = Data.list;
-        let todaysCard = list.length > 0 ? list.length - 1 : 0;
-        props.onClick( todaysCard );
+      <span className={ setDailyCardStyle() }
+        onClick={ ()=>{
+          const mobileBrowser:boolean = window.innerWidth <= mobile ? true : false
+          if( mobileBrowser ) setDisplayPopup( false );
+          let list = Data.list;
+          let todaysCard = list.length > 0 ? list.length - 1 : 0;
+          props.onClick( todaysCard );
       }}>
         <span className="mobile">Daily new card</span>
         <span className="desktop">Todays</span>
     </span>
 
 
-    { daily.map( (card: Day, index:number)=>{
+    { daily.map( (card: iDay, index:number)=>{
       return ( <span
         title={ setTags(card.tags, true) }
         onClick={()=>{ 
@@ -152,13 +148,12 @@ export function HorizontalDailyCards(props: Props){
     </span>}
 
 
-
     {displayPopup2 && missedCards.length > 0 && <span className="noselect horizontalDailycards">
       <Row className='no-gutters'>
       <span className="desktop headline">Missed cards: </span>
       <div className="mobile headline">Missed Cards</div>
 
-    { missedCards.map( (card: Day, index:number)=>{
+    { missedCards.map( (card: iDay, index:number)=>{
       return ( <span
         title={ setTags(card.tags, true) }
         onClick={()=>{ 
@@ -193,6 +188,51 @@ export function HorizontalDailyCards(props: Props){
     </Row>
     </span>}
 
+    {displayPopup3 && <span className="noselect horizontalDailycards">
+      <Row className='no-gutters mobile'>
+      <div className="mobile headline">Missed Cards</div>
+      <span onClick={ ()=> setDisplayPopup3( false ) }>
+        <Link to="/" className="link" >Home</Link>
+        <Link to="/schedule" className="link" >Schedule</Link>
+        <Link to="/search" className="link" >Search</Link>
+        <Link to="/dailyNotes" className="link" >Daily notes</Link>
+        <Link to="/note" className="link" >Note</Link>
+        <Link to="/laterLearnings" className="link" >Later learnings</Link>
+      </span>
+    {/* { missedCards.map( (card: iDay, index:number)=>{
+      return ( <span
+        title={ setTags(card.tags, true) }
+        onClick={()=>{ 
+          const mobileBrowser:boolean = window.innerWidth <= mobile ? true : false
+          if( mobileBrowser ) setDisplayPopup2( false );
+          cardClicked( card); 
+        }}
+
+
+        className={ Data.list[props.activeNote] === card ? "cardStyle cardStyleActive" : "cardStyle" } 
+        key={index}
+      >
+        <span >{setTags( card.tags)} </span>
+        <span
+          onClick={ (ev:any)=>{
+            ev.stopPropagation();
+            let nData = {...Data};
+            let _checkboxes = nData.missedCards;
+            _checkboxes[index].done = !_checkboxes[index].done;
+
+            _checkboxes[index].done = _checkboxes[index].done!;
+            nData.missedCards = [..._checkboxes];
+            dispatch( storage.setData(nData));
+            save(nData);
+          }}
+        >
+        {Data.missedCards[index].done && <span className="checkbox" ><CheckboxTrue /> </span> }
+        {!Data.missedCards[index].done && <span className="checkbox" > <CheckboxFalse /> </span> }
+        </span>
+      </span>)
+    })} */}
+    </Row>
+    </span>}
     </span>);
 
 }

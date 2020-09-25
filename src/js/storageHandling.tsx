@@ -1,25 +1,25 @@
 
-import {UserData} from '../interfaces';
+import {iUserData} from '../templatesTypes';
 import {cardsToRepeat} from './cardsToRepeat';
 import {getDaysAfter1970} from '../js/util'
 
-export function save(data: UserData){
-  const obj: UserData = {
+export function save(data: iUserData){
+  const obj: iUserData = {
     list: data.list,
     dailyCards: data.dailyCards,
     lastUse: data.lastUse,
     schedule: data.schedule,
     missedCards: data.missedCards,
     laterLearnings: data.laterLearnings,
+    dailyNotes: data.dailyNotes,
+    note: data.note,
   }
 
-  // console.log('here', obj);
-  // localStorage.setItem( "dailyNotes", JSON.stringify(obj) ); 
-
+  localStorage.setItem( "dailyNotes", JSON.stringify(obj) ); 
   // console.log('saving to localstorage:', obj);
 }
 
-export function cleanListFromPastEmptyDays(dataObj: UserData){
+export function cleanListFromPastEmptyDays(dataObj: iUserData){
   //Skip the newly inserted day.
   const length = dataObj.list.length  - 2;
   for( let i=length; i>= 0; i--){
@@ -29,7 +29,7 @@ export function cleanListFromPastEmptyDays(dataObj: UserData){
   }
 }
 
-export function cleanlistFromUserInput(dataObj: UserData){
+export function cleanlistFromUserInput(dataObj: iUserData){
   dataObj.list.forEach( (item:any)=>{
     if( 'userInput' in item ){
       delete item.userInput;
@@ -40,14 +40,16 @@ export function cleanlistFromUserInput(dataObj: UserData){
 
 interface DailyCards { ID: number, done: boolean }
 
-export function setDailyCards(dataObj: UserData,){
+export function setDailyCards(dataObj: iUserData,){
   let todayCards = cardsToRepeat( dataObj, getDaysAfter1970() );
-  const notReverse = true;
-  if( notReverse ){
-    dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
-  }
+  dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
 
-  else{
+  // const notReverse = true;
+  // if( notReverse ){
+  //   dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
+  // }
+
+  // else{
     //map to the new datastructure
     // let dailys: DailyCards[] = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
 
@@ -57,7 +59,7 @@ export function setDailyCards(dataObj: UserData,){
     // dataObj.dailyCards = [...reverseDailys];
     // console.log('dailyCads', dataObj.dailyCards);
     // dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
-  }
+  // }
 }
 
 

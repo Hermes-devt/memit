@@ -17,7 +17,6 @@ interface Props {
 // export function InterfaceOptions({layout, activeNote}: Props){
 export function InterfaceOptions(props: Props){
   const {activeNote, layout} = props;
-  console.log( layout );
 
   return ( <span id="interfaceContainer">
     {layout === 1 && <TextAreas1 forceUpdate={props.forceIt} activeNote={activeNote} /> }

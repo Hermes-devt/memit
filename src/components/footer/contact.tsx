@@ -5,7 +5,7 @@ export function Contact(){
   return (
     <div id='contact'>
       <div>
-        <h2>Contact</h2>
+        <h2 className="footerHeadlines">Contact</h2>
         <div className="col1">Email: </div>
         <div className="col2">kim@repeatLearnings.com</div>
         <br/>
