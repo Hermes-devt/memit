@@ -1,7 +1,7 @@
 
 
-import {iDay} from '../../templatesTypes';
-import {copyQuestions} from './copyQuestion';
+import {iDay} from '../../../templatesTypes';
+import {copyQuestions} from '../copyQuestion';
 
 export const fetchQuestionsAnswersToInputField = (card1: iDay, toFetch:any): iDay=>{
 

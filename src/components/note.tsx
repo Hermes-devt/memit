@@ -4,6 +4,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {iUserData} from '../templatesTypes';
 import {save} from '../js/storageHandling';
 import storage from '../store/data/action';
+import breakOutQuestionAnswersFromNote from '../js/textManipulation/execute/breakoutQuestionsAnswersFromNote'
+import adjustNumbers from '../js/textManipulation/adjustNumbers'
 import '../CSS/note.scss';
 
 export const Note = ()=>{
@@ -18,20 +20,16 @@ export const Note = ()=>{
 
   // Let the textarea expand to its mininum non-scroll height
   useEffect( ()=>{
-    // textareaRef.current.style.height = '600px';
-    // // containerRef.current.style.height = '500px';
-    // let height = textareaRef.current.scrollHeight;
-    // let cssHeight = textareaRef.current.style.height.match(/\d+/)[0];
-    // if( Math.abs( height-Number(cssHeight)) < 20 ){ return; }
-
-    // textareaRef.current.style.height = height + 20 + "px";
-    // containerRef.current.style.height = height + 20 + 'px';
-  }, [activeDocument]) //eslint-disable-line
+    if( Data.settings.activeNote > -1)
+      setActiveDocument( Data.settings.activeNote)
+  }, []) //eslint-disable-line
 
   const isActive = (index: number): string => index === activeDocument ? "menuItem menuItemActive" : "menuItem";
+
   const saveData = (nDocuments:any)=>{
       let nData = {...Data};
       nData.note.list = [...nDocuments];
+      nData.settings.activeNote = activeDocument;
       dispatch( storage.setData(nData) );
       save( nData );
   }
@@ -46,9 +44,11 @@ export const Note = ()=>{
           <span className="button"
             onClick={ ()=>{
               let nDocuments = [...documents];
-              nDocuments.splice(activeDocument + 1, 0, {headline: "New doc", text: ""});
+              const newActiveDocument = activeDocument + 1;
+              nDocuments.splice(newActiveDocument, 0, {headline: "New doc", text: ""});
+              Data.settings.activeNote = newActiveDocument;
               setDocuments( nDocuments );
-              setActiveDocument(activeDocument + 1);
+              setActiveDocument(newActiveDocument);
               saveData( nDocuments );
             }}
             >+</span>
@@ -61,6 +61,7 @@ export const Note = ()=>{
                 }else{
                   nDocuments.splice(activeDocument, 1);
                   let active = nDocuments.length - 1 < activeDocument ? activeDocument - 1 : activeDocument;
+                  Data.settings.activeNote = active;
                   setActiveDocument(active);
                 }
                 setDocuments( nDocuments );
@@ -80,6 +81,9 @@ export const Note = ()=>{
           onClick={ (evt)=>{
             evt.currentTarget.blur();
             setActiveDocument( index );
+            Data.settings.activeNote = index;
+            dispatch( storage.setData(Data) );
+            save(Data);
           }}
           onDoubleClick={ (evt)=>{ evt.currentTarget.focus(); }}
 
@@ -100,6 +104,48 @@ export const Note = ()=>{
       id="textArea"
       style={{height: '100%'}}
       ref={ textareaRef }
+
+      // onKeyDown={ (evt)=>{ console.log('here'): }}
+      onKeyDown={ (evt)=>{
+        let re = /\nsend\n|\nnsend\n/
+
+        let nValue = textareaRef.current.value;
+        nValue += evt.key.length === 1 ? evt.key : '';
+
+        let reMatch = textareaRef.current.value.match(re);
+        if( evt.key === 'Enter' && reMatch){
+        // if( evt.key === 'Enter' && (textareaRef.current.value).match(re)){
+          let spacingBetweeNewAndOldQuestions: boolean = reMatch[0].charAt(1) === 'n' ? true: false;
+
+          let sub = nValue.substring( 0, reMatch.index);
+          let questionAnswerObj = breakOutQuestionAnswersFromNote( sub );
+          let numberOfCharToDeleteToRemoveCommand: number = spacingBetweeNewAndOldQuestions ? 6 : 5;
+          nValue = nValue.substring( reMatch.index + numberOfCharToDeleteToRemoveCommand);
+
+          let Todays = Data.list[ Data.list.length -1 ];
+
+          Todays.questions = Todays.questions.trim() + (spacingBetweeNewAndOldQuestions ? '\n':'');
+          Todays.answers = Todays.answers.trim() + (spacingBetweeNewAndOldQuestions ? '\n':'');
+          Todays.questions += '\n' + questionAnswerObj.questions;
+          Todays.answers += '\n' + questionAnswerObj.answers;
+          Todays.questions = Todays.questions.trim()
+          Todays.answers = Todays.answers.trim() 
+
+          Data.list[ Data.list.length -1 ] = adjustNumbers( Data.list[ Data.list.length -1 ] );
+          dispatch( storage.setData(Data) );
+          save( Data );
+
+          let nDocuments = [...documents];
+          nDocuments[activeDocument].text = nValue;
+          setDocuments( nDocuments );
+          saveData( nDocuments );
+          setTimeout( ()=>{ 
+            textareaRef.current.selectionEnd = 0; 
+            textareaRef.current.scrollTo(0, 0)
+          },5);
+        }
+      }}
+
       onChange={ (evt)=>{
         let nValue = evt.currentTarget.value;
         let nDocuments = [...documents];

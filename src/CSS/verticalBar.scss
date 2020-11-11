@@ -6,14 +6,12 @@
   font-size: 1em;
   display: inline-block;
   width: 220px;
-  // background-color: white;
   height: 80vh;
   overflow: scroll;
   z-index: 99;
   overflow-x: hidden;
 
   .header{
-    // background-color: #242424;
     background-image: url(../IMG/sky2.jpg);
     font-style: italic;
     text-align: center;
@@ -32,7 +30,8 @@
 
   .card{
     position: relative;
-    padding: 5px 5px;
+    // padding: 5px 5px;
+    padding: 5px 7px 5px 5px;
     border-bottom: 1px solid silver;
     cursor: pointer;
     font-size: 0.8em;
@@ -41,12 +40,12 @@
   .card:hover{
     color: white;
     background-color: #A4978E;
+    // font-weight: bold;
   }
 
   .active{
     color: white;
     background-color: #A4978E;
-    // background-image: url(../IMG/sky2.jpg);
   }
 
   .passive{
@@ -62,10 +61,11 @@
   .tags{
     display: inline-block;
     font-weight: bold;
+    // word-wrap: break-word;
   }
 }
 
-@media (min-width: 700px){
+@media (min-width: 800px){
   #verticalBar{
     margin: 0px;
     padding: 0px;
@@ -77,7 +77,7 @@
 
 
 
-@media (max-width: 700px){
+@media (max-width: 800px){
   #verticalBar{
     position: absolute;
     margin: 0px;

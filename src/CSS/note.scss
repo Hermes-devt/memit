@@ -60,13 +60,19 @@
       font-size:14px;
       border: none;
       border-bottom: 1px solid black;
+      transition: 0.1s;
+    }
+
+    .menuItem:hover{
+      background-color: #A4978E;
+      color: white;
+      font-weight: bold;
     }
 
     .menuItemActive{
       background-color: #A4978E;
-      opacity: 0.8;
       color: white;
-      transition: 0.1s;
+      // font-weight: bold;
     }
   } 
 

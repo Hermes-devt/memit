@@ -45,7 +45,7 @@ export function Schedule():any{
           <div key={index} className='pt-0- m-0'>
             <div className="scheduleHeader">
               <span className="date">
-                <span style={{color: 'orange'}}>Date: </span> 
+                <span style={{color: ''}}>Date: </span> 
                 <span style={{paddingLeft: 3}}>
                   {getDayMonthFromInt( getDaysAfter1970() + item.daysFromNow )}
                 </span>
@@ -61,12 +61,13 @@ export function Schedule():any{
                 <div className="lineContainer">
                   <span className="tags"> {item2.tags.join(', ')} </span>
                   <span className="nrOfCardQuestions">{cardCounter( item2)}</span>
-                  <span className='creationDate creationDateDesktop font-weight-bold'> {dateHandling.getDayMonthFromInt(item2.onDay) }</span>
+                  <span className='creationDate creationDateDesktop'> {dateHandling.getDayMonthFromInt(item2.onDay) }</span>
                 </div>
 
               </div>
             ) })}
-            <div style={{backgroundColor: 'orange', borderTop: '1px solid black'}}>
+            {/* <div style={{backgroundColor: 'orange', borderTop: '1px solid black'}}> */}
+            <div className="total">
               <span className="tags">Total:</span>
               <span className="nrOfCardQuestions" style={{color: ''}}>{item.totalNrOfQuestions}</span>
             </div>

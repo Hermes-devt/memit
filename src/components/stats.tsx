@@ -7,7 +7,6 @@ import '../CSS/stats.scss';
 
 export function Stats():any{
   const data:any = useSelector<any>( state=>state.data);
-  let [dataStringified, setDataStringified] = useState<string>("");
   let [dataSize, setDataSize] = useState<number>(0);
   let [insertedDays, setInsertedDays ] = useState<number>(0);
   let [totalNrQuestions, setTotalNrQuestions] = useState<number>(0);
@@ -33,12 +32,6 @@ export function Stats():any{
     setDataSize(Math.ceil( Number(storageSize)) );
   };
 
-  const loadData = ()=>{
-    let dataStringified = JSON.stringify(data);
-    setDataStringified(dataStringified);
-    localStorageSpace();
-  }
-
   return(
     <Container fluid id="stats">
       <span className="item" >Stats</span>
@@ -58,7 +51,7 @@ export function Stats():any{
         <span> {streak} days</span>
       </span>
 
-      { !displayAdditionalData && <span onClick={ ()=>{ loadData(); setDisplayAdditionalData(true); }} className="item pointer">More data </span>}
+      { !displayAdditionalData && <span onClick={ ()=>{ localStorageSpace(); setDisplayAdditionalData(true); }} className="item pointer">More data </span>}
 
       { displayAdditionalData && <span style={{display:'inline-block'}}>
         <span className="item">
@@ -66,10 +59,6 @@ export function Stats():any{
           <span> {dataSize} KB</span>
         </span>
 
-        <span className="item">
-          <span className="tSilver">Serialized data: </span>
-          <textarea className="dataString" onChange={ ()=>{}} name="" id="" cols={10} rows={1} value={dataStringified} /> 
-        </span>
       </span> }
     </Container>
   )

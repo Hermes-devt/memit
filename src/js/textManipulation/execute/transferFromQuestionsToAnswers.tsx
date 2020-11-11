@@ -1,5 +1,5 @@
 
-import {iDay} from '../../templatesTypes';
+import {iDay} from '../../../templatesTypes';
 
 export const TransferFromQuestions = (card: iDay): iDay=>{
 

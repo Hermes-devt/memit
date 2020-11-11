@@ -7,7 +7,7 @@ import {init} from './js/init';
 import {useState} from 'react';
 import VerticalBar from './components/contentarea/verticalBar';
 import Util from './js/util';
-// import {save} from './js/storageHandling';
+import {save} from './js/storageHandling';
 
 import Note from './components/note';
 import {useDispatch} from 'react-redux';
@@ -40,6 +40,7 @@ export function App(){
 
   const dispatch = useDispatch();
 
+
   useEffect( ()=>{
     let data: iUserData  = init();
     dispatch( storage.setData(data) );
@@ -47,7 +48,12 @@ export function App(){
     let active: number = Util.lastElement(data.list);
     setData(data);
     setActiveNote( active );
-    // save(data);
+    save(data);
+
+    if( data.settings ){
+      setLayout( data.settings.cardLayout);
+    }
+
     if( window.innerWidth < 900 ) {
       setLayout(3);
       setMobile(true);
@@ -55,10 +61,16 @@ export function App(){
     }else{
       // setDisplayVerticalBar(true);
     }
+
   },[]); //eslint-disable-line
 
 
-  const onSettingsBarClick = (nr: number): void => setLayout( nr );
+  const onSettingsBarClick = (nr: number): void =>{
+    setLayout( nr );
+    data.settings.cardLayout = nr;
+    dispatch( storage.setData(data) );
+    save(data);
+  }
   const onMenuClick = ()=> { 
     if( mobile){
       if( location.pathname === '/') setDisplayVerticalBar( displayVerticalBar=> !displayVerticalBar); 
@@ -94,27 +106,35 @@ export function App(){
 
           {data && <span style={{position: 'relative'}}>
             <span style={hideVerticalBar()} >
-              {/* <div className='gBlackCoverAbsolute gMobileMin' onClick={ ()=> setDisplayVerticalBar(false)} /> */}
               <VerticalBar onClick={(note:number)=> { setActiveNote(note) }} menuClick={ onMenuClick } activeNote={ activeNote } />
             </span> 
 
             {!displayVerticalBar && <HorizontalDailyCards onClick={(note:number)=> { setActiveNote(note) }} activeNote={activeNote} mobile={mobile} />}
-            {data && <TagInput forceUpdate={forceUpdate } activeNote={ activeNote } mobile={mobile} /> }
+
+            {/* when the window shrinks and the verticalMenu is not displaying without this it doesnt show up */}
+            {displayVerticalBar && <span className="horizontalDailyCardHidder">
+              <HorizontalDailyCards onClick={(note:number)=> { setActiveNote(note) }} activeNote={activeNote} mobile={mobile} />
+            </span>}
+
+            {data && <>
+              <TagInput forceUpdate={forceUpdate } activeNote={ activeNote } mobile={mobile} />
+              <InterfaceOptions forceUpdate={forceUpdate} forceIt={ ()=>{
+                setForceUpdate( forceUpdate=> forceUpdate+1); }}
+                layout={layout} activeNote={activeNote}/>
+            </>}
+
+            {/* {data && <TagInput forceUpdate={forceUpdate } activeNote={ activeNote } mobile={mobile} /> }
             {data && <InterfaceOptions forceUpdate={forceUpdate} forceIt={ ()=>{
               setForceUpdate( forceUpdate=> forceUpdate+1);
             }}
-              layout={layout} activeNote={activeNote}/> }
-            
+              layout={layout} activeNote={activeNote}/> } */}
           </span>}
+
         </Route>
       </Switch>
 
-      <div className="backgroundImage"> 
-      <div className="backgroundImageCover" / >
-      {/* <Footer /> */}
+      {/* <div className="backgroundImage"><Footer /></div> */}
       <Footer />
-      {/* {data && <Stats />} */}
-      </div>
       {data && <Stats />} 
     </Container>
   )

@@ -2,7 +2,7 @@
 import React, {useState, useEffect, CSSProperties} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {save} from '../../js/storageHandling';
-import exe from '../../js/textManipulation/execute';
+import execute from '../../js/textManipulation/execute/execute';
 import storage from '../../store/data/action'
 import {iUserData} from '../../templatesTypes';
 
@@ -21,7 +21,6 @@ export function UserInput( props: Props){
   const {name, placeholder, activeNote, tabIndex} = props.data;
 
   const data: any = useSelector<{data: iUserData}>(state=> state.data);
-  // const temptemp: any = useSelector<any>( (state: {data: UserData })=> state.data );
   const dispatch = useDispatch();
   const [text, setText] = useState<string>('');
 
@@ -35,16 +34,24 @@ export function UserInput( props: Props){
   const checkKeyStrokes = (evt:any)=>{
     let value:string = '\n' + evt.currentTarget.value;
 
-    // let strSplit: string[] = value.split('/n');
 
-    const re = /\nexe\n|\ne\n/
-    if( evt.key === 'Enter' && (value + '\n').match( re)){
-      data.list = [...exe.execute( data.list, props.data.activeNote )];
-      setText(data.list[activeNote].userInput.trim());
-      dispatch( storage.setData(data) );
-      save( data );
+    //execute all the commands in the userInput field
+    const re = /\nexe\n|\ne\n|\nsend\n/
+    if( evt.key === 'Enter' && (value + '\n').match(re)){
+      let newData = {...execute( {...data}, props.data.activeNote )};
+      setText( (newData.list[activeNote].userInput || "" ).trim());
+      dispatch( storage.setData(newData) );
+      save( newData );
       props.forceUpdate();
     }
+
+    // Delete userinput if c+enter on a new line
+    if( evt.key === 'Enter' && (value + '\n').match(/\nc\n/)){
+      data.list[activeNote].userInput = '';
+      setTimeout( ()=> setText(""), 5);
+      return;
+    }
+
   }
 
   const onChange = (evt:any): void=>{
@@ -62,7 +69,6 @@ export function UserInput( props: Props){
         placeholder={placeholder || ""}
         style={ props.style ? {...styling.textarea, ...props.style} : styling.textarea } 
         name={name || ""} 
-        // id={name || "" }
         id="userInput"
         tabIndex={tabIndex || 1}
         onChange={ onChange }
@@ -70,10 +76,10 @@ export function UserInput( props: Props){
       />
       <div 
         onClick={ ()=>{
-          data.list = [...exe.execute( data.list, props.data.activeNote )];
-          setText(data.list[activeNote].userInput);
-          dispatch( storage.setData(data) );
-          save( data );
+          let newData = {...execute( data, props.data.activeNote )};
+          setText( (newData.list[activeNote].userInput || "" ).trim());
+          dispatch( storage.setData(newData) );
+          save( newData );
           props.forceUpdate();
         }}
         style={button}>Execute commands</div>
@@ -92,7 +98,6 @@ const styling = {
 }
 
 const button = {
-  // right: 10,
   position: 'absolute',
   bottom: 2,
   right: 0,

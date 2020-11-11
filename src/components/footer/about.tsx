@@ -5,13 +5,13 @@ export const About = () => {
   return( <div id="about">
     <h2 className="footerHeadlines">About</h2>
     <div>
-      This is a application that lets you plugin your daily learnings
-      to a set schedule so it allows you to repeat the information again
-      just before you forget about it. 
-      Thereby not wasting your hard earned wisdom the the fragility of time. 
+      Repeat Learnings is a spaced interval learning platform, the core feature is it tries 
+      to keep the contextual clues together and lets you build new connections from the information 
+      you already have.
     </div>
   </div>)
 }
+
 
 export default About;
 

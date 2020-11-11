@@ -1,5 +1,8 @@
 
 #horinzontalDailyCard{
+
+  .onLink{ color: black; text-decoration: none; }
+
   @media (min-width: 800px){
     .mobile{ display: none; }
     .desktop{ display: inline-block }
@@ -30,7 +33,7 @@
         color: black;
         height: 30px;
         line-height: 30px;
-        padding: 0px 12px 0px 2px;
+        padding: 0px 20px 0px 2px;
 
         border: 1px solid silver;
         border-bottom: none;
@@ -41,25 +44,30 @@
         font-size: 12px;
         overflow:  hidden;
         cursor: pointer;
+        transition: 0.1s;
       }
 
       .cardStyle:hover{
-        background-color: silver;
-        color: black;
+        color: white;
+        background-color: #A4978E;
+        font-weight: bold;
+        font-size: 11px;
       }
 
       .cardStyleActive{
         font-weight: bold;
-        color: black;
-        background-color: silver;
-        color: black;
+        font-size: 11px;
+        border-radius: 0px;
+        background-color: #A4978E; color: white;
       }
 
     }
 }
 
 @media (max-width: 800px){
-.mobile{ display:inline-block; }
+.mobile{ 
+  display:inline-block; 
+}
 .desktop{ display: none}
 
 .link{
@@ -81,8 +89,11 @@
 .popupOpener{
   font-weight: bold;
   padding: 10px 0px;
-  width: 33%;
+  // width: 33%;
+  width: 50%;
   text-align: center;
+  // background-color: red;
+
 }
 
 .popupOpener:hover{
@@ -92,18 +103,22 @@
 
 .horizontalDailycards{
   position: fixed;
-  left: 0px; right: 0px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+
   width: 80%;
-  max-height: 70%;
+  max-height: 90%;
   z-index: 99;
+
   background-color: white;
   padding: 25px 20px;
   border-radius: 5px;
   font-size: 13px;
-  margin: 0px auto;
   box-shadow: 5px 5px 5px black;
   border: 2px solid black;
-  overflow-x: scroll;
+  // overflow-x: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   cursor: pointer;
 }
   .cardStyle{
@@ -125,8 +140,7 @@
 
   .cardStyleActive{
     font-weight: bold;
-    color: black;
-    background-color: #f1f1f1;
+    color: black; background-color: #f1f1f1;
   }
 
   .checkbox{

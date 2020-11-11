@@ -1,22 +1,10 @@
 
 .backgroundImage{
   position: relative;
-  background-image: url(../IMG/sky2.jpg);
+  background-image: url(../IMG/sky5.jpg);
   background-size: cover;
   overflow: hidden;
   background-repeat: no-repeat;
-  // z-index: -2;
-
-  .backgroundImageCover{
-    position: absolute;
-    // z-index: -1;
-    background-color: black;
-    opacity: 0.65;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    height: 100%;
-  }
 }
 
 textarea{
@@ -30,9 +18,6 @@ textarea{
 .tSilver{ color: silver }
 
 
-// @media(max-width: 600px){
-  .desktopMin{
-    display: none;
-    color: red;
-  }
-// }
+@media( min-width: 800px ){
+  .horizontalDailyCardHidder{ display: none; }
+}

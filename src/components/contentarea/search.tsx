@@ -10,6 +10,7 @@ export const Search = ()=> {
   const [stringFind, setStringFind] = useState<string>('');
   const [showBlocks, setShowBlocks] = useState<{display: string}[]>([]);
 
+  const [renderBlocks, setRenderBlocks] = useState<boolean>(false);
   let data:any = useSelector<any>( state=> state.data);
 
   const questionTextAreas = useRef<any>(data.list.map(() => createRef()));
@@ -22,6 +23,8 @@ export const Search = ()=> {
 
   useEffect( ()=>{
     let tagsObj : {display: string }[] = [];
+
+
     let tagArr: string[] = (tags || "").split(/[,]/);
 
     const list = data.list
@@ -40,9 +43,8 @@ export const Search = ()=> {
       tagsObj.push( includes ? {display: 'block'} : {display: 'none'});
     }
 
+    // tags.length > 0 ? setRenderBlocks(true) : setRenderBlocks(false);
     setShowBlocks( tagsObj );
-    
-
   }, [tags]) //eslint-disable-line
 
   useEffect( ()=>{
@@ -72,6 +74,7 @@ export const Search = ()=> {
     setShowBlocks( ()=>data.list.map( ()=>{ return{display: 'block'}}) )
 
     for( let i=0, len=questionTextAreas.current.length; i<len; i++){
+
       let questionHeight = questionTextAreas.current[i].current.scrollHeight;
       let answerHeight = answerTextAreas.current[i].current.scrollHeight;
 
@@ -81,6 +84,7 @@ export const Search = ()=> {
     }
 
   }, []) //eslint-disable-line
+
 
   return(
   <Container className='m-0 p-0' fluid>

@@ -1,6 +1,5 @@
 
 import {iDay} from '../../templatesTypes';
-
 import splitAwayQuestionAndAnswers from './splitAwayQuestionAndAnswers'
 
 interface itoCopy{ question: string; answer: string; tags?: string[] }

@@ -26,11 +26,12 @@ export function SettingsBar(props: Props):any{
     <div className="noselect" id="settingbar">
       <Timer />
 
-      <span className={ location.pathname !== '/' ? "menu hideIt" : 'menu'} onClick={ ()=>{ 
+      <span className={ location.pathname !== '/' ? "menu hideIt desktop" : 'menu desktop'} onClick={ ()=>{ 
         props.menuClick(); }} > 
         <Menu className="menuOpener" />
         <span className="menuString desktop" >{props.displayVerticalBar ? "Hide Menu" : "Display Menu"}</span>
       </span> 
+      <Link to="/" className="homeButton mobile33" onClick={ ()=>{ props.onDisplayWindow( 1 ) }}>Home</Link>
   
       <span className="menuOptions">
         <Link to="/" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 1 ) }}>Home</Link>

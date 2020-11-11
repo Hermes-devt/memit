@@ -1,5 +1,6 @@
 
 #settingbar{
+
   position: relative;
   border-bottom: 1px solid silver;
   color: white;
@@ -18,11 +19,26 @@
   }
 
   .menuString{ padding-left: 10px; }
-  .hideIt{ opacity: 0.2; }
+
+  .hideIt{
+    opacity: 0.2;
+  }
+
+  .homeButton{
+    display: inline-block;
+    height: 100%;
+    padding: 0px 20px;
+    color: silver;
+    line-height: 100%;
+    line-height: 40px;
+  }
+
+  .mobile33{display: none;}
 
   @media (max-width: 800px){
     .desktop{ display: none; }
-    // .desktop11{ display: none; }
+    .mobile33{display: inline-block}
+    // .hideIt{ display: none; }
 
     .layoutContainer{
       position: absolute;

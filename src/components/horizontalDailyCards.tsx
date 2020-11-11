@@ -25,7 +25,7 @@ export function HorizontalDailyCards(props: Props){
 
   const [missedCards, setMissedCards] = useState<any>( [] );
   const [displayPopup2, setDisplayPopup2] = useState<boolean>( false );
-  const [displayPopup3, setDisplayPopup3] = useState<boolean>( false );
+  // const [displayPopup3, setDisplayPopup3] = useState<boolean>( false );
   const dispatch = useDispatch();
   const mobile = 800;
 
@@ -89,15 +89,15 @@ export function HorizontalDailyCards(props: Props){
 
 
     return(<span id="horinzontalDailyCard" style={{display: 'block', position: 'relative'}}>
-    {(displayPopup || displayPopup2 || displayPopup3) && <div className="mobile blackCover" onClick={ ()=>{ setDisplayPopup3(false); setDisplayPopup2(false); setDisplayPopup( false ); }}></div>}
+    {(displayPopup || displayPopup2) && <div className="mobile blackCover" onClick={ ()=>{ setDisplayPopup2(false); setDisplayPopup( false ); }}></div>}
 
     <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup(true) }}>Daily Cards</span>
     {missedCards.length > 0 && <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup2(true) }} >Missed Cards</span>}
-    <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup3(true); }} >Menu</span>
+    {/* <span className="mobile popupOpener" onClick={ ()=>{ setDisplayPopup3(true); }} >Menu</span> */}
 
     {displayPopup && <span className="noselect horizontalDailycards">
       <Row className='no-gutters'>
-      <span className="desktop headline">Cards: </span>
+      {/* <span className="desktop headline">Cards: </span> */}
       <div className="mobile headline">Cards to Repeat</div>
       <span className={ setDailyCardStyle() }
         onClick={ ()=>{
@@ -113,6 +113,7 @@ export function HorizontalDailyCards(props: Props){
 
 
     { daily.map( (card: iDay, index:number)=>{
+      // console.log( 'tags', card.tags.join('-').replace(/ /gi, "&") );
       return ( <span
         title={ setTags(card.tags, true) }
         onClick={()=>{ 
@@ -120,12 +121,12 @@ export function HorizontalDailyCards(props: Props){
           if( mobileBrowser ) setDisplayPopup( false );
           cardClicked( card); 
         }}
-
-
         className={ Data.list[props.activeNote] === card ? "cardStyle cardStyleActive" : "cardStyle" } 
         key={index}
       >
-        <span >{setTags( card.tags)} </span>
+        {/* <Link to="./" className="onLink"> */}
+          <span className="">{setTags( card.tags)} </span>
+        {/* </Link> */}
         <span
           onClick={ (ev:any)=>{
             ev.stopPropagation();
@@ -166,7 +167,7 @@ export function HorizontalDailyCards(props: Props){
         className={ Data.list[props.activeNote] === card ? "cardStyle cardStyleActive" : "cardStyle" } 
         key={index}
       >
-        <span >{setTags( card.tags)} </span>
+        <span >{setTags( card.tags)}</span>
         <span
           onClick={ (ev:any)=>{
             ev.stopPropagation();
@@ -188,51 +189,6 @@ export function HorizontalDailyCards(props: Props){
     </Row>
     </span>}
 
-    {displayPopup3 && <span className="noselect horizontalDailycards">
-      <Row className='no-gutters mobile'>
-      <div className="mobile headline">Missed Cards</div>
-      <span onClick={ ()=> setDisplayPopup3( false ) }>
-        <Link to="/" className="link" >Home</Link>
-        <Link to="/schedule" className="link" >Schedule</Link>
-        <Link to="/search" className="link" >Search</Link>
-        <Link to="/dailyNotes" className="link" >Daily notes</Link>
-        <Link to="/note" className="link" >Note</Link>
-        <Link to="/laterLearnings" className="link" >Later learnings</Link>
-      </span>
-    {/* { missedCards.map( (card: iDay, index:number)=>{
-      return ( <span
-        title={ setTags(card.tags, true) }
-        onClick={()=>{ 
-          const mobileBrowser:boolean = window.innerWidth <= mobile ? true : false
-          if( mobileBrowser ) setDisplayPopup2( false );
-          cardClicked( card); 
-        }}
-
-
-        className={ Data.list[props.activeNote] === card ? "cardStyle cardStyleActive" : "cardStyle" } 
-        key={index}
-      >
-        <span >{setTags( card.tags)} </span>
-        <span
-          onClick={ (ev:any)=>{
-            ev.stopPropagation();
-            let nData = {...Data};
-            let _checkboxes = nData.missedCards;
-            _checkboxes[index].done = !_checkboxes[index].done;
-
-            _checkboxes[index].done = _checkboxes[index].done!;
-            nData.missedCards = [..._checkboxes];
-            dispatch( storage.setData(nData));
-            save(nData);
-          }}
-        >
-        {Data.missedCards[index].done && <span className="checkbox" ><CheckboxTrue /> </span> }
-        {!Data.missedCards[index].done && <span className="checkbox" > <CheckboxFalse /> </span> }
-        </span>
-      </span>)
-    })} */}
-    </Row>
-    </span>}
     </span>);
 
 }

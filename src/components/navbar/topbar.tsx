@@ -9,7 +9,7 @@ import '../../CSS/topbar.scss';
 export const Topbar = ()=>{
   return(
     <Container fluid id='topbar'>
-        <div id="topbarCover"></div>
+        {/* <div id="topbarCover"></div> */}
       <Row>
 
         <Col className="d-none d-md-block">

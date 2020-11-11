@@ -26,7 +26,7 @@ export function getDayMonthFromInt(fromDay:number): string{
   return str;
 }
 
-function ifNewDay(data:  any): boolean {
+export function ifNewDay(data:  any): boolean {
   let todayDateInNr = getDaysAfter1970();
   const {list} = data;
   if(list.length === 0 ) return true;

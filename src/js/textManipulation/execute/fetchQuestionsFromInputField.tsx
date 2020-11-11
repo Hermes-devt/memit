@@ -1,5 +1,5 @@
 
-import {iDay} from '../../templatesTypes';
+import {iDay} from '../../../templatesTypes';
 
 // Fetches questions fromt he input field with the following format
 // #This is a question

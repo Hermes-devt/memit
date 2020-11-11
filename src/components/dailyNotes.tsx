@@ -1,5 +1,5 @@
 import React, {useState, useEffect, createRef, useRef } from 'react';
-import clearAwayCommands from '../js/textManipulation/clearAwayCommands';
+import clearAwayCommands from '../js/textManipulation/execute/clearAwayCommands';
 import {useDispatch, useSelector} from 'react-redux';
 import {iUserData} from '../templatesTypes';
 
@@ -153,17 +153,28 @@ export const DailySummary = (props:any)=>{
     if( !mobileScreen ){
       // Split oldInformation into two columns
       let countNewLines = (nData.dailyNotes.oldData.match(/\n/g) || []).length;
-      let split = (nData.dailyNotes.oldData.split('\n') || [nData.dailyNotes.oldData]);
-      let oldInformationSplit1 = (split.slice(0, Math.floor( countNewLines / 2) || [])).join('\n') || '';
-      let oldInformationSplit2 = (split.slice(Math.floor( countNewLines / 2) || [])).join('\n') || '';
-      setOldDataSplit( [oldInformationSplit1.trim() + '\n\n\n\n\n\n', oldInformationSplit2.trim() + '\n\n\n\n\n\n'] );
+
+
+      if( countNewLines < 50){
+        setOldDataSplit([ nData.dailtNotes.oldData, '']);
+      }else{
+        let split = (nData.dailyNotes.oldData.split('\n') || [nData.dailyNotes.oldData]);
+        let oldInformationSplit1 = (split.slice(0, Math.floor( countNewLines / 2) || [])).join('\n') || '';
+        let oldInformationSplit2 = (split.slice(Math.floor( countNewLines / 2) || [])).join('\n') || '';
+        setOldDataSplit( [oldInformationSplit1.trim() + '\n\n\n\n\n\n', oldInformationSplit2.trim() + '\n\n\n\n\n\n'] );
+
+      }
+
 
       let countNewLines2 = (nData.dailyNotes.newData.match(/\n/g) || []).length;
-
-      let split2 = (nData.dailyNotes.newData.split('\n') || [nData.dailyNotes.newData]);
-      let newInformationSplit1: string = (split2.slice(0, Math.floor( countNewLines2 / 2) || [])).join('\n') || '';
-      let newInformationSplit2: string = (split2.slice(Math.floor( countNewLines2 / 2) || [])).join('\n') || '';
-      setNewlyDataSplit( [(newInformationSplit1.trim() + '\n\n\n\n\n\n') , newInformationSplit2.trim() + '\n\n\n\n\n\n' ]);
+      if( countNewLines2 < 50 ){
+        setNewlyDataSplit([nData.dailyNotes.newData, ""]);
+      }else{
+        let split2 = (nData.dailyNotes.newData.split('\n') || [nData.dailyNotes.newData]);
+        let newInformationSplit1: string = (split2.slice(0, Math.floor( countNewLines2 / 2) || [])).join('\n') || '';
+        let newInformationSplit2: string = (split2.slice(Math.floor( countNewLines2 / 2) || [])).join('\n') || '';
+        setNewlyDataSplit( [(newInformationSplit1.trim() + '\n\n\n\n\n\n') , newInformationSplit2.trim() + '\n\n\n\n\n\n' ]);
+      }
 
       setTimeout( ()=>{ setSplitWindowsHeight()}, 20);
     }
@@ -176,11 +187,11 @@ export const DailySummary = (props:any)=>{
     let nData = {...Data}
 
     // Get new unique data from the userInputs and set it into the newData. 
-    let cardUserInputs = fetchNewInformationFromInputFields();
-    let dailyInformation = getUniqueLinesAndDeleteThose(cardUserInputs, nData);
-    let docRows = removeExceseNewLines( dailyInformation );
-    nData.dailyNotes.newData = docRows.join('\n');
-    clearOutUserInput( nData );
+    // let cardUserInputs = fetchNewInformationFromInputFields();
+    // let dailyInformation = getUniqueLinesAndDeleteThose(cardUserInputs, nData);
+    // let docRows = removeExceseNewLines( dailyInformation );
+    // nData.dailyNotes.newData = docRows.join('\n');
+    // clearOutUserInput( nData );
 
     setDataTabs(nData)
     dispatch( storage.setData(nData) );

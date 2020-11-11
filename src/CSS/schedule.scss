@@ -1,48 +1,49 @@
 
 #scheduleComponent{
-  // background-color:rgb(138, 128, 128);
-  background-color: silver;
+  background-color:white;
   color:black;
-  // color: silver;
+  font-size: 13px;
   min-height: 100vh;
-  // background-image: url(../IMG/sky2.jpg);
+
 
   .scheduleHeader{
-    background-color: black;
-    // background-color: #A4978E;
-    color:white;
+    background-color:rgb(239, 232, 232);
+    font-weight: bold;
+    font-size: 15px;
     padding: 4px 0px;
+  }
+
+  .lineContainer:hover{
+    background-color: #A4978E;
+    color: white;
+    cursor: pointer;
+  }
+
+  .total{
+    font-weight: bold;
+    border-top: 1px solid silver;
   }
 
   .totalNrOfQuestions{
     display: inline-block;
-    // color: orange;
     width: 150px;
     text-align: center;
   }
 
   .tags{
     display: inline-block;
-    font-weight: bold;
     vertical-align: top;
   }
 
   .nrOfQuestionsHeadline, .creationDateHeadline{
       display: inline-block;
       text-align: center;
-      // color: orange;
-      color: silver;
   }
 
-  .nrOfCardQuestions{
-    font-weight: bold;
-  }
 
   .date{
     display: inline-block;
-    font-weight: bold;
     padding-left: 5px;
-    color: silver;
   }
 
   @media (min-width: 601px){

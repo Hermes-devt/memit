@@ -1,6 +1,6 @@
 
-import {iDay} from '../../templatesTypes';
-import splitAwayQuestionAndAnswers from './splitAwayQuestionAndAnswers'
+import {iDay} from '../../../templatesTypes';
+import splitAwayQuestionAndAnswers from '../splitAwayQuestionAndAnswers'
 
 
 export const deleteQuestions= (card: iDay, questionsToDelete: string[]): iDay =>{

@@ -1,3 +1,4 @@
+import dateHandling from './js/dateHandling';
 
 export interface iLaterLearningsList{
   name: string;
@@ -13,11 +14,16 @@ export interface iDay {
   answers: string,
   tags: string[],
   onDay: number,
-  creationDate?: string,
   userInput?: string,
 }
-export const tDay = ( questions: string, answers: string, tags: string[], onDay: number): iDay=>{
-  return { questions, answers, tags, onDay, creationDate: "" };
+
+export const tDay = ( questions: string="", answers: string="", tags: string[] = [], onDay: number = dateHandling.getDaysAfter1970()): iDay=>{
+  return { 
+    questions, 
+    answers, 
+    tags, 
+    onDay,
+  };
 }
 
 export interface iUserData{
@@ -29,6 +35,22 @@ export interface iUserData{
   laterLearnings?: any;
   dailyNotes: {newData: string, oldData: string};
   note?: any;
+  settings: { cardLayout: 1, activeNote: 0 };
+}
+
+export function tUserData(): iUserData{
+  let data: iUserData = {
+    list: [],
+    dailyCards: [],
+    lastUse: { date: dateHandling.getDaysAfter1970()},
+    schedule: [0, 1, 3, 6, 12, 24, 48, 100, 200, 400, 800, 1600],
+    missedCards: [],
+    laterLearnings: { list: [] },
+    dailyNotes: {newData: "", oldData: ""},
+    note: { list: [{headline: "New doc", text: ""}], str: ""},
+    settings: { cardLayout: 1, activeNote: 0}
+  }
+  return data;
 }
 
 
@@ -44,59 +66,7 @@ export interface iMissedCard {
   data?: any;
 }
 
-// export function laterType(name: string = '', answers: string = '', questions: string = '', questionsFetch: number = 5):tLaterType{
-//   return ({ name, answers, questions, questionsFetch})
-// }
 
-// export default{
-//   laterType,
-// }
-// export interface DailyNotes{
-//   onDay: number,
-//   questions: string,
-//   answers: string,
-// }
-
-// export interface Day {
-  //   questions: string,
-  //   answers: string,
-  //   tags: string[],
-  //   onDay: number,
-  //   creationDate?: string,
-  //   userInput?: string,
-  // }
-  
-  // export interface UserData{
-  //   schedule: number[],
-  //   lastUse: {date: number},
-  //   list: Day[],
-  //   dailyCards: {ID: number, done: boolean}[],
-  //   missedCards: {ID: number, done:boolean}[],
-  //   laterLearnings?: any;
-  //   dailyLearnings?: any;
-  //   dailyNotes: {newData: string, oldData: string};
-  //   note?: any;
-  // }
-  
-  // export interface iDailyCard { ID: number, done: boolean }
-  // export interface iMissedCard { ID: number, done: boolean, }
-  
-  // export interface CardsToRepeat{
-  //   ID: number,
-  //   done: boolean,
-  // }
-  
-  // export interface iCardsToRepeat{
-  //   ID: number,
-  //   done: boolean,
-  // }
-  
-  // export interface DailyNotes{
-  //   onDay: number,
-  //   questions: string,
-  //   answers: string,
-  // }
-  
   // export interface tLaterType{
   //   name: string,
   //   answers: string,
