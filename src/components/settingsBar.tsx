@@ -38,7 +38,7 @@ export function SettingsBar(props: Props):any{
         <Link to="/schedule" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 2 ) }}>Schedule</Link>
         <Link to="/search" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 3 ) }}>Search</Link>
         <Link to="/dailyNotes" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 5 ) }}>Daily</Link>
-        <Link to="/note" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 6 ) }}>Notes</Link>
+        <Link to="/note" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 6 ) }}>Staging</Link>
         <Link to="/laterlearnings" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 4 ) }}>Later Learnings</Link>
       </span>
   

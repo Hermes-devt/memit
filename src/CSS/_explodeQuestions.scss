@@ -1,0 +1,85 @@
+
+#explodeQuestions{
+  width: 100%;
+
+  .questionContainer{
+    position: relative;
+    width: 100%;
+    border: 1px solid silver;
+    border-top: none;
+    border-left: none;
+    // border-right: 1px solid silver;
+    margin: 2px;
+    // border-radius: 5px;
+    padding: 1px;
+    cursor:pointer;
+    transition: all 0.1s;
+    // margin-right: 5px;
+  }
+  .questionContainer:hover{
+    background-color: silver;
+  }
+
+  #noQuestions{
+    padding: 5px;
+    border: 1px solid silver;
+    width: 50%;
+    text-align: center;
+    margin: 0px auto;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+
+  .questionArea{
+    width:100%;
+    height: 100%;
+    border:none;
+    background-color: white;
+    border-radius:0px;
+  }
+
+  .commandContainer{
+    position: absolute;
+    top: 0px;
+    right: 0;
+    // border:1px solid black;
+    border-right:none;
+    // width: 100px;
+    opacity: 0.1;
+    border-radius: 3px;
+  }
+
+  .commandContainer:hover{
+    opacity: 0.9;
+    background-color: silver;
+  }
+
+  .commandIcon{
+    font-size:15px;
+    padding: 0px 5px 2px 5px;
+    border-right: 1px solid silver;
+    border-radius: 2px;
+  }
+
+  .deleteQuestion{
+    color: red;
+  }
+
+  .deleteQuestion:hover{
+    background-color:black;
+    opacity: 0.7;
+  }
+
+  .addNewQuestion{
+    color: black;
+  }
+
+  .addNewQuestion:hover{
+    color: white;
+    background-color:black;
+    opacity: 0.7;
+  }
+
+
+
+}

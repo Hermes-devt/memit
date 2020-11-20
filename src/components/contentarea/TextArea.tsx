@@ -12,7 +12,7 @@ interface Props {
 export function TextArea( props: Props){
   const {name, placeholder, activeNote, tabIndex} = props.data;
 
- const data: any = useSelector<{data: iUserData}>(state=> state.data);
+  const data: any = useSelector<{data: iUserData}>(state=> state.data);
   const [text, setText] = useState<string>('');
 
   useEffect( ()=>{

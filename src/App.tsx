@@ -9,7 +9,7 @@ import VerticalBar from './components/contentarea/verticalBar';
 import Util from './js/util';
 import {save} from './js/storageHandling';
 
-import Note from './components/note';
+import Note from './components/staging';
 import {useDispatch} from 'react-redux';
 import storage from './store/data/action'
 
