@@ -2,19 +2,21 @@
 #explodeQuestions{
   width: 100%;
 
+  height: 100%;
+  font-size: 12px;
+  // margin: 0px;
+  padding: 2px;
+
   .questionContainer{
     position: relative;
     width: 100%;
-    border: 1px solid silver;
     border-top: none;
     border-left: none;
-    // border-right: 1px solid silver;
     margin: 2px;
-    // border-radius: 5px;
     padding: 1px;
+    background-color: red;
     cursor:pointer;
     transition: all 0.1s;
-    // margin-right: 5px;
   }
   .questionContainer:hover{
     background-color: silver;
@@ -34,6 +36,7 @@
     width:100%;
     height: 100%;
     border:none;
+    // background-color: blue;
     background-color: white;
     border-radius:0px;
   }
@@ -42,9 +45,7 @@
     position: absolute;
     top: 0px;
     right: 0;
-    // border:1px solid black;
     border-right:none;
-    // width: 100px;
     opacity: 0.1;
     border-radius: 3px;
   }

@@ -35,7 +35,7 @@ export interface iUserData{
   laterLearnings?: any;
   dailyNotes: {newData: string, oldData: string};
   note?: any;
-  settings: { cardLayout: 1, activeNote: 0 };
+  settings: { cardLayout: number, activeNote: number, minimize?: boolean };
 }
 
 export function tUserData(): iUserData{
@@ -45,10 +45,11 @@ export function tUserData(): iUserData{
     lastUse: { date: dateHandling.getDaysAfter1970()},
     schedule: [0, 1, 3, 6, 12, 24, 48, 100, 200, 400, 800, 1600],
     missedCards: [],
-    laterLearnings: { list: [] },
+    laterLearnings: { list: [{name: "Mix", questionsAnswers: "",  questionsToFetch: 10}, {name: "Mix2", questionsAnswers: "",  questionsToFetch: 10}] },
+    // laterLearnings: { list: [] },
     dailyNotes: {newData: "", oldData: ""},
     note: { list: [{headline: "New doc", text: ""}], str: ""},
-    settings: { cardLayout: 1, activeNote: 0}
+    settings: { cardLayout: 1, activeNote: 0, minimize: false}
   }
   return data;
 }
@@ -66,12 +67,3 @@ export interface iMissedCard {
   data?: any;
 }
 
-
-  // export interface tLaterType{
-  //   name: string,
-  //   answers: string,
-  //   questions: string,
-  //   questionsFetch: string | number,
-  // }
-  
-  // export interface tLaterTypes extends Array<tLaterType>{}

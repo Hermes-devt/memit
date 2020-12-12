@@ -6,7 +6,10 @@ import splitAwayQuestionAndAnswers from '../splitAwayQuestionAndAnswers'
 export const deleteQuestions= (card: iDay, questionsToDelete: string[]): iDay =>{
   if(questionsToDelete.length === 0) return card;
 
+  // console.log( 'string', questionsToDelete );
+
   let obj = splitAwayQuestionAndAnswers( card );
+
 
   questionsToDelete.forEach( (questionNr: string)=>{
     obj.questions = obj.questions.map( (questionStr:string)=>{

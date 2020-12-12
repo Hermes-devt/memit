@@ -4,14 +4,21 @@ import Scheduler from './scheduler';
 import {Container, Row, Col} from 'react-bootstrap';
 import {ReactComponent as Clockcss} from '../../IMG/clock1.svg';
 import {Link} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {iUserData} from '../../templatesTypes';
+
 import '../../CSS/topbar.scss';
 
 export const Topbar = ()=>{
-  return(
-    <Container fluid id='topbar'>
-        {/* <div id="topbarCover"></div> */}
-      <Row>
+  const Data: any = useSelector<any>( (state: {data: iUserData })=> state.data );
 
+
+  if( Data.settings.minimize ){
+      // return <div className='noselect' style={{padding: 0, marginLeft: 20, fontStyle: 'italic', fontSize: 25}}>Repeat Learnings</div>
+      return <span></span>
+  }
+  else return( <Container fluid id='topbar'>
+      <Row>
         <Col className="d-none d-md-block">
           <div className="clockLeft"> <Clockcss /> </div>
         </Col>

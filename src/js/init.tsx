@@ -32,6 +32,8 @@ export function init(): iUserData{
   }
 
   checkLocalStorageSpace();
-  console.log( userdata );
+  userdata.settings.minimize = true;
+  // console.log( 'here', userdata.settings);
+  // console.log( userdata );
   return userdata;
 }

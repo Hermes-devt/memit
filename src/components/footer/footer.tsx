@@ -4,26 +4,33 @@ import {Container, Row, Col} from 'react-bootstrap';
 import NewsLetter from './newsletter';
 import Contact from './contact';
 import About from './about';
+
+import {useSelector} from 'react-redux';
+import {iUserData} from '../../templatesTypes';
+
 import '../../CSS/footer.scss';
 
 export function Footer(props: any){
-  return (
-    <Container fluid id="footer">
-      <div>
-        <Row>
-          <Col className="d-none d-sm-block col-sm-4 p-2"><About /> </Col>
-          <Col className="d-none d-sm-block col-sm-4 p-2"> <Contact /> </Col>
-          <Col className="d-none d-sm-block col-sm-4 p-2"> <NewsLetter /> </Col>
+  const Data: any = useSelector<any>( (state: {data: iUserData })=> state.data );
+  // if( Data && Data.settings.minimize ) return <span style={{}}></span>
+  // else
+    return (
+      <Container fluid id="footer">
+        <div>
+          <Row>
+            <Col className="d-none d-sm-block col-sm-4 p-2"><About /> </Col>
+            <Col className="d-none d-sm-block col-sm-4 p-2"> <Contact /> </Col>
+            <Col className="d-none d-sm-block col-sm-4 p-2"> <NewsLetter /> </Col>
 
-          <div className="px-4 m-0 d-sm-none margin-auto">
-            <About />
-            <Contact />
-            <NewsLetter />
-          </div>
-        </Row>
-      </div>
-      {props.children}
-    </Container>
-  );
+            <div className="px-4 m-0 d-sm-none margin-auto">
+              <About />
+              <Contact />
+              <NewsLetter />
+            </div>
+          </Row>
+        </div>
+        {props.children}
+      </Container>
+    );
 }
 export default Footer;

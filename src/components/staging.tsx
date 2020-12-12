@@ -6,7 +6,7 @@ import {save} from '../js/storageHandling';
 import storage from '../store/data/action';
 import breakOutQuestionAnswersFromNote from '../js/textManipulation/execute/breakoutQuestionsAnswersFromNote'
 import adjustNumbers from '../js/textManipulation/adjustNumbers'
-import '../CSS/note.scss';
+import '../CSS/staging.scss';
 
 export const Note = ()=>{
   const Data: any = useSelector<any>( (state: {data: iUserData })=> state.data );

@@ -1,5 +1,5 @@
 
-import React, {} from 'react';
+import React, { useEffect, useState } from 'react';
 import {ReactComponent as Layout1} from '../IMG/layout1.svg';
 import {ReactComponent as Layout2} from '../IMG/layout2.svg';
 import {ReactComponent as Layout3} from '../IMG/layout3.svg';
@@ -22,6 +22,42 @@ interface Props {
 
 export function SettingsBar(props: Props):any{
   let location = useLocation();
+  const [shiftDown, setShiftDown] = useState<boolean>(false);
+
+  useEffect( ()=>{
+    document.addEventListener('keydown', listenOnMenuOption);
+    document.addEventListener('keyup', listenForShiftUp);
+    // document.addEventListener('keydown')
+    return ()=>{ 
+      document.removeEventListener('keydown', listenOnMenuOption);
+      document.removeEventListener('keyup', listenForShiftUp);
+    }
+  },[props, shiftDown]); //eslint-disable-line
+
+  const listenForShiftUp = (evt:any)=>{
+    // if( document && document.activeElement && document.activeElement.tagName !== 'BODY') return;
+    if( evt.key === 'Shift') setShiftDown(false);
+  }
+
+  const listenOnMenuOption = (evt:any)=>{
+    let keyPress = evt.code;
+
+    if( evt.key === 'Shift'){ 
+      setShiftDown(true);
+      return;
+    }
+    if( !shiftDown ) return;
+    if( document && document.activeElement && document.activeElement.tagName !== 'BODY') return;
+    // console.log('shiftown', shiftDown);
+    switch( keyPress ){
+      case 'Digit1': props.onClick(0); break;
+      case 'Digit2': props.onClick(1); break;
+      case 'Digit3': props.onClick(2); break;
+      case 'Digit4': props.onClick(3); break;
+      case 'Digit5': props.onClick(4); break;
+    }
+  }
+
   return(
     <div className="noselect" id="settingbar">
       <Timer />
@@ -43,6 +79,7 @@ export function SettingsBar(props: Props):any{
       </span>
   
       <span className="layoutContainer">
+        <span className="layout desktop" style={{fontStyle: 'italic' }}onClick={ ()=> props.onClick(6)}>e</span>
         <span className="layout" onClick={ ()=> props.onClick(2)}> <Layout1 className="viewOption" /> </span>
         <span className="layout desktop" onClick={ ()=> props.onClick(1)}> <Layout2 className="viewOption"  /> </span>
         <span className="layout" onClick={ ()=> props.onClick(3)}> <Layout3 className="viewOption"  /> </span>

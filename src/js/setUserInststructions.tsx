@@ -43,6 +43,7 @@ let userInput = "" +
 
 
 export const insertUserInstructions = (data: iUserData): iUserData =>{
+  data.list[data.list.length-1].tags = ["repeat learnings", " SRS"];
   data.list[data.list.length-1].questions = questions;
   data.list[data.list.length-1].answers = answers;
   data.list[data.list.length-1].userInput = userInput;

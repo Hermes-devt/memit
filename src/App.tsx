@@ -2,12 +2,14 @@ import React, { useEffect} from 'react';
 import {Container} from 'react-bootstrap';
 import Footer from './components/footer/footer';
 import Topbar from './components/navbar/topbar';
-import InterfaceOptions from './components/contentarea/interfaceOptions';
+import InterfaceDesktop from './components/contentarea/interfaceDesktop';
+import InterfaceMobile from './components/contentarea/interfaceMobile';
 import {init} from './js/init';
 import {useState} from 'react';
-import VerticalBar from './components/contentarea/verticalBar';
 import Util from './js/util';
 import {save} from './js/storageHandling';
+
+import MainInterface from './components/mainInterface';
 
 import Note from './components/staging';
 import {useDispatch} from 'react-redux';
@@ -19,10 +21,12 @@ import Schedule from './components/schedule';
 import Search from './components/contentarea/search';
 import Stats from './components/stats';
 import LaterLearnings from './components/laterLearnings';
-import HorizontalDailyCards from './components/horizontalDailyCards';
+// import HorizontalDailyCards from './components/horizontalDailyCards';
+// import VerticalBar from './components/contentarea/verticalBar';
 import DailySummary from './components/dailyNotes';
 import { Switch, Route, useHistory, useLocation, withRouter} from "react-router-dom";
 import {iUserData} from './templatesTypes';
+import CardMenu from './components/cardMenu';
 import './CSS/app.scss'
 
 
@@ -83,7 +87,7 @@ export function App(){
   const hideVerticalBar = (): object => displayVerticalBar ? {display: 'block'} : {display: 'none'};
 
   return(
-    <Container fluid className="m-0 p-0 overflow-hidden" >
+    <Container fluid className="m-0 p-0 overflow-hidden" id="body">
       <div className="backgroundImage"> 
       <div className="backgroundImageCover" />
         {data && <Topbar />}
@@ -104,24 +108,44 @@ export function App(){
         <Route exact path='/dailynotes'> {data && <DailySummary data={data} /> } </Route>
         <Route path='/'>
 
+          <CardMenu 
+            displayVerticalBar={displayVerticalBar}
+            activeNote={activeNote}
+            data={data}
+            mobile={mobile}
+            setActiveNote={ setActiveNote}
+          />
+
           {data && <span style={{position: 'relative'}}>
-            <span style={hideVerticalBar()} >
+            {/* <span style={hideVerticalBar()} >
               <VerticalBar onClick={(note:number)=> { setActiveNote(note) }} menuClick={ onMenuClick } activeNote={ activeNote } />
-            </span> 
+            </span>  */}
 
-            {!displayVerticalBar && <HorizontalDailyCards onClick={(note:number)=> { setActiveNote(note) }} activeNote={activeNote} mobile={mobile} />}
+            {/* {!displayVerticalBar && <HorizontalDailyCards onClick={(note:number)=> { setActiveNote(note) }} activeNote={activeNote} mobile={mobile} />} */}
 
-            {/* when the window shrinks and the verticalMenu is not displaying without this it doesnt show up */}
-            {displayVerticalBar && <span className="horizontalDailyCardHidder">
+            {/* {displayVerticalBar && <span className="horizontalDailyCardHidder">
               <HorizontalDailyCards onClick={(note:number)=> { setActiveNote(note) }} activeNote={activeNote} mobile={mobile} />
-            </span>}
+            </span>} */}
 
-            {data && <>
-              <TagInput forceUpdate={forceUpdate } activeNote={ activeNote } mobile={mobile} />
-              <InterfaceOptions forceUpdate={forceUpdate} forceIt={ ()=>{
+            <MainInterface 
+              activeNote={activeNote}
+              forceUpdate={forceUpdate}
+              mobile={mobile}
+              layout={layout}
+              // forceIt={ ()=> setForceUpdate( forceUpdate=> forceUpdate+1)}
+            />
+
+            {/* {data && <> */}
+              {/* <TagInput forceUpdate={forceUpdate } activeNote={ activeNote } mobile={mobile} /> */}
+
+              {/* {(layout !== 0) && <InterfaceDesktop forceUpdate={forceUpdate} forceIt={ ()=>{
                 setForceUpdate( forceUpdate=> forceUpdate+1); }}
-                layout={layout} activeNote={activeNote}/>
-            </>}
+                layout={layout} activeNote={activeNote}/>} */}
+
+              {/* {(layout === 0) && <InterfaceMobile forceUpdate={forceUpdate} forceIt={ ()=>{
+                setForceUpdate( forceUpdate=> forceUpdate+1); }}
+                layout={layout} activeNote={activeNote} /> } */}
+            {/* </>} */}
 
             {/* {data && <TagInput forceUpdate={forceUpdate } activeNote={ activeNote } mobile={mobile} /> }
             {data && <InterfaceOptions forceUpdate={forceUpdate} forceIt={ ()=>{

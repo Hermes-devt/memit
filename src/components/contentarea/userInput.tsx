@@ -1,5 +1,5 @@
 
-import React, {useState, useEffect, CSSProperties} from 'react';
+import React, {useState, useEffect, CSSProperties, useRef, createRef} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {save} from '../../js/storageHandling';
 import execute from '../../js/textManipulation/execute/execute';
@@ -14,7 +14,7 @@ interface Props {
     tabIndex?: number,
   }
   style?: object;
-  forceUpdate?: any;
+  forceUpdate: any;
 }
 
 export function UserInput( props: Props){
@@ -23,6 +23,7 @@ export function UserInput( props: Props){
   const data: any = useSelector<{data: iUserData}>(state=> state.data);
   const dispatch = useDispatch();
   const [text, setText] = useState<string>('');
+  const textareaRef= useRef<any>(createRef());
 
   useEffect( ()=>{
     let nText = data.list[activeNote][name];
@@ -30,6 +31,18 @@ export function UserInput( props: Props){
     setText(nText);
   }, [props, data.list]) //eslint-disable-line
 
+
+  useEffect( ()=>{
+    document.addEventListener('keyup', handleKeyDown);
+    return ()=>{ document.removeEventListener('keyup', handleKeyDown); }
+  },[props])
+
+  const handleKeyDown = (evt:any)=>{
+    if( evt.key === 'i'){
+      if( document && document.activeElement && document.activeElement.tagName !== 'BODY') return;
+      textareaRef.current.focus();
+    }
+  }
 
   const checkKeyStrokes = (evt:any)=>{
     let value:string = '\n' + evt.currentTarget.value;
@@ -42,13 +55,15 @@ export function UserInput( props: Props){
       setText( (newData.list[activeNote].userInput || "" ).trim());
       dispatch( storage.setData(newData) );
       save( newData );
-      props.forceUpdate();
+      // props.forceUpdate();
     }
 
     // Delete userinput if c+enter on a new line
     if( evt.key === 'Enter' && (value + '\n').match(/\nc\n/)){
       data.list[activeNote].userInput = '';
       setTimeout( ()=> setText(""), 5);
+      dispatch( storage.setData({...data}) );
+      save( data );
       return;
     }
 
@@ -72,6 +87,7 @@ export function UserInput( props: Props){
         id="userInput"
         tabIndex={tabIndex || 1}
         onChange={ onChange }
+        ref={textareaRef}
         onKeyDown={ checkKeyStrokes}
       />
       <div 

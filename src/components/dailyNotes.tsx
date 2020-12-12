@@ -144,6 +144,7 @@ export const DailySummary = (props:any)=>{
   // const resizeListener = ()=> { }
 
   const setDataTabs = (nData:any)=>{
+
     if( mobileScreen ){
       setNewlyData( nData.dailyNotes.newData.trim() + '\n\n\n\n\n\n');
       setOldData( nData.dailyNotes.oldData.trim() + '\n\n\n\n\n\n');
@@ -156,7 +157,7 @@ export const DailySummary = (props:any)=>{
 
 
       if( countNewLines < 50){
-        setOldDataSplit([ nData.dailtNotes.oldData, '']);
+        setOldDataSplit([ nData.dailyNotes.oldData, '']);
       }else{
         let split = (nData.dailyNotes.oldData.split('\n') || [nData.dailyNotes.oldData]);
         let oldInformationSplit1 = (split.slice(0, Math.floor( countNewLines / 2) || [])).join('\n') || '';

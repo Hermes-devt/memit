@@ -1,4 +1,8 @@
 
+#body{
+  background-color: white;
+}
+
 .backgroundImage{
   position: relative;
   background-image: url(../IMG/sky5.jpg);
@@ -8,7 +12,8 @@
 }
 
 textarea{
-  background: transparent;
+  // background: transparent;
+  background-color: white;
   outline: none;
   border-radius: 15px;
   resize: none;
