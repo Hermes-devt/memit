@@ -81,19 +81,19 @@
   margin: 0px auto;
   font-size: 25px;
   margin-top: -15px;
+  width: 100%;
   padding-bottom: 10px;
   font-size: 1.5em;
-  font-weight: bold;
+  // box-shadow: 1px 1px 5px lightgray;
+  display: block;
 }
 
 .popupOpener{
-  font-weight: bold;
+  font-family: 'times new roman';
   padding: 10px 0px;
-  // width: 33%;
+  font-size: 20px;
   width: 50%;
   text-align: center;
-  // background-color: red;
-
 }
 
 .popupOpener:hover{
@@ -114,8 +114,9 @@
   padding: 25px 20px;
   border-radius: 5px;
   font-size: 13px;
-  box-shadow: 5px 5px 5px black;
-  border: 2px solid black;
+  // box-shadow: 5px 5px 5px black;
+  // box-shadow: 5px 5px 5px lightgray;
+  // border: 2px solid black;
   // overflow-x: scroll;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -129,18 +130,23 @@
     font-size: 1em;
     border-bottom: 1px solid black;
     color: black;
-    font-weight: bold;
+    // font-weight: bold;
     cursor: pointer;
+    transition: all 0.3s;
   }
 
   .cardStyle:hover{
-    background-color: silver;
-    font-weight: bold;
+    // // background-color: silver;
+    box-shadow: 1px 1px 5px lightgray;
+    // font-weight: bold;
+    // font-size: 15px;
+    margin-left: 10px;
   }
 
   .cardStyleActive{
     font-weight: bold;
-    color: black; background-color: #f1f1f1;
+    color: black; 
+    // background-color: #f1f1f1;
   }
 
   .checkbox{

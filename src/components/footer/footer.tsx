@@ -5,15 +5,9 @@ import NewsLetter from './newsletter';
 import Contact from './contact';
 import About from './about';
 
-import {useSelector} from 'react-redux';
-import {iUserData} from '../../templatesTypes';
-
 import '../../CSS/footer.scss';
 
 export function Footer(props: any){
-  const Data: any = useSelector<any>( (state: {data: iUserData })=> state.data );
-  // if( Data && Data.settings.minimize ) return <span style={{}}></span>
-  // else
     return (
       <Container fluid id="footer">
         <div>
@@ -29,7 +23,6 @@ export function Footer(props: any){
             </div>
           </Row>
         </div>
-        {props.children}
       </Container>
     );
 }

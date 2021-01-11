@@ -1,44 +1,42 @@
 import React from 'react';
-// import TextAreas1 from './textAreas1';
 import TextArea from './TextArea';
 import ExplodeArea from './explodeArea';
 import {useState, useEffect} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 import UserInput from './userInput';
-import {iUserData} from '../../templatesTypes';
-import {useSelector} from 'react-redux';
-
-
-import splitAwayQuestionAndAnswers from '../../js/textManipulation/splitAwayQuestionAndAnswers';
-import {useDispatch} from 'react-redux';
+import {iUserClass, iQuestionAnswerPair, tQuestionAnswerPair} from '../../templatesTypes';
+import {useSelector, useDispatch} from 'react-redux';
 import storage from '../../store/data/action'
-import deleteQuestions from '../../js/textManipulation/execute/deleteQuestions';
-import adjustNumbers from '../../js/textManipulation/adjustNumbers';
 import {save} from '../../js/storageHandling';
-
-// import ExplodeQuestions from './explodeQuestions';
 import '../../CSS/interfaceOptions.scss';
+// import {} from 'react-latex';
+
+
+
 
 interface Props {
   layout: number,
   activeNote: number,
-  // forceUpdate?: any;
-  forceIt?: any,
   forceUpdate: any,
 }
 
-// export function InterfaceOptions({layout, activeNote}: Props){
-export function InterfaceDesktop(props: Props){
-  // const [activeNote, setActiveNote] = useState(0);
-  const data: any = useSelector<{data: iUserData}>(state=> state.data);
-  const [activeQuestions, setActiveQuestions] = useState<number[]>([1]);
+interface iTextAreaFields{
+  question: string;
+  answer: string
+}
 
-  const [questionMarked, setMarkedQuestion] = useState<number[]>([]);
+export function InterfaceDesktop(props: Props){
+  const data: any = useSelector<{data: iUserClass}>(state=> state.data);
+  const [activeQuestions, setActiveQuestions] = useState<number[]>([0]);
+  const [questionAnswerPair, setQuestionAnswerPair] = useState<iQuestionAnswerPair[]>( data.get.list()[props.activeNote].questionAnswerPair)
   const [explodeView, setExplodeView] = useState<boolean>(true);
 
-  const [mouseOverQuestion_index, setMouseOverQuestion_index] = useState<number>(0)
-  const [textAreaActive, setTextareaActive] = useState<any>({active:false, index: 0});
+  const [textAreaActive, setTextareaActive] = useState<{active: boolean, index:number}>({active:false, index: 0});
   const [shiftDown, setShiftDown] = useState<boolean>(false);
+
+  const [textAreaTextHolder, setTextAreaTextHolder] = useState<iTextAreaFields>({ question: '', answer: ''});
+  const [forceUpdateTextArea, setForceUpdateTextArea] = useState<number>(0);
+
   const dispatch = useDispatch();
 
   useEffect( ()=>{
@@ -50,33 +48,110 @@ export function InterfaceDesktop(props: Props){
       document.removeEventListener('keyup', handleKeyUp ); 
     }
 
-  },[props, activeQuestions, explodeView, data, questionMarked, shiftDown]);//eslint-disable-line
+  },[props, props.activeNote,textAreaActive, activeQuestions, explodeView, data, shiftDown, textAreaTextHolder]);//eslint-disable-line
+
+  useEffect( ()=>{
+    if( activeQuestions[0] > 0 && activeQuestions[0] <= questionAnswerPair.length ){
+      setTextAreaTextHolder({
+        question: questionAnswerPair[activeQuestions[0]].question.text,
+        answer: questionAnswerPair[activeQuestions[0]].answer.text
+      })
+    }else{
+      if( activeQuestions[0] !== 0)
+        setActiveQuestions([0]);
+    }
+  }, [activeQuestions, props.activeNote])//eslint-disable-line
 
 
   useEffect( ()=>{
-    if( data.list.length-1 === props.activeNote){
-      setExplodeView(false); return;
-    }
+    setQuestionAnswerPair( data.get.list()[props.activeNote].questionAnswerPair );
+  }, [data, props.activeNote])
 
-    let nrOfQuestion2 = splitAwayQuestionAndAnswers( data.list[props.activeNote]).questions;
-    if( nrOfQuestion2.length <= 2)
-      setExplodeView( false );
-    else
-      setExplodeView( true );
-  },[props.activeNote]) //eslint-disable-line
+
+  useEffect( ()=>{
+    if( textAreaActive.active ){
+      setTextareaActive({active: false, index: 0});
+    }else{
+    }
+    setActiveQuestions([0]);
+  }, [props.activeNote])
 
 
   const handleKeyUp = (evt:any)=>{ if( evt.key === 'Shift'){ setShiftDown(false); }}
 
   const handleKeyDown = (evt:any)=>{
+
     let keyPressed = evt.key;
-    // const len:number = explodedElements.length;
 
 
     if( !explodeView && keyPressed === 'Escape'){
-      data.list[props.activeNote] = adjustNumbers( data.list[props.activeNote]);
-      setExplodeView( true )
+
+      if( !explodeView && props.layout !== 4){
+        let arr = textAreaTextHolder.question.trim().split('\n');
+        let arr2 = textAreaTextHolder.answer.trim().split('\n');
+
+        const seperator = (arrayToBeSplit: string[]): string[]=>{
+          let qa:any = [];
+          arrayToBeSplit.forEach( (item:string, index:number)=>{
+            let text = item ? item : "";
+            if( item.match(/\d+. ?/)){
+              qa.push( item )
+            }else{
+              if( qa.length > 0)
+                qa[qa.length -1] += + '\n' + text;
+            }
+          })
+          if( qa.length === 0)
+            qa.push("");
+          return qa;
+        }
+
+        let questionsArr = seperator(arr);
+        let answersArr= seperator(arr2);
+  
+
+        let questionPair = []
+
+        for( let i =0; i<questionsArr.length; i++){
+
+          let questionMatch = questionsArr[i].match(/\d+. ?/);
+          if( questionMatch ){
+
+            let answerText = '';
+            for( let m=0; m<answersArr.length; m++){
+              let answerMatch= answersArr[m].match(/\d+. ?/)
+              if( answerMatch && answerMatch[0] === questionMatch[0]){
+                answerText = answersArr[m].replace(/\d+. ?/, '')
+                break;
+              }
+              
+              
+            }//end of for loop
+            if( questionMatch[0]){
+              questionPair.push({
+                question: {text: questionsArr[i].replace(/\d+. ?/, '')},
+                answer: {text: answerText},
+                questionID: 555555
+              })
+            }
+          }
+        }
+
+        if( questionPair.length === 0 ){
+          let newQuestionAnswerPair = questionAnswerPair;
+          newQuestionAnswerPair = [];
+          newQuestionAnswerPair.push({ question: {text: ''}, answer: {text: ''}, questionID: 555555 } )
+          setQuestionAnswerPair( newQuestionAnswerPair );
+        }else{
+          setQuestionAnswerPair( questionPair );
+          data.data.list[props.activeNote].questionAnswerPair = questionPair;
+        }
+        setExplodeView(true);
+      }
+
+      setTextareaActive({active: false, index: activeQuestions[0]}); 
       dispatch(storage.setData( data ))
+      save( data );
       return;
     }
 
@@ -84,6 +159,7 @@ export function InterfaceDesktop(props: Props){
       setShiftDown(true);
       return;
     }
+
     if( document && document.activeElement && document.activeElement.tagName !== 'BODY') return;
 
     if( keyPressed === "ArrowDown" || keyPressed ==='ArrowUp') 
@@ -92,32 +168,47 @@ export function InterfaceDesktop(props: Props){
     let activeQuestion:number = activeQuestions[0] || 0;
 
     switch( keyPressed ){
-      // case 'Shift': setShiftDown(true); break;
-      case 'E': setExplodeView( false ); break;
+      case 'E': 
+        if( props.layout !== 4)
+          setExplodeView( false ); 
+      break;
       case 'j': case 'ArrowDown':
-        let nrOfQuestion = splitAwayQuestionAndAnswers( data.list[props.activeNote]).questions;
-        if( activeQuestion >= nrOfQuestion.length - 2) return;
+        let nrOfQuestion = questionAnswerPair.length
+        if( activeQuestion >= nrOfQuestion - 1) return;
          activeQuestion= activeQuestion + 1;
+         setTextareaActive({active: false, index: activeQuestion});
          setActiveQuestions([activeQuestion]);
          break;
       case 'k': case 'ArrowUp':
-        activeQuestion = activeQuestion <= 1 ? 1 : activeQuestion - 1;
+        activeQuestion = activeQuestion === 0 ? 0 : activeQuestion - 1;
+        // setActiveQuestions([activeQuestion]);
+        setTextareaActive({active: false, index: activeQuestion});
         setActiveQuestions([activeQuestion]);
         break;
-      case 'm': 
-        let marked = new Set([...questionMarked]);
+      case 'm': case 'z':
         activeQuestions.forEach( (value:number)=>{
-          marked.has(value) ? marked.delete(value) : marked.add(value);
-          // if( marked.has(value)){
-          //   marked.delete(value);
-          // }else{
-          //   marked.add(value)
-          // }
-        })
-        setMarkedQuestion( Array.from(marked)); 
+          let currentQuestion = data.get.list()[props.activeNote].questionAnswerPair[value];
 
+          if( !currentQuestion.style ){
+            currentQuestion.style = {backgroundColor: 'blue', color: 'white'};
+
+          } else if( !currentQuestion.style.backgroundColor ){
+            currentQuestion.style = {...currentQuestion.style, ...{backgroundColor: 'blue', color: 'white'}};
+
+          }else{
+            delete currentQuestion.style.backgroundColor;
+            delete currentQuestion.style.color;
+            if( Object.keys( currentQuestion.style).length === 0 )
+              delete currentQuestion.style;
+          }
+        })
+
+        setQuestionAnswerPair( [...data.get.list()[props.activeNote].questionAnswerPair])
         break;
-      case 'x': deleteQuestion(); break;
+      case 'x': 
+        deleteQuestion(); 
+        return;
+        // break;
       case 'a': 
         addNewQuestion( activeQuestion );
         setActiveQuestions( [activeQuestions[0] + 1]);
@@ -125,140 +216,139 @@ export function InterfaceDesktop(props: Props){
       case 'Escape': 
         setTextareaActive({active: false, index: activeQuestion}); 
         setActiveQuestions( [activeQuestions[0]] || [0] );
+
+        data.get.list()[props.activeNote].questionAnswerPair = [...questionAnswerPair];
         if( shiftDown ){
-          console.log('shift is still down?', shiftDown)
-          setMarkedQuestion([]);
         }
         break;
       case 'Enter': case 'e':
+        if( shiftDown ){
+          console.log('shift is down')
+        }
         setTextareaActive({active: true, index: activeQuestion}); 
         break;
       case 'K': //Shift question one step upwards
-        let arr = [...activeQuestions].sort();
-        let q = splitAwayQuestionAndAnswers( data.list[props.activeNote])
 
-        for( let i=0; i<arr.length; i++){
-          activeQuestion=arr[i];
-          if( activeQuestion < 2 || arr[i-1] === arr[i]-1)
-            continue;
-
-          arr[i] -= 1;
-          let insertPos = activeQuestion - 1;
-          q.questions.splice( insertPos, 0, '' + q.questions[ activeQuestion ].trim() + '\n' );
-          q.answers.splice( insertPos, 0, '' + q.answers[ activeQuestion ].trim() + '\n');
-          q.questions.splice( activeQuestion + 1, 1);
-          q.answers.splice( activeQuestion + 1, 1);
-        }
-        let questions: string  = q.questions.join('').trim() || '';
-        let answers: string = q.answers.join('').trim() || '';
-
-        // console.log( questions );
-        data.list[props.activeNote].questions = questions;
-        data.list[props.activeNote].answers = answers;
-        data.list[props.activeNote] = adjustNumbers( data.list[props.activeNote]);
-        dispatch(storage.setData( data ))
-        setActiveQuestions( arr );
-        save( data );
-      break;
-      case 'J': //shift question one step uwpards
-
-        let arr1 = [...activeQuestions].sort().reverse();
-        let q2 = splitAwayQuestionAndAnswers( data.list[props.activeNote])
-
-        for( let i=0; i<arr1.length; i++){
-          let insertPosition= arr1[i];
-          if( insertPosition >= q2.questions.length - 2) continue;
-          if( Number(arr1[i-1]) === Number(arr1[i]+1) ) continue;
-
-          arr1[i] += 1;
-          let insertPos2 = insertPosition + 2;
-          if( insertPosition >= q2.questions.length - 3 ){
-            q2.questions.push( q2.questions[ insertPosition ].trim() + '\n' )
-            q2.answers.push( q2.answers[ insertPosition ].trim() + '\n' )
-            q2.questions.splice( insertPosition, 1);
-            q2.answers.splice( insertPosition, 1);
-          }else{
-            q2.questions.splice( insertPos2, 0, '' + q2.questions[ insertPosition ].trim() + '\n' );
-            q2.answers.splice( insertPos2, 0,  '' + q2.answers[ insertPosition ].trim()  + '\n' );
-            q2.questions.splice( insertPosition, 1);
-            q2.answers.splice( insertPosition, 1);
+        let temp2 = [...activeQuestions.sort()];
+        let breakAt = 0;
+        for( let i =0; i < temp2.length; i++){
+          let active = temp2[i];
+         
+          if( breakAt >= active){
+            breakAt++; continue;
           }
-        }
-        let questions2: string  = q2.questions.join('').trim() || '';
-        let answers2: string = q2.answers.join('').trim() || '';
 
-        data.list[props.activeNote].questions = questions2;
-        data.list[props.activeNote].answers = answers2;
-        data.list[props.activeNote] = adjustNumbers( data.list[props.activeNote]);
-        dispatch(storage.setData( data ))
-        setActiveQuestions( arr1 );
-        save( data );
+          temp2[i] -= 1;
+          let extractedQuestion = questionAnswerPair[active];
+          questionAnswerPair.splice( active, 1);
+          questionAnswerPair.splice( active-1, 0, extractedQuestion);
+        }
+        setQuestionAnswerPair( [...questionAnswerPair])
+        setActiveQuestions( [...temp2] );
+        data.get.list()[props.activeNote].questionAnswerPair = questionAnswerPair;
+      break;
+      case 'J': //shift question one step downwward
+        let newActiveQuestions = [...activeQuestions.sort().reverse()];
+        let breakAt2 = questionAnswerPair.length - 1;
+        for( let i=0; i < newActiveQuestions.length; i++){
+          let active = newActiveQuestions[i];
+          if( breakAt2 <= active){
+            breakAt2--; continue;
+          }
+
+          newActiveQuestions[i] += 1;
+          let extractedQuestion2 = questionAnswerPair[active];
+          questionAnswerPair.splice( active, 1);
+          questionAnswerPair.splice( active+1, 0, extractedQuestion2);
+          setQuestionAnswerPair( [...questionAnswerPair])
+        }
+
+        data.get.list()[props.activeNote].questionAnswerPair = questionAnswerPair;
+        setActiveQuestions( newActiveQuestions.reverse() );
         break;
     }
+
+    dispatch(storage.setData( data ))
+    save( data );
 
   };
 
 
   const explodeAreaToParent = (command:string, index:any)=>{
-    // console.log('here', command, index)
     switch(command){
-      case 'mouseOver': setMouseOverQuestion_index(index); break;
+      // case 'mouseOver': setMouseOverQuestion_index(index); break;
       case 'addNewQuestion': addNewQuestion(index); break;
-      case 'deleteQuestion': deleteQuestion(index); break;
+      // case 'deleteQuestion': deleteQuestion(index); break;
       case 'activeElements': setActiveQuestions( index ); break;
-      case 'editQuestion': setTextareaActive(index); break;
+      case 'editQuestion': 
+        setActiveQuestions([index.index]);
+        setTextareaActive(index); 
+      break;
     }
   }
 
   const deleteQuestion = (questionToDelete?: number)=>{
-    let nrOfQuestion2 = splitAwayQuestionAndAnswers( data.list[props.activeNote]).questions;
-    if( nrOfQuestion2.length <=2 ) return;
+    let questionList = [...questionAnswerPair];
 
-    let activeQuestion:number = activeQuestions[0] || 0;
-    let temptemp: number[] = questionToDelete ? [questionToDelete] : activeQuestions;
+    let temp = [...activeQuestions.sort().reverse()];
 
-    data.list[props.activeNote] = deleteQuestions( data.list[props.activeNote], temptemp.map( (value: number)=> JSON.stringify(value)) );
-    data.list[props.activeNote] = adjustNumbers( data.list[props.activeNote]);
-    let nActiveQuestion = activeQuestion >= nrOfQuestion2.length -2 ? activeQuestions[0]-1 : activeQuestions[0];
-    nActiveQuestion = nActiveQuestion < 0 ? 0 : nActiveQuestion;
-    setActiveQuestions([nActiveQuestion]);
-    // setActiveQuestions([...[activeQuestions[0]]]);
-    if( nrOfQuestion2.length - 1 <= 2)
-      setExplodeView(false);
+    temp.forEach( (active: any, index:number)=>{
+      if( questionList.length <= 1){
+        questionList[0].question.text = '';
+        questionList[0].answer.text = '';
+      }else{
+        questionList.splice( active, 1);
+      }
+    })
+    let activeQuestion:number = activeQuestions.reverse()[0] || 0;
 
+    if( questionList.length <= activeQuestion)
+      activeQuestion -= 1;
+
+    if(activeQuestion < 0)
+      activeQuestion = 0;
+
+    data.get.list()[props.activeNote].questionAnswerPair = [...questionList];
     dispatch( storage.setData(data) );
     save( data );
-
+    setQuestionAnswerPair( questionList );
+    setActiveQuestions( [activeQuestion] );
+    save( data );
   }
 
   const addNewQuestion = (index:number)=>{
-    let daily = data.list[props.activeNote];
-    let tx = splitAwayQuestionAndAnswers( daily);
+    questionAnswerPair.splice( activeQuestions[0]+1, 0,  tQuestionAnswerPair( '', ''));
 
-    let insertValue = "" + (Number(index)+2) + ". ";
-    if( index >= tx.questions.length - 2){
-      tx.questions[tx.questions.length-1].trim();
-      tx.answers[tx.answers.length-1].trim();
-      tx.questions.push(insertValue)
-      tx.answers.push(insertValue);
-    }else{
-      tx.questions.splice(index+1, 0, insertValue  + "\n")
-      tx.answers.splice(index+1, 0,  insertValue + "\n")
-    }
-
-    data.list[props.activeNote].questions = tx.questions.join('');
-    data.list[props.activeNote].answers = tx.answers.join('');
-    data.list[props.activeNote] = adjustNumbers( data.list[props.activeNote]);
+    setQuestionAnswerPair( [...questionAnswerPair]);
+    data.get.list()[props.activeNote].questionAnswerPair = questionAnswerPair;
     dispatch( storage.setData(data) );
-    save( data );
-    setMouseOverQuestion_index( mouseOverQuestion_index+1);
   }
+
+  const textAreaChange = (question_answer_text: string, accessName: string)=>{
+    textAreaTextHolder[accessName as keyof iTextAreaFields] = question_answer_text;
+  }
+
+  const getUserInputElement = (containerStyle: string)=>{ return( 
+    <div className={containerStyle}>
+      <UserInput
+        forceUpdate={()=>{
+          props.forceUpdate()
+          setForceUpdateTextArea( Math.random() );
+        }}
+        data={{
+          activeNote: props.activeNote,
+          placeholder: "User input",
+          name: "userInput",
+        }}
+      />
+    </div>
+  ) }
 
   return (
     <span id="interfaceContainer">
       <Container fluid className="px-0 mx-0">
         <Row className="no-gutters">
-          <Col>
+          <Col style={{borderRight: '1px solid black'}}>
             <div
               className={
                 props.layout === 2 ? "textareaPartialSize" : "textareaFullSize"
@@ -269,69 +359,36 @@ export function InterfaceDesktop(props: Props){
                   data={{
                     activeNote: props.activeNote,
                     placeholder: "Type your questions here",
-                    name: "questions",
+                    name: "question",
                   }}
+                  forceUpdateTextArea={ forceUpdateTextArea }
+                  questionAnswerPair={ questionAnswerPair}
+                  textChange={ textAreaChange }
                 />
               }
 
-              { (explodeView && data.list[props.activeNote].answers.length < 5) &&
-                <Row> <div 
-                  onClick={ ()=>{ 
-                    for(let i=0; i<7; i++){ 
-                      addNewQuestion(-1)
-                    } 
-                    setExplodeView(true);
-                }}
-                  id="noQuestions"
-                  >add question + </div>
-                </Row>
-              }
-
-              { (explodeView && data.list[props.activeNote].answers.length >= 5) &&
-              // {explodeView && (
+              { (explodeView) &&
                 <ExplodeArea
                   activeQuestions={activeQuestions}
-                  mouseOverQuestion={mouseOverQuestion_index}
+                  setFocusOnTextInput={true}
                   toParent={explodeAreaToParent}
                   shiftDown={shiftDown}
-                  questionMarked={questionMarked}
+                  onChange={ (newValue:string)=>{
+                    textAreaTextHolder.question = newValue;
+                    setTextAreaTextHolder( {...textAreaTextHolder});
+                  }}
+                  value={ textAreaTextHolder.question }
                   textAreaActive={textAreaActive}
-                  
-                  questionsOrAnswersData={data.list[props.activeNote].questions}
-                />
+                  question={'question'}
+                  questionsOrAnswersData={questionAnswerPair}
+                >
+                </ExplodeArea>
               }
             </div>
 
-            {props.layout === 2 && (
-              <div className="textareaUserInput_middleColumn">
-                <UserInput
-                  forceUpdate={props.forceUpdate}
-                  data={{
-                    activeNote: props.activeNote,
-                    placeholder: "User input",
-                    // tabIndex: -1,
-                    name: "userInput",
-                  }}
-                />
-              </div>
-            )}
+            {props.layout === 2 && ( <span> { getUserInputElement("textareaUserInput_middleColumn")} </span>)}
           </Col>
-
-          {props.layout === 1 && (
-            <Col>
-              <div className="textareaFullSize">
-                <UserInput
-                  forceUpdate={props.forceUpdate}
-                  data={{
-                    activeNote: props.activeNote,
-                    placeholder: "User input",
-                    // tabIndex: -1,
-                    name: "userInput",
-                  }}
-                />
-              </div>
-            </Col>
-          )}
+          {props.layout === 1 && ( <Col> { getUserInputElement("textareaFullSize")} </Col>)}
 
           {props.layout !== 4 && (
             <Col className="">
@@ -341,20 +398,28 @@ export function InterfaceDesktop(props: Props){
                     data={{
                       activeNote: props.activeNote,
                       placeholder: "Answers",
-                      name: "answers",
+                      name: "answer",
                     }}
+                    forceUpdateTextArea={ forceUpdateTextArea }
+                    questionAnswerPair={ questionAnswerPair }
+                    textChange={ textAreaChange }
                   />
                 )}
                 {explodeView && (
                   <ExplodeArea
                     activeQuestions={activeQuestions}
-                    mouseOverQuestion={mouseOverQuestion_index}
-                    questionMarked={questionMarked}
                     toParent={explodeAreaToParent}
                     shiftDown={shiftDown}
+                    onChange={ (newValue:string)=>{
+                      textAreaTextHolder.answer = newValue;
+                      setTextAreaTextHolder( {...textAreaTextHolder});
+                    }}
                     textAreaActive={textAreaActive}
-                    questionsOrAnswersData={data.list[props.activeNote].answers}
-                  />
+                    value={ textAreaTextHolder.answer}
+                    question={'answer'}
+                    questionsOrAnswersData={questionAnswerPair}
+                  >
+                </ExplodeArea>
                 )}
               </div>
             </Col>
@@ -363,12 +428,6 @@ export function InterfaceDesktop(props: Props){
       </Container>
     </span>
   );
-
-  // return ( <span id="interfaceContainer">
-  //   {layout === 6 && <ExplodeQuestions forceUpdate={props.forceIt} activeNote={activeNote} /> }
-  // </span>);
-
-
 }
  
 export default InterfaceDesktop;

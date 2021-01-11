@@ -1,10 +1,11 @@
 
 import {iQuestionsToLater} from './questionsToLater'
+import {iFetchQuestionAnswer} from './fetchQuestionsAnswersToInputField';
 
 export interface iGroupCommands{
-  questionsToRepeat: string[];
-  questionsToDelete: string[];
-  fetchQuestionAnswer: {command: string, question: string}[];
+  questionsToRepeat: number[];
+  questionsToDelete: number[];
+  fetchQuestionAnswer: iFetchQuestionAnswer[];
   questionsToLater: iQuestionsToLater[];
 }
 
@@ -18,7 +19,8 @@ export const groupCommands = (commandArr: string[] ): iGroupCommands=>{
   };
 
   commandArr.forEach( (command:string = "")=>{
-    let number = (command.match(/\d+/) || []).join(""); //get number
+    let stringNr = (command.match(/\d+/) || []).join(""); //get number
+    let number: number = parseInt( stringNr );
     if( command.indexOf('r') >= 0){ 
       groupedCommands.questionsToRepeat.push( number ); 
     }
@@ -49,7 +51,6 @@ export const groupCommands = (commandArr: string[] ): iGroupCommands=>{
         command: (command.match(/\D+/) || []).join(""),
         question: number
       })
-      // console.log('command', command)
     }
 
     if( command.indexOf('x') >= 0 || command.indexOf('X') >= 0){  

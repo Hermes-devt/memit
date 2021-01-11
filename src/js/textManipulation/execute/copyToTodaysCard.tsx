@@ -1,33 +1,31 @@
-
-import {iDay} from '../../../templatesTypes';
-import {copyQuestions} from '../copyQuestion';
-import splitAwayQuestionAndAnswers from '../splitAwayQuestionAndAnswers'
-import adjustNumbers from '../adjustNumbers';
-
+import { iListItem, iQuestionAnswerPair, iUserClass } from "../../../templatesTypes";
 
 // Copy questions to todays card. 
-export const copyToTodaysCard = (card: iDay, toCopy: string[], daily: iDay): iDay=>{
-  if( toCopy.length < 1 ) return daily;
+export const copyToTodaysCard = (data: iUserClass, activeCard:number, toCopy: number[]): void=>{
+  if( toCopy.length < 1 ) return;
 
-  let questionAnswer = copyQuestions(card, toCopy);
-  let temp = splitAwayQuestionAndAnswers(daily);
+  let list = data.data.list[activeCard].questionAnswerPair;
 
-  //so the first newly inserted question gets on a new row.
-  let questionStr:string = '\n' + questionAnswer.question.join('');
-  let answerStr:string = '\n' + questionAnswer.answer.join('');
+  let questions: iQuestionAnswerPair[] = [];
+  toCopy.forEach( (indexPos:number)=>{
+    --indexPos;
+    if( indexPos >= 0 && indexPos < list.length)
+    questions.push( list[indexPos]);
+  })
 
-  //insert the new questions in the splittet double arr
-  temp.questions.splice( temp.questions.length - 1, 0, questionStr );
-  temp.answers.splice( temp.answers.length - 1, 0, answerStr );
+  let todays: iListItem = data.get.todaysCard();
 
+  let counter = 0;
+  todays.questionAnswerPair.forEach( (item: iQuestionAnswerPair )=>{
+    if( item.question.text.trim() === '' && item.answer.text.trim() === ''){
+      counter++;
+    }
+  });
 
-  //create a simple string from the arrays.
-  daily.questions = temp.questions.join('').trim();
-  daily.answers = temp.answers.join('').trim();
+  if( counter === todays.questionAnswerPair.length)
+    todays.questionAnswerPair = []; 
+  questions.forEach( (pair: iQuestionAnswerPair)=> todays.questionAnswerPair.push( pair) );
 
-  daily = adjustNumbers( daily);
-  console.log('daily', daily);
-  return daily;
 }
 
 export default copyToTodaysCard;

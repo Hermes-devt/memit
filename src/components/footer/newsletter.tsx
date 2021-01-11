@@ -7,7 +7,7 @@ export function NewsLetter(){
     <span id="newsLetter"> 
         <h2 className="footerHeadlines">Newsletter</h2>
         <div>
-          <input className="signupInput" type="text" placeholder="Your email address" />
+          <input tabIndex={-1} className="signupInput" type="text" placeholder="Your email address" />
           <span className="signup">Signup</span>
           <img src={socialIcons} alt="social icons" className="img-fluid socialIcons"/>
         </div>

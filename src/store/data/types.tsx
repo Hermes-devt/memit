@@ -1,4 +1,5 @@
 
+
 export const SETDATA = 'SETDATA';
 export interface dataType{
   list: any[];
@@ -10,7 +11,8 @@ export interface dataType{
 
 export interface Data{
   type: typeof SETDATA,
-  payload: dataType,
+  payload: any,
+  // payload: dataType,
 };
 
 export const SETSCHEDULE = 'SETSCHEDULE';

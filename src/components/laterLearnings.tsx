@@ -4,20 +4,19 @@ import {Container} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
 import storage from '../store/data/action'
 import {save} from '../js/storageHandling';
-import adjustNumbersFromQuestionAndAnswers from '../js/textManipulation/adjustNumbers';
-import { iLaterLearningsList, tLaterLearningsList, iDay, iUserData } from '../templatesTypes';
+import { iLaterLearningsListItem, tLaterLearningsList, iUserClass, iListItem, iList} from '../templatesTypes';
 
 import '../CSS/laterLearnings.scss';
 
 export function LaterLearnings(){
-  const [list, setList] = useState<iLaterLearningsList[]>( [] )
+  const [list, setList] = useState<iLaterLearningsListItem[]>( [] )
 
-  const Data: any = useSelector<any>( (state: {data: iUserData })=> state.data );
+  const Data: any = useSelector<any>( (state: {data: iUserClass})=> state.data );
+  const [selectedDailyCard, setSelectedDailyCard] = useState<number>(0)
   const dispatch = useDispatch();
 
   useEffect( ()=>{
-    let data: iUserData = Data;
-    setList( data.laterLearnings.list);
+    setList( Data.data.laterLearnings.list);
   }, []) // eslint-disable-line
 
 
@@ -27,7 +26,7 @@ export function LaterLearnings(){
     copyOfList.push( newListItem );
     setList( copyOfList );
 
-    Data.laterLearnings.list = copyOfList;
+    Data.data.laterLearnings.list = copyOfList;
     dispatch( storage.setData(Data));
     save( Data );
   }
@@ -39,9 +38,11 @@ export function LaterLearnings(){
     saveData( copyOfList );
   }
 
-  const splitOutQuestions = (str1: string, nrOfQuestionsToFetch: string | number):string=>{
-    let newInput = str1;
+  const splitOutQuestions = (textString: string, nrOfQuestionsToFetch: string | number):string=>{
+    const stringDefaultState:string = textString;
+    // let textString = str1;
 
+    // splits the questions from each other
     const toSplit = (textToSplit: string = "", regex2:any):string[] => {
       let splitedText = textToSplit.split('\n') || [];
       let arr: string[] = [""];
@@ -56,56 +57,76 @@ export function LaterLearnings(){
       return arr;
     }
 
-    // Split out the questions from each other.
-    let questionAnswers = toSplit( newInput, /^#/)
-    let split: Array<string[]> = [];
 
-    questionAnswers.forEach( (questionAnswer:string)=>{
-      //split the answer from the question
-      let questionSeperatedFromTheAnswer = toSplit( questionAnswer, /^@/)
-      if( questionSeperatedFromTheAnswer.length === 2){
-        // Split the answer from the rest of the text below the question
-        let answer = questionSeperatedFromTheAnswer[1].split("\n\n")[0];
-        split.push([questionSeperatedFromTheAnswer[0], answer ]);
-        // Remove question and answer from the input field.
-        newInput = newInput.replace( '\n' + questionSeperatedFromTheAnswer[0], '');
-        newInput = newInput.replace( answer, '');
-      }
-    });
+    let questionAnswers = toSplit( textString, /^#/)
+    let rest = questionAnswers.slice(Number(nrOfQuestionsToFetch)+1);
+    questionAnswers = questionAnswers.slice(1, Number(nrOfQuestionsToFetch)+1);
 
-    // questionStringToTodaysCard
-    let questionStringToTodaysCard:string = ''; 
-    let answerStringToTodaysCard: string = ''
 
-    newInput = '\n' + str1;
-    let maximumFetch = nrOfQuestionsToFetch > split.length ? split.length : nrOfQuestionsToFetch;
-    let unFetchedQuestionsAnswers:string = ""
-
-    for( let questionIndex:number=0; questionIndex < split.length; questionIndex++){
-      if( questionIndex < maximumFetch ){
-        questionStringToTodaysCard += questionIndex +1 + ". " +  split[questionIndex][0].substring(1);
-        answerStringToTodaysCard += questionIndex+1 + ". " +   split[questionIndex][1].substring(1).trim() + '\n';
-      }else{
-        unFetchedQuestionsAnswers += split[questionIndex][0] + split[questionIndex][1].trim() + '\n';
+    let misMatch = false;
+    for(let i = 1; i< questionAnswers.length; i++){
+      let match1 = ((questionAnswers[i]|| '').match(/^#/) || []).length;
+      let match2 =  ((questionAnswers[i]|| '').match(/\n@/) || []).length;
+      if( match1 !== 1 || match2 !==1){
+        misMatch = true;
       }
     }
+  
+    // If something is wrong with the inputed user structure
+    if( misMatch ){
+      alert('Mismatch between the number of # and @. \n# should always be followed by a @' +
+      "\n@question\n#answer")
+      return stringDefaultState;
+    }
 
-    let todaysNote: iDay = {...Data.list[ Data.list.length - 1]};
-    todaysNote.questions = todaysNote.questions.trim() + (todaysNote.questions.includes("\n") ? '\n' : '') + questionStringToTodaysCard;
-    todaysNote.answers = todaysNote.answers.trim() + (todaysNote.answers.includes("\n") ? '\n' : '') + answerStringToTodaysCard;
-    todaysNote = adjustNumbersFromQuestionAndAnswers( todaysNote )
 
-    Data.list[Data.list.length -1] = todaysNote;
+    // let intoCard = Data.get.todaysCard();
+    let intoCard: iListItem = Data.get.todaysCards()[selectedDailyCard];
+    let split: [string, string][]= [];
+    textString = '\n' + textString;
+    questionAnswers.forEach( (str:string)=>{
+      //split answer from question
+      let temp = toSplit( str, /^@/)
+
+      // make sure the length is 2
+      if( temp.length === 2){
+        let answer = temp[1].split("\n\n")[0];
+        split.push([temp[0], answer ]);
+
+        // Remove question and answer from the input field.
+        textString = textString.replace( '\n' + temp[0], '');
+        textString = textString.replace( answer, '');
+      }
+    });
+    if( split.length === 0) 
+      return stringDefaultState;
+
+    // If all questions / answers are empty remove all empty questions
+    let counter = 0;
+    intoCard.questionAnswerPair.forEach( (item:any)=>{
+      if( item.question.text.trim() === '' && item.answer.text.trim() === ''){
+        counter++;
+      }
+    });
+    intoCard.questionAnswerPair.splice(0, counter);
+
+    // Insert new questions into the active card
+    split.forEach( (pair: [string, string] )=>{ intoCard.questionAnswerPair.push({
+        questionID: 5,
+        question: {text: pair[0].length > 0 ? pair[0].substring(1) : "" },
+        answer: {text: pair[1].length > 0 ? pair[1].substring(1) : "" },
+    })});
+
+
     dispatch( storage.setData({...Data}));
-    // save( Data );
-
-    return unFetchedQuestionsAnswers;
+    save( Data );
+    return rest.join('');
   }
 
 
-  const saveData = (newList:any):void=>{
+  const saveData = (newList: iLaterLearningsListItem[]):void=>{
     setList( newList );
-    Data.laterLearnings.list = newList;
+    Data.data.laterLearnings.list = newList;
     dispatch( storage.setData(Data));
     save( Data );
   }
@@ -115,9 +136,25 @@ export function LaterLearnings(){
       <div id="createDeleteDatablockContainer">
         <span id="">Create new data block:</span>
         <span id="createNewDatablockButton" onClick={ ()=>{ createNewTextArea() }} >Create</span>
+
+
+        { Data.get.todaysCards().length > 1 && <div id="cardSelector">
+          <span className="header">To daily card:</span>
+          { Data.get.todaysCards().map( (item:iListItem, index:number)=>{
+            return(
+            <div 
+              onClick={ ()=> setSelectedDailyCard(index)}
+              key={index} 
+              className={ (selectedDailyCard === index ? "item active" : "item") }>
+              {item.tags ? (index+1 + ". " + item.tags) :  (index+1 + ". No tags set") }
+            </div>)
+          })}
+        </div>}
       </div>
 
-      {list.map( (item: iLaterLearningsList, index:number)=>{
+      
+
+      {list.map( (item: iLaterLearningsListItem, index:number)=>{
         return(<div key={index} className="deckContainer">
           <div className="settingsContainer">
             <input className="inputDeckName" type="text" placeholder="Headline"
@@ -144,7 +181,7 @@ export function LaterLearnings(){
                 onChange={ (evt)=>{ 
                   let newList = [...list];
                   if( isNaN( Number(evt.target.value)) && evt.target.value !== "") return;
-                  newList[index].questionsToFetch = evt.target.value;
+                  newList[index].questionsToFetch = Number( evt.target.value);
                   saveData(newList);
                 }}
               />

@@ -1,3 +1,4 @@
+import { iUserClass } from "../templatesTypes";
 
 
 export function createDate(): string{
@@ -26,14 +27,13 @@ export function getDayMonthFromInt(fromDay:number): string{
   return str;
 }
 
-export function ifNewDay(data:  any): boolean {
-  let todayDateInNr = getDaysAfter1970();
-  const {list} = data;
+export function ifNewDay(data: iUserClass): boolean {
+  const list = data.get.list();
   if(list.length === 0 ) return true;
 
   let lastElement = list.length - 1;
-  let latestDay = list[lastElement].onDay;
-  let newDay = latestDay < todayDateInNr;
+  let latestDay = list[lastElement].created;
+  let newDay = latestDay < getDaysAfter1970();
   return newDay;
 }
 

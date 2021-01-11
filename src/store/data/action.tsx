@@ -1,8 +1,9 @@
 
 // import React from 'react';
-import {dataType, SETDATA, DataActionTypes, SETSCHEDULE } from './types';
+import {SETDATA, DataActionTypes, SETSCHEDULE } from './types';
 
-export const setData= (data: dataType): DataActionTypes =>{
+// export const setData= (data: dataType): DataActionTypes =>{
+export const setData= (data:any): DataActionTypes =>{
   return({
     type: SETDATA,
     payload: data

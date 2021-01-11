@@ -3,34 +3,32 @@ import React, {useRef, createRef, useEffect, useState} from 'react';
 import {Container} from 'react-bootstrap';
 import {useSelector} from 'react-redux';
 import '../../CSS/search.scss';
+import {iList, iListItem, iQuestionAnswer, iQuestionAnswerPair } from '../../templatesTypes';
 
 
 export const Search = ()=> {
   const [tags, setTags] = useState<string>('');
   const [stringFind, setStringFind] = useState<string>('');
-  const [showBlocks, setShowBlocks] = useState<{display: string}[]>([]);
 
-  const [renderBlocks, setRenderBlocks] = useState<boolean>(false);
+  // const [showBlocks, setShowBlocks] = useState<{display: string}[]>([]);
+
+  const [listToShow, setList] = useState<any>([])
   let data:any = useSelector<any>( state=> state.data);
 
-  const questionTextAreas = useRef<any>(data.list.map(() => createRef()));
-  const answerTextAreas = useRef<any>(data.list.map(() => createRef()));
+  const questionTextAreas = useRef<any>(data.get.list().map(() => createRef()));
+  const answerTextAreas = useRef<any>(data.get.list().map(() => createRef()));
 
-  data.list.forEach( (item:any) =>{
-    item.answers = item.answers.trim(); 
-    item.questions = item.questions.trim();
-  });
 
-  useEffect( ()=>{
+  // Finds all the cards the matches the corresponding tags.
+  const tagFind = ()=>{
     let tagsObj : {display: string }[] = [];
-
-
     let tagArr: string[] = (tags || "").split(/[,]/);
 
-    const list = data.list
+    const list: iList = data.get.list();
 
+    let tempList: iList = [];
     for(let i=0, len:number= list.length; i<len; i++){
-      let tagStr: string = list[i].tags.join(' ');
+      let tagStr: string = list[i].tags;
       let includes: boolean = false;
 
       let len: number = tagArr.length;
@@ -40,41 +38,55 @@ export const Search = ()=> {
         if( tagStr.trim().toLowerCase().includes(tagArr[y].toLowerCase())){
           includes = true; break; }
       }
+      if( includes ){
+        tempList.push( list[i] );
+      }
       tagsObj.push( includes ? {display: 'block'} : {display: 'none'});
     }
 
-    // tags.length > 0 ? setRenderBlocks(true) : setRenderBlocks(false);
-    setShowBlocks( tagsObj );
-  }, [tags]) //eslint-disable-line
+    // setShowBlocks( tagsObj );
+    setList( tempList );
+  }
 
-  useEffect( ()=>{
-    if( stringFind.length === 0 || stringFind === ' ') return;
+  // Find all cards matching the corresponding string
+  const findString = ()=>{
+    if( stringFind.trim() === '') return;
 
-    const strArr = stringFind.split(/,/);
-    let tagsObj: {display: string}[] = [];
-    const {list} = data;
+    const strArr = stringFind.split(/, /);
+    // let tagsObj: {display: string}[] = [];
+    const list: iList = data.get.list();
 
-
+    let tempList: iList = [];
     for(let i=0, len:number=list.length; i<len; i++){
       let includes: boolean = false;
+
+      let listText = getText( list[i], 'question') +' ' + getText( list[i], 'answer');
+
       for(let y=0, len=strArr.length; y<len; y++){
         if( strArr[y].length === 0 || strArr[y] === ' ') continue;
-        if( list[i].questions.includes(strArr[y]) || list[i].answers.includes(strArr[y])){
-          includes = true; break; }
+        if( listText.includes(strArr[y])){
+          includes = true;
+          break;
+        }
       }
-
-      tagsObj.push( includes ? {display: 'block'} : {display: 'none'});
-
+      if( includes ){
+        tempList.push( list[i])
+      }
+      // tagsObj.push( includes ? {display: 'block'} : {display: 'none'});
     }
-    setShowBlocks( tagsObj);
-  }, [stringFind]) //eslint-disable-line
+    setList( tempList );
+    // setShowBlocks( tagsObj);
 
+  }
 
+  
+  // Automatically expands the text areas so no scolling is required
   useEffect( ()=>{
-    setShowBlocks( ()=>data.list.map( ()=>{ return{display: 'block'}}) )
+    // setShowBlocks( ()=>data.get.list().map( ()=>{ return{display: 'block'}}) )
 
     for( let i=0, len=questionTextAreas.current.length; i<len; i++){
 
+      if( !questionTextAreas.current[i].current) continue;
       let questionHeight = questionTextAreas.current[i].current.scrollHeight;
       let answerHeight = answerTextAreas.current[i].current.scrollHeight;
 
@@ -83,8 +95,18 @@ export const Search = ()=> {
       answerTextAreas.current[i].current.style.height = height;
     }
 
-  }, []) //eslint-disable-line
+  }, [listToShow]) //eslint-disable-line
 
+  const getText = (field: iListItem, key:string): string=>{
+    let text = '';
+
+    field.questionAnswerPair.forEach( (item: iQuestionAnswerPair, index:number)=>{
+      let obj: iQuestionAnswer|number = item[key as keyof iQuestionAnswerPair];
+      if( typeof obj !== 'number' )
+        text += index + 1 + '. ' + obj.text + '\n';
+    })
+    return text.trim();
+  }
 
   return(
   <Container className='m-0 p-0' fluid>
@@ -93,30 +115,44 @@ export const Search = ()=> {
         placeholder="Sort documents based on tags"
         className="tagInput"
         value={ tags }
-        onChange={ (evt)=>{ setTags(evt.target.value) }}
+        onChange={ (evt)=>{ 
+          setTags(evt.target.value) 
+          if( evt.target.value === '')
+            setList([])
+        }}
+        onKeyDown={ (evt:any)=>{
+          if( evt.key !== 'Enter') return;
+          tagFind();
+        }}
       />
 
       <input 
         placeholder="Sort documents after specific keywords"
         className="documentSortInput"
         value={stringFind}
-        onChange={ (evt)=>{ setStringFind(evt.target.value)}}
+        onChange={ (evt)=>{ 
+          setStringFind(evt.target.value)
+          if( evt.target.value === '')
+            setList([])
+        }}
+        onKeyDown={ (evt:any)=>{
+          if( evt.key !== 'Enter') return;
+          findString();
+        }}
       />
 
-      {data.list.map( (item:any, index:number)=>{
+      {listToShow.map( (item:any, index:number)=>{
         return(
-          <div key={index} style={{...{verticalAlign: 'top'}, ...showBlocks[index] }}>
+          <div key={index} 
+          style={{verticalAlign: 'top'}}>
+          {/* <div key={index} style={{...{verticalAlign: 'top'}, ...showBlocks[index] }}> */}
 
-            {/* <div style={{fontSize: '18px', fontWeight: 'bold', padding: '3px 0px'}}> */}
-            <h3 className="tagStr">
-              {typeof item.tags !== 'string' && item.tags.join(', ')}
-              {typeof item.tags === 'string' && item.tags}
-            </h3>
+            <h3 className="tagStr"> {item.tags} </h3>
 
             <textarea
               readOnly
               style={{width: '50%', padding: 10}}
-              value={item.questions}
+              value={ getText(item, 'question') }
               ref={questionTextAreas.current[index]}
             />
             <textarea
@@ -124,7 +160,7 @@ export const Search = ()=> {
               readOnly
               onChange={ ()=>{}}
               ref={answerTextAreas.current[index]}
-              value={item.answers}
+              value={ getText(item, 'answer') }
             />
           </div>
         )

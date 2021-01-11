@@ -1,6 +1,5 @@
 import React from 'react';
 
-import '../../CSS/footer.scss'
 export const About = () => {
   return( <div id="about">
     <h2 className="footerHeadlines">About</h2>

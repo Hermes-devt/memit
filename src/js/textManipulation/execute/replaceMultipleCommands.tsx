@@ -5,7 +5,7 @@ export const replaceMultipleCommands = (text: string): string =>{
   let textArr = text.split('\n') || [];
   let nText: string[] = [];
 
-  textArr.forEach( (line=>{
+  textArr.forEach( ( (line:string)=>{
     let m = line.match( regex2 );
     if( m !== null) {
       const re3 = /[rxqaRQXl]{1,4}$/;

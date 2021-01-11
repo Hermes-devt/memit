@@ -1,0 +1,49 @@
+
+#cardCommands{
+  display: block;
+  padding: 15px;
+  color: silver;
+  display: flex;
+  justify-content: center;
+  background-color: #1d0002;
+  // box-shadow: 1px 1px 1px 1px #61060c;
+  // box-shadow: 1px 1px 1px 1px white;
+  border-bottom: 1px solid rgb(78, 78, 78);
+
+  .commandButton{
+    border: 1px solid rgb(71, 70, 70);
+    margin: 5px 3px;
+    border-radius: 3px;
+    display: inline-block;
+    cursor: pointer;
+    padding: 0px 3px;
+    text-align: center;
+
+    &:hover{
+      background-color: red;
+    }
+  }
+
+  #schedule{
+    padding: 5px;
+    input{
+      width: 160px;
+      height: 30px;
+      font-size: 14px;
+      padding: 0px 5px;
+      margin: 0px 10px;
+    }
+
+    .saveIt{
+      border: 1px solid silver;
+      padding: 2px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &:hover{
+        background-color: lightslategrey;
+
+      }
+    }
+  }
+}

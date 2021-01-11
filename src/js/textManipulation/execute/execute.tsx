@@ -1,8 +1,8 @@
 
-import {iUserData} from '../../../templatesTypes';
+import {iUserClass, iList} from '../../../templatesTypes';
 import deleteQuestions from './deleteQuestions';
-import {questionsToLater} from './questionsToLater'
-import transferFromQuestionsToAnswers from './transferFromQuestionsToAnswers';
+// import {questionsToLater} from './questionsToLater'
+// import transferFromQuestionsToAnswers from './transferFromQuestionsToAnswers';
 import fetchQuestionsAnswersToInputField from './fetchQuestionsAnswersToInputField';
 import clearCard from './clearCard';
 import clearAwayCommands from './clearAwayCommands';
@@ -13,40 +13,32 @@ import copyToTodaysCard from './copyToTodaysCard';
 import fetchQuestionsFromInputField from './fetchQuestionsFromInputField';
 import sendToDaily from './sendToDaily';
 
-import adjustNumbersFromQuestionAndAnswers from '../adjustNumbers';
-
-
-export const execute = (data: iUserData, activeNote: number): iUserData =>{
-  let list = data.list;
+export const execute = (data: iUserClass, activeNote: number): iUserClass =>{
+  let list: iList = data.data.list;
 
   if( list[activeNote].userInput === undefined || list[activeNote].userInput === null) 
     return data;
   
-  data.list[activeNote].userInput = replaceMultipleCommands(data.list[activeNote].userInput || "");
-  let userInputString:string = data.list[activeNote].userInput || "";
+  list[activeNote].userInput = replaceMultipleCommands(list[activeNote].userInput || "");
 
-  const objCommands = groupCommands( fetchCommands(userInputString) );
+  const objCommands = groupCommands( fetchCommands(list[activeNote].userInput || "") );
 
-  let currentNote = data.list[activeNote];
-  currentNote = fetchQuestionsAnswersToInputField( currentNote, objCommands.fetchQuestionAnswer );
+  let currentNote = list[activeNote];
+  list[activeNote].userInput = fetchQuestionsAnswersToInputField( data, activeNote, objCommands.fetchQuestionAnswer );
 
-  list[list.length-1] = {...copyToTodaysCard( currentNote, objCommands.questionsToRepeat, list[list.length-1])};
-  data = questionsToLater( currentNote, objCommands.questionsToLater, data);
+  copyToTodaysCard( data, activeNote, objCommands.questionsToRepeat);
+  // data = questionsToLater( currentNote, objCommands.questionsToLater, data);
 
-  currentNote = deleteQuestions( currentNote, objCommands.questionsToDelete);
-  if( userInputString.indexOf( '\ntransfer-questions\n') >= 0) 
-    currentNote = transferFromQuestionsToAnswers( currentNote );
-  if( userInputString.indexOf( '\nclear-card\n') >= 0)
-    currentNote = clearCard( currentNote );
+  list[activeNote] = deleteQuestions( list[activeNote], objCommands.questionsToDelete);
+  if( (list[activeNote].userInput || "").indexOf( '\nclear-card\n') >= 0){
+    list[activeNote] = clearCard( list[activeNote] );
+  }
 
-  currentNote.userInput = clearAwayCommands( currentNote.userInput || "" );
-  currentNote = fetchQuestionsFromInputField( currentNote );
+  list[activeNote].userInput = clearAwayCommands( list[activeNote].userInput || "" );
+  list[activeNote] = fetchQuestionsFromInputField( currentNote );
 
-  sendToDaily( data, currentNote, activeNote);
-  currentNote = adjustNumbersFromQuestionAndAnswers( currentNote )
+  sendToDaily( data, currentNote);
   list[activeNote] = {...currentNote};
-
-  data.list = [...list];
   return data;
 }
 

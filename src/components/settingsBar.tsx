@@ -7,27 +7,25 @@ import {ReactComponent as Layout4} from '../IMG/layout4.svg';
 import {ReactComponent as Menu} from '../IMG/menuWhite.svg';
 import {Link} from 'react-router-dom';
 import Timer from '../components/navbar/timer';
-import RightMenu from './rightMenu';
 import { useLocation } from "react-router-dom";
 import '../CSS/settingbar.scss';
+import '../CSS/rightMenu.scss';
 
 
 interface Props {
   onClick(nr:number): void,
   menuClick(): void,
-  onDisplayWindow(window: number): void,
   displayVerticalBar: boolean;
-  windowDisplay: number;
 }
 
 export function SettingsBar(props: Props):any{
   let location = useLocation();
   const [shiftDown, setShiftDown] = useState<boolean>(false);
+  const [displayMenu, setDisplayMenu] = useState<boolean>(false);
 
   useEffect( ()=>{
     document.addEventListener('keydown', listenOnMenuOption);
     document.addEventListener('keyup', listenForShiftUp);
-    // document.addEventListener('keydown')
     return ()=>{ 
       document.removeEventListener('keydown', listenOnMenuOption);
       document.removeEventListener('keyup', listenForShiftUp);
@@ -35,7 +33,6 @@ export function SettingsBar(props: Props):any{
   },[props, shiftDown]); //eslint-disable-line
 
   const listenForShiftUp = (evt:any)=>{
-    // if( document && document.activeElement && document.activeElement.tagName !== 'BODY') return;
     if( evt.key === 'Shift') setShiftDown(false);
   }
 
@@ -48,7 +45,7 @@ export function SettingsBar(props: Props):any{
     }
     if( !shiftDown ) return;
     if( document && document.activeElement && document.activeElement.tagName !== 'BODY') return;
-    // console.log('shiftown', shiftDown);
+    // Switch through the daily cards to repeat
     switch( keyPress ){
       case 'Digit1': props.onClick(0); break;
       case 'Digit2': props.onClick(1); break;
@@ -67,27 +64,46 @@ export function SettingsBar(props: Props):any{
         <Menu className="menuOpener" />
         <span className="menuString desktop" >{props.displayVerticalBar ? "Hide Menu" : "Display Menu"}</span>
       </span> 
-      <Link to="/" className="homeButton mobile33" onClick={ ()=>{ props.onDisplayWindow( 1 ) }}>Home</Link>
+
+
+      <Link to="/" className="homeButton mobile33" onClick={ ()=>{ setDisplayMenu(true); }} >Menu</Link>
   
-      <span className="menuOptions">
-        <Link to="/" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 1 ) }}>Home</Link>
-        <Link to="/schedule" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 2 ) }}>Schedule</Link>
-        <Link to="/search" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 3 ) }}>Search</Link>
-        <Link to="/dailyNotes" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 5 ) }}>Daily</Link>
-        <Link to="/note" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 6 ) }}>Staging</Link>
-        <Link to="/laterlearnings" className="schedule" onClick={ ()=>{ props.onDisplayWindow( 4 ) }}>Later Learnings</Link>
+      <span className="linkCollection">
+        <Link to="/" className="schedule">Home</Link>
+        <Link to="/schedule" className="schedule">Schedule</Link>
+        <Link to="/search" className="schedule">Search</Link>
+        <Link to="/dailyNotes" className="schedule">Daily</Link>
+        <Link to="/note" className="schedule">Staging</Link>
+        <Link to="/laterlearnings" className="schedule">Later Learnings</Link>
       </span>
   
+      {/* switch through the different window interfaces */}
       <span className="layoutContainer">
-        <span className="layout desktop" style={{fontStyle: 'italic' }}onClick={ ()=> props.onClick(6)}>e</span>
-        <span className="layout" onClick={ ()=> props.onClick(2)}> <Layout1 className="viewOption" /> </span>
-        <span className="layout desktop" onClick={ ()=> props.onClick(1)}> <Layout2 className="viewOption"  /> </span>
-        <span className="layout" onClick={ ()=> props.onClick(3)}> <Layout3 className="viewOption"  /> </span>
-        <span className="layout" onClick={ ()=> props.onClick(4)}> <Layout4  className="viewOption" /> </span>
+        <span className="layoutIcon mobileIcon" style={{fontStyle: 'italic' }}onClick={ ()=> props.onClick(0)}>m</span>
+        <span className="desktop layoutIcon" onClick={ ()=> props.onClick(2)}> <Layout1 className="viewOption" /> </span>
+        <span className="layoutIcon desktop" onClick={ ()=> props.onClick(1)}> <Layout2 className="viewOption"  /> </span>
+        <span className="layoutIcon" onClick={ ()=> props.onClick(3)}> <Layout3 className="viewOption"  /> </span>
+        <span className="layoutIcon" onClick={ ()=> props.onClick(4)}> <Layout4  className="viewOption" /> </span>
       </span>
 
 
-      <RightMenu />
+      {/* Mobile popup menu */}
+      <div className="mobile">
+          {displayMenu && <div className="mobile blackCover" onClick={ ()=> setDisplayMenu(false)}></div>}
+          {displayMenu && <span className="popup">
+            <div className="">
+              <span onClick={ ()=> setDisplayMenu( false )}>
+              <Link to="/" className="item" >Home</Link>
+              <Link to="/schedule" className="item" >Schedule</Link>
+              <Link to="/search" className="item" >Search</Link>
+              <Link to="/dailyNotes" className="item" >Daily notes</Link>
+              <Link to="/note" className="item" >Note</Link>
+              <Link to="/laterLearnings" className="item" >Later learnings</Link>
+              </span>
+            </div>
+          </span>
+          }
+      </div>
     </div>) 
 }
 

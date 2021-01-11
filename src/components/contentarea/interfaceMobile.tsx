@@ -1,56 +1,44 @@
 import React from 'react';
-// import TextAreas1 from './textAreas1';
-// import TextArea from './TextArea';
-// import ExplodeArea from './explodeArea';
-// import ExplodeAreaMobile from './explodeAreaMobile';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef, createRef} from 'react';
 import {Container} from 'react-bootstrap';
-// import UserInput from './userInput';
-import {iUserData} from '../../templatesTypes';
+import {iUserClass, iQuestionAnswerPair, tQuestionAnswerPair} from '../../templatesTypes';
 import {useSelector} from 'react-redux';
-
-
-import splitAwayQuestionAndAnswers from '../../js/textManipulation/splitAwayQuestionAndAnswers';
 import {useDispatch} from 'react-redux';
 import storage from '../../store/data/action'
-import deleteQuestions from '../../js/textManipulation/execute/deleteQuestions';
-import adjustNumbers from '../../js/textManipulation/adjustNumbers';
 import {save} from '../../js/storageHandling';
-
-// import ExplodeQuestions from './explodeQuestions';
 import '../../CSS/interfaceOptions.scss';
 
 interface Props {
   layout: number,
   activeNote: number,
-  // forceUpdate?: any;
-  forceIt?: any,
-  forceUpdate: any,
 }
 
-// export function InterfaceOptions({layout, activeNote}: Props){
-export function InterfaceOptions2(props: Props){
-  // const [activeNote, setActiveNote] = useState(0);
-  const data: any = useSelector<{data: iUserData}>(state=> state.data);
-  // const [activeQuestions, setActiveQuestions] = useState<number[]>([1]);
-  const [activeQuestion, setActiveQuestion] = useState<number>(1);
-  const [nrOfQuestions, setNrOfQuestions] = useState<number>(0);
-  const [questionAnswerSplit, setQuestionsAnswersSplit] = useState<{questions: string[], answers:string[]}>({questions: [], answers: []})
+export function InterfaceMobile(props: Props){
+  const data: any = useSelector<{data: iUserClass}>(state=> state.data);
+  const [activeQuestion, setActiveQuestion] = useState<number>(0);
+  const [nrOfQuestions, setNrOfQuestions] = useState<number>(1);
+  const [questionAnswerSplit, setQuestionsAnswersSplit] = useState<iQuestionAnswerPair[]>(data.get.list()[props.activeNote].questionAnswerPair)
+  const [displayAnswer, setDisplayAnswer] = useState<boolean>(false);
+  const [addQuestionOn, setAddQuestion] = useState<boolean>(false);
 
-
-  const [explodeView, setExplodeView] = useState<boolean>(true);
-  const [mouseOverQuestion_index, setMouseOverQuestion_index] = useState<number>(0)
-  // const [textAreaActive, setTextareaActive] = useState<any>({active:false, index: 0});
   const [shiftDown, setShiftDown] = useState<boolean>(false);
   const dispatch = useDispatch();
 
-  useEffect( ()=>{
-    // console.log( props.data.list[props.activeNote]);
-    let split = splitAwayQuestionAndAnswers( data.list[props.activeNote])
-    setQuestionsAnswersSplit( split );
+  const newQuestion = useRef<any>(createRef())
+  const newAnswer = useRef<any>(createRef())
 
-    setNrOfQuestions( split.questions.length - 2);
-  },[props])//eslint-disable-line
+  useEffect( ()=>{
+    let questionPair: iQuestionAnswerPair[] = data.get.list()[props.activeNote].questionAnswerPair
+    setQuestionsAnswersSplit( data.get.list()[props.activeNote].questionAnswerPair )
+    setQuestionsAnswersSplit( questionPair )
+
+    let len:number = data.get.list()[props.activeNote].questionAnswerPair.length;
+
+    setNrOfQuestions(len);
+    setActiveQuestion(0)
+    setAddQuestion( false );
+  },[props.activeNote])//eslint-disable-line
+
 
   useEffect( ()=>{
     document.addEventListener("keydown", handleKeyDown);
@@ -60,20 +48,20 @@ export function InterfaceOptions2(props: Props){
       document.removeEventListener('keyup', handleKeyUp ); 
     }
 
-  },[props, data, activeQuestion, questionAnswerSplit]); //eslint-disable-line
+  },[props, data, activeQuestion, questionAnswerSplit, nrOfQuestions, addQuestionOn]); //eslint-disable-line
 
-  const handleKeyUp = (evt:any)=>{ if( evt.key === 'Shift'){ setShiftDown(false); }}
+
+  useEffect( ()=>{ setDisplayAnswer(false); },[activeQuestion, props])
+
+  const handleKeyUp = (evt:any)=>{ 
+    if( evt.key === 'Shift'){ 
+      setShiftDown(false); 
+    }
+  }
+
 
   const handleKeyDown = (evt:any)=>{
     let keyPressed = evt.key;
-    // const len:number = explodedElements.length;
-
-    if( !explodeView && keyPressed === 'Escape'){
-      data.list[props.activeNote] = adjustNumbers( data.list[props.activeNote]);
-      setExplodeView( true )
-      dispatch(storage.setData( data ))
-      return;
-    }
 
     if( keyPressed === 'Shift'){
       setShiftDown(true);
@@ -86,261 +74,251 @@ export function InterfaceOptions2(props: Props){
     if( keyPressed === "ArrowLeft" || keyPressed ==='ArrowRight') 
       evt.preventDefault();
 
-
     switch( keyPressed ){
-      // case 'E': setExplodeView( false ); break;
-      // case 'Shift': setShiftDown(true); break;
       case 'j': case 'ArrowRight': moveRight(); break;
       case 'k': case 'ArrowLeft': moveLeft(); break;
-      case 'x': deleteQuestion(); break;
-      case 'a': addNewQuestion(); break;
-      case 'Escape': 
-        // setTextareaActive({active: false, index: activeQuestion}); 
-        // setActiveQuestions( [activeQuestions[0]] || [0] );
-        break;
-      case 'Enter': case 'e':
-        // setTextareaActive({active: true, index: activeQuestion}); 
-        break;
+      case 'x':
+        deleteQuestion();
+      break;
+      case 'a': 
+        setAddQuestion(true);
+        addNewQuestion(); break;
       case 'K': //Shift question one step upwards
-        // let arr = [...activeQuestions].sort();
-        let arr = [activeQuestion];
-        let q = splitAwayQuestionAndAnswers( data.list[props.activeNote])
+        if( activeQuestion <= 0) return;
+        let extractedQuestion = questionAnswerSplit[activeQuestion];
+        questionAnswerSplit.splice( activeQuestion, 1);
+        questionAnswerSplit.splice( activeQuestion-1, 0, extractedQuestion);
+        setQuestionsAnswersSplit( [...questionAnswerSplit])
 
-        for( let i=0; i<arr.length; i++){
-          let tempActiveQuestion=arr[i];
-          if( tempActiveQuestion < 2 || arr[i-1] === arr[i]-1)
-            continue;
-
-          arr[i] -= 1;
-          let insertPos = tempActiveQuestion - 1;
-          q.questions.splice( insertPos, 0, '' + q.questions[ tempActiveQuestion ].trim() + '\n' );
-          q.answers.splice( insertPos, 0, '' + q.answers[ tempActiveQuestion ].trim() + '\n');
-          q.questions.splice( tempActiveQuestion + 1, 1);
-          q.answers.splice( tempActiveQuestion + 1, 1);
-        }
-        let questions: string  = q.questions.join('').trim() || '';
-        let answers: string = q.answers.join('').trim() || '';
-
-        // console.log( questions );
-        data.list[props.activeNote].questions = questions;
-        data.list[props.activeNote].answers = answers;
-        data.list[props.activeNote] = adjustNumbers( data.list[props.activeNote]);
-        dispatch(storage.setData( data ))
-        save( data );
-
-        let split = splitAwayQuestionAndAnswers( data.list[props.activeNote])
-        setQuestionsAnswersSplit( split );
-
-        setActiveQuestion( arr[0]);
+        let active2:number = activeQuestion > 0 ? activeQuestion-1 : 0;
+        setActiveQuestion( active2 ); 
+        data.get.list()[props.activeNote].questionAnswerPair = questionAnswerSplit;
       break;
       case 'J': //shift question one step uwpards
+        if( activeQuestion >= questionAnswerSplit.length - 1) return;
+        let extractedQuestion2 = questionAnswerSplit[activeQuestion];
+        questionAnswerSplit.splice( activeQuestion, 1);
+        questionAnswerSplit.splice( activeQuestion+1, 0, extractedQuestion2);
+        setQuestionsAnswersSplit( [...questionAnswerSplit])
 
-        let arr1 = [activeQuestion];
-        // let arr1 = [...activeQuestions].sort().reverse();
-        let q2 = splitAwayQuestionAndAnswers( data.list[props.activeNote])
-
-        for( let i=0; i<arr1.length; i++){
-          let insertPosition= arr1[i];
-          if( insertPosition >= q2.questions.length - 2) continue;
-          if( Number(arr1[i-1]) === Number(arr1[i]+1) ) continue;
-
-          arr1[i] += 1;
-          let insertPos2 = insertPosition + 2;
-          if( insertPosition >= q2.questions.length - 3 ){
-            q2.questions.push( q2.questions[ insertPosition ].trim() + '\n' )
-            q2.answers.push( q2.answers[ insertPosition ].trim() + '\n' )
-            q2.questions.splice( insertPosition, 1);
-            q2.answers.splice( insertPosition, 1);
-          }else{
-            q2.questions.splice( insertPos2, 0, '' + q2.questions[ insertPosition ].trim() + '\n' );
-            q2.answers.splice( insertPos2, 0,  '' + q2.answers[ insertPosition ].trim()  + '\n' );
-            q2.questions.splice( insertPosition, 1);
-            q2.answers.splice( insertPosition, 1);
-          }
-        }
-        let questions2: string  = q2.questions.join('').trim() || '';
-        let answers2: string = q2.answers.join('').trim() || '';
-
-        data.list[props.activeNote].questions = questions2;
-        data.list[props.activeNote].answers = answers2;
-        data.list[props.activeNote] = adjustNumbers( data.list[props.activeNote]);
-        dispatch(storage.setData( data ))
-        // setActiveQuestions( arr1 );
-        save( data );
-
-        let split2 = splitAwayQuestionAndAnswers( data.list[props.activeNote])
-        setQuestionsAnswersSplit( split2 );
-
-        setActiveQuestion( arr1[0]);
+        setActiveQuestion( (activeQuestion)=> activeQuestion+1); 
+        data.get.list()[props.activeNote].questionAnswerPair = questionAnswerSplit;
         break;
     }
 
   };
 
+  const deleteQuestion = ()=>{
+    let questionList = questionAnswerSplit;
+    let active = activeQuestion;
+    if( questionList.length <= 1){
+      questionList[0].question.text = '';
+      questionList[0].answer.text = '';
+    }else{
+      questionList.splice( active, 1);
+    }
+
+    if( questionList.length <= active)
+      active -= 1;
+
+    if(activeQuestion < 0)
+      active = 0;
+
+    setActiveQuestion( active );
+    setQuestionsAnswersSplit( questionList );
+
+    setNrOfQuestions( (nrOfQuestions:number) => nrOfQuestions > 0 ? nrOfQuestions - 1 : 0);
+
+    data.get.list()[props.activeNote].questionAnswerPair = questionList;
+    dispatch( storage.setData(data) );
+  }
+
   const moveLeft = ()=>{
-      let tempActiveQuestion = activeQuestion <= 1 ? 1 : activeQuestion - 1;
-      setActiveQuestion(tempActiveQuestion);
+      let newActiveQuestion = activeQuestion <= 0 ? 0 : activeQuestion - 1;
+      setAddQuestion(false);
+      setActiveQuestion(newActiveQuestion);
   }
 
   const moveRight = ()=>{
-    let nrOfQuestion = splitAwayQuestionAndAnswers( data.list[props.activeNote]).questions;
-    if( activeQuestion >= nrOfQuestion.length - 2) return;
+    if( activeQuestion + 1 >= questionAnswerSplit.length) return;
       setActiveQuestion(activeQuestion=> activeQuestion+1 );
 
   }
 
-  const deleteQuestion = ()=>{
-    let nrOfQuestion2 = splitAwayQuestionAndAnswers( data.list[props.activeNote]).questions;
-    if( nrOfQuestion2.length <=2 ) return;
-
-
-    data.list[props.activeNote] = deleteQuestions( data.list[props.activeNote], [JSON.stringify(activeQuestion) ] );
-    data.list[props.activeNote] = adjustNumbers( data.list[props.activeNote]);
-    let nActiveQuestion:number = activeQuestion >= nrOfQuestion2.length -2 ? activeQuestion-1 : activeQuestion;
-    nActiveQuestion = nActiveQuestion < 0 ? 0 : nActiveQuestion;
-    setActiveQuestion( nActiveQuestion ); 
-
-    let split = splitAwayQuestionAndAnswers( data.list[props.activeNote])
-    setQuestionsAnswersSplit( split );
-
-    dispatch( storage.setData({...data}) );
-    save( data );
-  }
 
   const addNewQuestion = ()=>{
-    let daily = data.list[props.activeNote];
-    let tx = splitAwayQuestionAndAnswers( daily);
-    let current = activeQuestion;
-    let index = current;
 
-    let insertValue = "" + (Number(current)+2) + ". ";
-    if( index >= tx.questions.length - 2){
-      tx.questions[tx.questions.length-1].trim();
-      tx.answers[tx.answers.length-1].trim();
-      tx.questions.push(insertValue)
-      tx.answers.push(insertValue);
-    }else{
-      tx.questions.splice(index+1, 0, insertValue  + "\n")
-      tx.answers.splice(index+1, 0,  insertValue + "\n")
+    let last = questionAnswerSplit[ questionAnswerSplit.length-1 ];
+    if( last.question.text === ''){
+
+      let pos = questionAnswerSplit.length - 1;
+      if( pos < 0) pos = 0;
+      setActiveQuestion( pos );
+      return;
     }
 
-    data.list[props.activeNote].questions = tx.questions.join('');
-    data.list[props.activeNote].answers = tx.answers.join('');
-    data.list[props.activeNote] = adjustNumbers( data.list[props.activeNote]);
+    questionAnswerSplit.push( tQuestionAnswerPair( '', ''));
 
-    let split = splitAwayQuestionAndAnswers( data.list[props.activeNote])
-    setQuestionsAnswersSplit( split );
-    setActiveQuestion( activeQuestion=>activeQuestion+1);
+    setQuestionsAnswersSplit( [...questionAnswerSplit]);
 
+    let pos = questionAnswerSplit.length - 1;
+    if( pos < 0) pos = 0;
+    setActiveQuestion( pos );
+    setNrOfQuestions( questionAnswerSplit.length );
+
+    data.get.list()[props.activeNote].questionAnswerPair = questionAnswerSplit;
     dispatch( storage.setData(data) );
-    save( data );
-    setMouseOverQuestion_index( mouseOverQuestion_index+1);
   }
 
-  const questionWithoutTheNumber = (str: any = ""): string=>{
-    let re = /^\d+\./
-    return str.replace( re, '');
+  const appendQuestinoAndAddNewQuestion = ()=>{
+    if( newQuestion.current.value.trim() === '') return;
+    questionAnswerSplit[questionAnswerSplit.length-1].question.text = newQuestion.current.value.trim();
+    questionAnswerSplit[questionAnswerSplit.length-1].answer.text = newAnswer.current.value.trim();
+
+    setQuestionsAnswersSplit( [...questionAnswerSplit]);
+    setNrOfQuestions( questionAnswerSplit.length );
+    data.get.list()[props.activeNote].questionAnswerPair = questionAnswerSplit;
+    dispatch( storage.setData(data) );
+    save( data );
+
   }
 
   const setAreaIfNoQuestions = ()=>{ 
     return( 
-      <div id="">
-        <textarea placeholder='Question' className="blockArea" autoFocus/>
-        {/* <textarea placeholder='Answer' className="blockArea" / > */}
+      <div id="ifNoQuestions">
+        <textarea ref={newQuestion} placeholder='Question' className="inputboxIfNoQuestions" autoFocus/>
+        <div id="answerBlock">
+          <textarea ref={newAnswer} placeholder='Answer' id="answerArea" />
+          <div id="saveQuestion" onClick={ ()=>{ 
+            setAddQuestion(false);
+            appendQuestinoAndAddNewQuestion(); 
+          }}>save</div>
+        </div>
       </div>
     ) 
   }
 
   const setQuestionBox = ()=>{
-
-    let answer:string = questionWithoutTheNumber( questionAnswerSplit.questions[ activeQuestion ] || "" );
-
-
-    if( !questionAnswerSplit.questions[ activeQuestion ] || questionAnswerSplit.questions[ activeQuestion ].length === 0){
-      return( <textarea cols={4} placeholder='Question is currently empty' className="blockArea1" style={{height: '100%', width: '100%'}} />)
-    }
-
+    let question: string = questionAnswerSplit[activeQuestion].question.text;
+    const cleanInterface = true;
     return(
-        <div >
-          <div id="top" >
-            <div className="rotatingElement" style={{height: '15px', fontSize: '10px', opacity: 0.1, paddingBottom: '1px', top: ''}}
-            >{ activeQuestion > 3 ? questionAnswerSplit.questions[activeQuestion-3] : "" }</div>
+      <div style={{position: 'relative', top: '30px'}}>
+        { !cleanInterface && <div id="top" >
+          <div className="rotatingElement" style={{height: '15px', fontSize: '10px', opacity: 0.1, paddingBottom: '1px', top: ''}}
+          >{ activeQuestion >= 3 ? questionAnswerSplit[activeQuestion-3].question.text : "" }</div>
 
-            <div className="rotatingElement" style={{height: '15px', fontSize: '13px', lineHeight: '13px', opacity: 0.2, top: ''}}
-            >{ activeQuestion > 2 ? questionAnswerSplit.questions[activeQuestion-2] : "" }</div>
+          <div className="rotatingElement" style={{height: '15px', fontSize: '13px', lineHeight: '13px', opacity: 0.2, top: ''}}
+          >{ activeQuestion >= 2 ? questionAnswerSplit[activeQuestion-2].question.text : "" }</div>
 
-            <div className="rotatingElement" style={{height: '', fontSize: '17px', lineHeight: '20px', opacity: 0.3, top: '50px'}}
-            >{(activeQuestion > 1) ? questionAnswerSplit.questions[activeQuestion-1] : ""}</div>
-          </div>
+          <div className="rotatingElement" style={{height: '', fontSize: '17px', lineHeight: '20px', opacity: 0.3, top: '50px'}}
+          >{(activeQuestion >= 1) ? questionAnswerSplit[activeQuestion-1].question.text : ""}</div>
+        </div> }
 
-          { answer.length <= 2 && <span>
-              <span className="textToBlockArea1">{activeQuestion}.</span>
-              <textarea cols={4} placeholder='Question is currently empty' className="blockArea1" / > 
-              </span>}
-          { answer.length > 2 && 
-              <div className="rotatingElement activeQuestion">{questionWithoutTheNumber(questionAnswerSplit.questions[activeQuestion])}</div>
-          }
+        { question.length <= 0 && <span>
+            {((questionAnswerSplit.length <= 1) && !cleanInterface) && <div className="deckEmptyText">Deck currently empty!</div>}
+            <textarea ref={newQuestion} placeholder='Question' className="textAnswerInput" / > 
+            </span>}
+        { question.length > 0 && <div className="rotatingElement activeQuestion">{question}</div> }
 
-          <div id='bottom'>
-            <div className="rotatingElement" style={{fontSize: '17px', lineHeight: '20px', opacity: 0.3, top: ''}}
-            >{(activeQuestion + 0< nrOfQuestions) ? questionAnswerSplit.questions[activeQuestion+1] : ""}</div>
+        {!cleanInterface && <div id='bottom'>
+          <div className="rotatingElement" style={{fontSize: '17px', lineHeight: '20px', opacity: 0.3, top: ''}}
+          >{(activeQuestion + 1< questionAnswerSplit.length) ? questionAnswerSplit[activeQuestion+1].question.text : ""}</div>
 
-            <div className="rotatingElement" style={{fontSize: '13px', lineHeight: '10px', opacity: 0.2, top: ''}}
-            >{ activeQuestion + 1 < nrOfQuestions ? questionAnswerSplit.questions[activeQuestion+2] : '' }</div>
+          <div className="rotatingElement" style={{fontSize: '13px', lineHeight: '10px', opacity: 0.2, top: ''}}
+          >{ (activeQuestion + 2 < questionAnswerSplit.length) ? questionAnswerSplit[activeQuestion+2].question.text : '' }</div>
 
-            <div className="rotatingElement" style={{fontSize: '10px', opacity: 0.1, paddingBottom: '1px', top: ''}}
-            >{ activeQuestion + 2< nrOfQuestions ? questionAnswerSplit.questions[activeQuestion+3] : "" }</div>
+          <div className="rotatingElement" style={{fontSize: '10px', opacity: 0.1, paddingBottom: '1px', top: ''}}
+          >{ (activeQuestion + 3< questionAnswerSplit.length) ? questionAnswerSplit[activeQuestion+3].question.text : "" }</div>
 
-            <div className="rotatingElement" style={{fontSize: '10px', opacity: 0.1, paddingBottom: '1px', top: ''}}
-            >{ activeQuestion + 3 < nrOfQuestions ? questionAnswerSplit.questions[activeQuestion+4] : "" }</div>
-        </div>
-      </div>)
+          <div className="rotatingElement" style={{fontSize: '10px', opacity: 0.1, paddingBottom: '1px', top: ''}}
+          >{ (activeQuestion + 4 < questionAnswerSplit.length) ? questionAnswerSplit[activeQuestion+4].question.text : "" }</div>
+      </div>}
+    </div>)
   }
 
 
   const setAnswerBox= ()=>{
-    // let str = questionAnswerSplit.answers[ activeQuestion ] || "";
-    let answer:string = questionWithoutTheNumber( questionAnswerSplit.answers[ activeQuestion ] || "" );
-
-    if( answer.length <= 2){
-      return( <textarea placeholder='Answer' className="blockArea" / >)
+    let answer: string = questionAnswerSplit[activeQuestion].answer.text.trim();
+    if( answer.trim() === ''){
+        return(
+          <div id="answerBlock">
+            <textarea ref={newAnswer} placeholder='Answer' id="inputArea" />
+            <div id="saveQuestion" onClick={ ()=>{ 
+              setAddQuestion(false);
+              appendQuestinoAndAddNewQuestion(); 
+            }}>save</div>
+          </div>)
     }else{
-      if( shiftDown )
+      if( shiftDown || displayAnswer)
         return( <span id="answerBoxText">{answer}</span>)
-      else{
-        return <span id="answerBoxText"></span>
-      }
     }
+    return <span id="answerBoxText"></span>
   }
 
   return(
-    <div style={{backgroundColor: '', height: '100%', overflow: 'auto', overflowX: "hidden"}}>
-    <Container id='mobile' className="noselect">
+    <div style={{position: 'relative', backgroundColor: '', height: '100%', overflow: 'auto', overflowX: "hidden"}}>
+    <Container fluid id='mobile' className="px-0 mx-0 noselect">
+      { (questionAnswerSplit.length <= 0) && <span>{setAreaIfNoQuestions()}</span> }
 
-      {/* { (questionAnswerSplit.questions.length <= 2) && <span>{setAreaIfNoQuestions()}</span> } */}
+      { (questionAnswerSplit.length > 0) && <span>
 
-      { (questionAnswerSplit.questions.length > 2) && <span>
-          <div className='clickArea left' onClick={ ()=>{ moveLeft(); }}></div>
-          <div className='clickArea right' onClick={ ()=>{ moveRight(); }} ></div>
-      </span> }
+        <div id="questionBox" className="box">
+          <span>{setQuestionBox()}</span>
 
-      <div id="questionBox" className="box"> {setQuestionBox()} </div>
-      <div id="answerBox" className='box'> { setAnswerBox() } </div>
+          {!addQuestionOn && <span className="clickHandler">
+            <div className='clickArea left' onClick={ ()=>{ moveLeft(); }}>
+              <span className="clickAreaText">&lt;</span>
+            </div>
+            <div className='clickArea right' onClick={ ()=>{ moveRight(); }} >
+              <span className="clickAreatext2">&gt;</span>
+            </div>
+          </span>}
 
-      <div id="commandContainer">
-        <span className="icon deleteQuestion" onClick={ ()=>{ deleteQuestion(); }}>X</span>
-        <span className="icon" onClick={ ()=>{ console.log('edit question')}} >e</span> 
-        <span className="icon addNewQuestion" onClick={ ()=>{ addNewQuestion(); }} >+</span>
-      </div>
+        </div>
+        <div id="answerBox" className='box' 
+          onClick={ ()=>{ 
+            if(displayAnswer){
+                moveRight();
+                setDisplayAnswer( false ); 
+              return;
+            }
+            setDisplayAnswer(true); 
+          }}
+          >
+            <span> { setAnswerBox() } </span>
+        </div>
+        <div>
+          {!addQuestionOn && <div id="addQuestionIcon" title="Add question" 
+            onClick={ ()=>{ 
+            setAddQuestion(true);
+            addNewQuestion(); 
+          }} >Add card
+          </div>}
+
+          {addQuestionOn === true && <span id="addQuestionIcon" title="Add question" onClick={ ()=>{
+            setAddQuestion(false);
+            deleteQuestion();
+            }}>Cancel</span>}
+        </div>
+
+        <div id="commandContainer">
+          <span className="icon" title="Edit question" onClick={ ()=>{ console.log('edit question')}} >e</span> 
+        </div>
+
+
+      </span>}
 
       <div id="counter">
-        <span>{activeQuestion}</span>
+        <span>{activeQuestion+1}</span>
         <span> / </span>
         <span>{nrOfQuestions}</span>
       </div>
+
+      <span id="deleteIcon" title="Delete question" onClick={ deleteQuestion }>X</span>
+
     </Container>
     </div>
   )
 }
  
-export default InterfaceOptions2;
+export default InterfaceMobile;

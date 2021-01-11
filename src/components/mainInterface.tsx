@@ -1,14 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import TagInput from './contentarea/tagInput';
 import InterfaceDesktop from './contentarea/interfaceDesktop';
 import InterfaceMobile from './contentarea/interfaceMobile';
+import CardCommands from './cardCommands';
 
 interface Props{
   activeNote: number;
   forceUpdate: any;
   mobile: boolean;
   layout: number;
-  // forceIt(): void;
+  setActiveNote(note:number): void;
 }
 
 export const MainInterface = (props: Props)=>{
@@ -16,19 +17,28 @@ export const MainInterface = (props: Props)=>{
 
   return(
     <div>
-      <TagInput forceUpdate={props.forceUpdate } activeNote={ props.activeNote } mobile={props.mobile} />
+      <TagInput 
+        forceUpdate={props.forceUpdate } 
+        activeNote={ props.activeNote } 
+      />
 
-      {(props.layout !== 0) && <InterfaceDesktop 
-        forceUpdate={props.forceUpdate} 
-        // forceIt={ props.forceIt }
-        forceIt={ ()=> setForceUpdate( forceUpdate=> forceUpdate+1)}
-        layout={props.layout} activeNote={props.activeNote}/>}
+
+      {(props.layout !== 0) && 
+      <span>
+        <InterfaceDesktop 
+          forceUpdate={ ()=> setForceUpdate( forceUpdate=> forceUpdate+1)}
+          layout={props.layout} activeNote={props.activeNote}/>
+
+      <CardCommands 
+        activeNote={props.activeNote}
+        setActiveNote={ props.setActiveNote }
+      />
+      </span>}
 
       {(props.layout === 0) && <InterfaceMobile 
-        forceUpdate={props.forceUpdate} 
-        // forceIt={ props.forceIt }
-        forceIt={ ()=> setForceUpdate( forceUpdate=> forceUpdate+1)}
+        // forceUpdate={ ()=> setForceUpdate( forceUpdate=> forceUpdate+1)}
         layout={props.layout} activeNote={props.activeNote} /> }
+
     </div>
   )
 }

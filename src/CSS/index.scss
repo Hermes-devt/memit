@@ -18,6 +18,14 @@ body {
   -ms-user-select: none; 
 }
 
+.pointer{
+  cursor: pointer;
+}
+.relative{
+  position: relative;
+}
+
+.inline{ position: inline-block; }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

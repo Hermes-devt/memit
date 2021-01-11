@@ -1,37 +1,57 @@
 
-import {iUserData} from '../templatesTypes';
+import {iUserClass} from '../templatesTypes';
 import {cardsToRepeat} from './cardsToRepeat';
 import {getDaysAfter1970} from '../js/util'
 
-export function save(data: iUserData){
-  const obj: iUserData = {
-    list: data.list,
-    dailyCards: data.dailyCards,
-    lastUse: data.lastUse,
-    schedule: data.schedule,
-    missedCards: data.missedCards,
-    laterLearnings: data.laterLearnings,
-    dailyNotes: data.dailyNotes,
-    note: data.note,
-    settings: data.settings,
+export function save(data: any){
+  const {list, dailyCards, lastUse, schedule, missedCards, laterLearnings, dailyNotes, note, settings} = data.data;
+  const obj: any = {
+    list,
+    dailyCards,
+    lastUse,
+    schedule,
+    missedCards,
+    laterLearnings,
+    dailyNotes,
+    note,
+    settings,
   }
+  // const obj: any = {
+  //   list: data.data.list,
+  //   dailyCards: data.data.dailyCards,
+  //   lastUse: data.data.lastUse,
+  //   schedule: data.data.schedule,
+  //   missedCards: data.data.missedCards,
+  //   laterLearnings: data.data.laterLearnings,
+  //   dailyNotes: data.data.dailyNotes,
+  //   note: data.data.note,
+  //   settings: data.data.settings,
+  // }
 
   localStorage.setItem( "dailyNotes", JSON.stringify(obj) ); 
   // console.log('saving to localstorage:', obj);
 }
 
-export function cleanListFromPastEmptyDays(dataObj: iUserData){
+export function cleanListFromPastEmptyDays(userObj: iUserClass): void{
   //Skip the newly inserted day.
-  const length = dataObj.list.length  - 2;
+  let list = [...userObj.get.list()];
+  const length = list.length - 1;
   for( let i=length; i>= 0; i--){
-    let item = dataObj.list[i];
-    if( item.questions === '' && item.answers === '')
-      dataObj.list.splice( i, 1);
+    if( list[i].questionAnswerPair.length <= 2 ){
+      if( list[i].questionAnswerPair.length === 0)
+        userObj.data.list.splice(i, 1);
+      else{
+        if( list[i].questionAnswerPair[0].question.text.trim().length <= 0){
+          userObj.data.list.splice(i, 1);
+        }
+      }
+    }
   }
+
 }
 
-export function cleanlistFromUserInput(dataObj: iUserData){
-  dataObj.list.forEach( (item:any)=>{
+export function cleanlistFromUserInput(userObj: iUserClass){
+  userObj.data.list.forEach( (item:any)=>{
     if( 'userInput' in item ){
       delete item.userInput;
     }
@@ -39,28 +59,16 @@ export function cleanlistFromUserInput(dataObj: iUserData){
 }
 
 
-interface DailyCards { ID: number, done: boolean }
+// interface DailyCards { ID: number, done: boolean }
 
-export function setDailyCards(dataObj: iUserData,){
-  let todayCards = cardsToRepeat( dataObj, getDaysAfter1970() );
-  dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
+export function setDailyCards(userObj: iUserClass){
+  let todayCards = cardsToRepeat( userObj, getDaysAfter1970() );
 
-  // const notReverse = true;
-  // if( notReverse ){
-  //   dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
-  // }
-
-  // else{
-    //map to the new datastructure
-    // let dailys: DailyCards[] = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
-
-    // //Reverse the array so the newly learnt knowledge is in the fist place. 
-    // let reverseDailys: DailyCards[] = dailys.reverse();
-
-    // dataObj.dailyCards = [...reverseDailys];
-    // console.log('dailyCads', dataObj.dailyCards);
-    // dataObj.dailyCards = todayCards.map( (card:any): DailyCards => ({ID: card.onDay, done: false}));
-  // }
+  userObj.data.dailyCards = todayCards.map( (card:any): any=> ({
+    ID: card.cardID, 
+    done: false,
+    card,
+  }));
 }
 
 

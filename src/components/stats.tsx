@@ -1,23 +1,29 @@
 
 import React, {useState, useEffect} from 'react';
 import {Container} from 'react-bootstrap';
-import {useSelector} from 'react-redux';
-import {cardsCounter} from '../js/questionCounter';
+import {cardQuestionCounter} from '../js/questionCounter';
+import { iList, iUserClass } from '../templatesTypes';
 import '../CSS/stats.scss';
 
-export function Stats():any{
-  const data:any = useSelector<any>( state=>state.data);
+interface Props{
+  data: iUserClass;
+}
+
+export function Stats(props: Props):any{
   let [dataSize, setDataSize] = useState<number>(0);
   let [insertedDays, setInsertedDays ] = useState<number>(0);
   let [totalNrQuestions, setTotalNrQuestions] = useState<number>(0);
   let [streak, setStreak] = useState<number>(0);
-
   let [displayAdditionalData, setDisplayAdditionalData] = useState<boolean>(false);
+
   useEffect( ()=>{
-    setInsertedDays(data.list.length);
-    let daysRegistered = data.list[ data.list.length -1].onDay - data.list[0].onDay;
+
+    let list: iList = props.data.get.list();
+    setInsertedDays( list.length );
+    let daysRegistered = list[ list.length -1].created - list[0].created;
     setStreak( daysRegistered );
-    setTotalNrQuestions( cardsCounter(data.list));
+    setTotalNrQuestions( cardQuestionCounter(list));
+
   },[]); //eslint-disable-line
 
   const localStorageSpace = ()=>{

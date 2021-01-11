@@ -1,6 +1,7 @@
 
 
 #verticalBar{
+  // font-family: 'times new roman';
   position: relative;
   border-right: 2px solid gray;
   font-size: 1em;
@@ -11,8 +12,33 @@
   z-index: 99;
   overflow-x: hidden;
 
+  #searchBox{
+    width: 100%;
+  }
+
+  #createNewCard{
+    border: 1px solid silver;
+    padding: 0px 5px;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 50%;
+  }
+
   .header{
-    background-image: url(../IMG/sky2.jpg);
+    // background-image: url(../IMG/sky2.jpg);
+    // background-color: #000000;
+    // background-image: linear-gradient(315deg, #000000 0%, #414141 74%);
+
+    // background-color: #000000;
+    // background-image: linear-gradient(147deg, #000000 0%, #434343 74%);
+
+    // background-color: #000000;
+    // background-image: linear-gradient(147deg, #000000 0%, #2c3e50 74%);
+    // background-color: #2d3436;
+    // background-image: linear-gradient(315deg, #2d3436 0%, #000000 74%);
+
+    background-color: #1d0002;
     font-style: italic;
     text-align: center;
     color: white;
@@ -30,7 +56,6 @@
 
   .card{
     position: relative;
-    // padding: 5px 5px;
     padding: 5px 7px 5px 5px;
     border-bottom: 1px solid silver;
     cursor: pointer;
@@ -42,6 +67,22 @@
     background-color: #A4978E;
     // font-weight: bold;
   }
+
+  #hideMissedCards{
+    position: absolute;
+    display: inline-block;
+    right: 5px;
+    top: 3px;
+    width: 20px;
+    height: 20px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .rotate-90{
+    transform: rotate(-90deg);
+  }
+
 
   .active{
     color: white;
@@ -62,6 +103,13 @@
     display: inline-block;
     font-weight: bold;
     // word-wrap: break-word;
+  }
+
+  .invisible{
+    display: none;
+  }
+  .visible{
+    display: block;
   }
 }
 

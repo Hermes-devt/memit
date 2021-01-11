@@ -1,31 +1,17 @@
 
+import { iList, iListItem } from "../templatesTypes";
 
-import {iDay} from '../templatesTypes';
-
-export function cardsCounter(cards: iDay[]): number{
-  let accumulator = 0;
-  for(let i=0; i < cards.length; i++){
-    accumulator += cardCounter( cards[i]);
-  }
-  return accumulator;
-}
-
-export function cardCounter( card: iDay): number {
-  const re = /\r\n|\r|\n\s*\d/g;
-  const count = ((card || {questions:''}).questions.match(re) || []).length;
-  return count;
-}
-
-export function laterCardsCounter(cards: iDay[]): number{
-  let accumulator = 0;
-  for(let i=0; i < cards.length; i++){
-    accumulator += cardCounter( cards[i]);
-  }
-  return accumulator;
-}
-
-export function laterCardCounter( card: iDay): number {
-  const re = /\r\n|\r|\n\s*\d/g;
-  const count = ((card || {questions:''}).questions.match(re) || []).length;
+export function cardQuestionCounter( cards: iList): number{
+  let count = 0;
+  cards.forEach( (card: iListItem)=>{
+    if( card.questionAnswerPair.length === 1){
+      if( card.questionAnswerPair[0].question.text !== ""){
+        count = 1;
+      }
+    }
+    if( card.questionAnswerPair.length > 1){
+      count += card.questionAnswerPair.length-1;
+    }
+  })
   return count;
 }

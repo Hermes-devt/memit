@@ -1,18 +1,22 @@
+import { iUserClass, iListItem } from "../../../templatesTypes";
 
-
-import {iUserData} from '../../../templatesTypes';
-export const sendToDaily = (data: iUserData, card: any, activeNote: number): iUserData =>{
+export const sendToDaily = (data: iUserClass, card: iListItem): iUserClass =>{
+  // alert('here');
+  if( !card.userInput )
+    return data;
 
   const re = /\nsend/
   let sendMatch = card.userInput.match(re);
 
   if(sendMatch){
-    let subStr = card.userInput.substring(0, sendMatch.index);
+    let subStr: string = card.userInput.substring(0, sendMatch.index);
     card.userInput = card.userInput.replace(re, "");
 
-    let leftOver = card.userInput.substring(sendMatch.index).trim();
-    card.userInput = leftOver;
-    data.dailyNotes.newData += subStr;
+    if( sendMatch.index ){
+      let leftOver:string = card.userInput.substring(sendMatch.index).trim();
+      card.userInput = leftOver;
+    }
+    data.data.dailyNotes.newData += subStr;
   }
   return data;
 }

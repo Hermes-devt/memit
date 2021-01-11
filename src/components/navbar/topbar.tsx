@@ -1,36 +1,91 @@
-
-import React from 'react';
-import Scheduler from './scheduler';
-import {Container, Row, Col} from 'react-bootstrap';
-import {ReactComponent as Clockcss} from '../../IMG/clock1.svg';
+import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import {useSelector} from 'react-redux';
-import {iUserData} from '../../templatesTypes';
-
+import {useDispatch} from 'react-redux';
+import {setData} from '../../store/data/action';
+import { save, setDailyCards } from '../../js/storageHandling';
+import {Container, Row} from 'react-bootstrap';
 import '../../CSS/topbar.scss';
-
-export const Topbar = ()=>{
-  const Data: any = useSelector<any>( (state: {data: iUserData })=> state.data );
+import { iUserClass } from '../../templatesTypes';
 
 
-  if( Data.settings.minimize ){
-      // return <div className='noselect' style={{padding: 0, marginLeft: 20, fontStyle: 'italic', fontSize: 25}}>Repeat Learnings</div>
-      return <span></span>
+type stringNumber = string | number;
+
+interface Props{
+  data: iUserClass;
+}
+
+export const Topbar = (props: Props)=>{
+  const [schedule, setSchedule] = useState<stringNumber[]>( props.data ? props.data.get.schedule(): []);
+  const [displayNrOfBoxes, setDisplayNrOfBoxes] = useState<number>(9);
+  const [mobile, setMobile] = useState<boolean>(false)
+  const dispatch = useDispatch();
+
+
+  // Set if the window is mobile
+  useEffect( ()=>{
+    if( window.innerWidth < 620 ){
+      setDisplayNrOfBoxes( 0 );
+      setMobile(true);
+    }
+  }, [])
+
+  const onChange = (evt: React.ChangeEvent<HTMLInputElement>, index:number)=>{
+    let val:string = evt.target.value;
+    if( val.length > 0 && isNaN( Number(val)) ){
+      return;
+    }
+
+    let _schedule = [...schedule];
+    _schedule[index] = val;
+
+    const convertedSchedule: number[] = _schedule.map( (item: stringNumber, index:number): number=>{
+      if( item === '') return 0;
+      return Number(item);
+    })
+
+    setSchedule( convertedSchedule );
+    props.data.set.schedule( convertedSchedule)
+    setDailyCards(props.data);
+    dispatch( setData({...props.data}));
+    save( props.data  );
   }
-  else return( <Container fluid id='topbar'>
+
+  const displayText = ():boolean=> ( mobile && displayNrOfBoxes > 6 ) ? false : true;
+  
+
+  const openClose = ()=>{
+    if( mobile ) setDisplayNrOfBoxes( displayNrOfBoxes > 6 ? 0 : 11 )
+    else setDisplayNrOfBoxes( displayNrOfBoxes < 10 ?  100 : 9);
+  }
+
+  return( <Container fluid id='topbar'>
       <Row>
-        <Col className="d-none d-md-block">
-          <div className="clockLeft"> <Clockcss /> </div>
-        </Col>
+        {displayText() && <Link to="/" className="noselect" id="topbarHeadline"><h1>Repeat Learnings</h1></Link>}
 
-         <Col className="col-xs-12 col-sm-10 col-md-8"> 
-          <Link to="/" id="topbarHeadline"><h1>Repeat Learnings</h1></Link>
-          <Scheduler />
-        </Col>
+          <div id="schedulerContainer">
 
-        <Col className="d-none d-sm-block">
-          <div className="clockRight" > <Clockcss /> </div>
-        </Col>
+              {displayText() && <span className='noselect pointer'
+                onClick={ ()=>{ openClose(); }}
+              >Schedule</span>}
+
+              {!displayText() && <span className='pointer noselect closeExpandedArea' 
+              onClick={ ()=>{ openClose(); }}
+              >X</span>}
+
+              <div className='scheduleInputs'>
+                  {schedule && schedule.map( (item: stringNumber, index:number)=>{ 
+
+                    if( index >= displayNrOfBoxes) 
+                      return <span key={index}></span>
+
+                    return( <input type="text" key={index} 
+                      value={item === 0 ? 0 : item}
+                      onChange={(evt)=> onChange(evt, index) }
+                    />
+                  )})}
+              </div>
+              {displayText() && <span className="pointer" onClick={ ()=>{ openClose(); }}>...</span>}
+          </div>
 
       </Row>
     </Container>

@@ -1,35 +1,48 @@
 
 
-import {iDay} from '../../../templatesTypes';
-import {copyQuestions} from '../copyQuestion';
+import {iUserClass, iListItem, iQuestionAnswerPair} from '../../../templatesTypes';
 
-export const fetchQuestionsAnswersToInputField = (card1: iDay, toFetch:any): iDay=>{
+export interface iFetchQuestionAnswer{
+  command: string, 
+  question: number
+};
 
-  let card = {...card1};
-  if( card.userInput === undefined || card.userInput === null) return card;
+export const fetchQuestionsAnswersToInputField = (data: iUserClass, activeNote: number, toFetch:iFetchQuestionAnswer[]): string=>{
+
+  let card: iListItem = {...data.get.list()[activeNote]};
+
+  if( card.userInput === undefined || card.userInput === null) 
+    return "";
 
   let userInput:string = card.userInput || "";
 
-  toFetch.forEach( (item:any)=>{
-    let {command, question } = item;
-    let questionAnswer = copyQuestions( card, [question]);
+  for( let index=0; index < toFetch.length; index++){
+    let {command, question } = toFetch[index];
 
     let str = '';
-    if( command.includes('q')) str += (questionAnswer.question[0] || "").trim() + '';
-    if( command.includes('a')) str += '\n' + (questionAnswer.answer[0] || "").trim();
+    const questionAnswer:iQuestionAnswerPair|undefined  = data.get.question( card, question);
+    if( questionAnswer === undefined )
+      continue;
+
+    if( command.includes('q')){
+        str +=  question + "Q. " + questionAnswer.question.text.trim() + "";
+    }
+
+    if( command.includes('a')){
+        str +=  question + "A. " + questionAnswer.answer.text.trim() + "";
+    }
+
     if( command.includes('Q')){
-      str += '\n' + (questionAnswer.question[0] || "").trim();
-      str += '\n' + (questionAnswer.answer[0] || "").trim();
+        str +=  '\n' + question + "Q. " + questionAnswer.question.text.trim() + "";
+        str +=  '\n' + question + "A. " + questionAnswer.answer.text.trim() + "";
     }
 
     let findMatch = question + command;
     let indexPos = userInput.indexOf(findMatch) + findMatch.length;
 
     userInput = userInput.substring(0, indexPos ) + '\n' + str.trim() + userInput.substring(indexPos );
-  });
-
-  card.userInput = userInput;
-  return card;
+  }
+  return userInput;
 }
 
 export default fetchQuestionsAnswersToInputField;

@@ -5,20 +5,27 @@
   border-bottom: 1px solid silver;
   color: white;
   height: 40px;
+  background-color: #1d0002;
 
-  .layout{
-    cursor: pointer;
-    margin-left: 5px;
+  .layoutContainer{
+    .layoutIcon{
+      cursor: pointer;
+      margin-left: 5px;
+    }
   }
 
-  .schedule{
-    display: inline-block;
-    cursor: pointer;
-    color: white;
-    padding: 3px 5px 2px 10px;
+  .linkCollection{
+    .schedule{
+      display: inline-block;
+      cursor: pointer;
+      color: white;
+      padding: 3px 5px 2px 10px;
+    }
   }
 
-  .menuString{ padding-left: 10px; }
+  .menu{
+    .menuString{ padding-left: 10px; }
+  }
 
   .hideIt{
     opacity: 0.2;
@@ -38,16 +45,27 @@
   @media (max-width: 800px){
     .desktop{ display: none; }
     .mobile33{display: inline-block}
-    // .hideIt{ display: none; }
 
     .layoutContainer{
       position: absolute;
-      right: 50px;
+      right: 0px;
       top: 3px;
       opacity: 1;
+
+      .mobileIcon{
+        position: relative;
+        top: 4px;
+        font-size: 1.1em;
+        padding: 0px 7px;
+        border-left: 1px solid silver;
+        border-right: 1px solid silver;
+        border-radius: 3px;
+        // font-style: cursive;
+        color: red;
+      }
     }
 
-    .menuOptions{
+    .linkCollection{
       display: none;
     }
 
